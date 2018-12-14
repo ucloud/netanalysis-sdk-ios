@@ -3,7 +3,7 @@
 
 ## 概要
 
-本文档主要是`UFile SDK for iOS`的使用说明文档，下面我们从以下几个方面做介绍： 
+本文档主要是`NetAnalysis SDK for iOS`的使用说明文档，下面我们从以下几个方面做介绍： 
 
 * 简要说明
 * 目录结构
@@ -93,6 +93,6 @@ Ping the server when the network environment change between WIFI and Cellular
 ## 联系我们
 
 * [UCloud官方网站: https://www.ucloud.cn/](https://www.ucloud.cn/)
-*  如有任何问题，欢迎提交[issue](https://github.com/ufilesdk-dev/ufile-ios-sdk/issues)或联系我们的技术支持，我们会第一时间解决问题。
+*  如有任何问题，欢迎提交[issue](https://github.com/ucloud/netanalysis-sdk-ios/issues)或联系我们的技术支持，我们会第一时间解决问题。
 
 
