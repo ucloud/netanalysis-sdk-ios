@@ -1,12 +1,29 @@
 //
-//  UPingResModel.h
-//  PingDemo
+//  UPingModel.h
+//  UNetAnalysisSDK
 //
-//  Created by ethan on 31/07/2018.
+//  Created by ethan on 2018/12/17.
 //  Copyright © 2018 ucloud. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface UReportPingModel : NSObject
+
+@property (nonatomic,assign) int loss;
+@property (nonatomic,assign) float delay;
+@property (nonatomic,assign) int ttl;
+@property (nonatomic,copy)   NSString *src_ip;
+@property (nonatomic,copy)   NSString *dst_ip;
+
+
++ (instancetype)uReporterPingmodelWithDict:(NSDictionary *)dict;
+- (NSDictionary *)objConvertToDict;
+@end
+
+
 
 typedef NS_ENUM(NSInteger, UCloudPingStatus) {
     UCloudPingStatusDidStart,
@@ -32,3 +49,5 @@ typedef NS_ENUM(NSInteger, UCloudPingStatus) {
 + (NSDictionary *)pingResultWithPingItems:(NSArray *)pingItems;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -14,7 +14,6 @@
 @property (nonatomic,copy) NSArray *url;
 
 - (NSArray *)uGetUHosts;
-- (instancetype)initWithDict:(NSDictionary *)dict;
 + (instancetype)dataBeanWithDict:(NSDictionary *)dict;
 @end
 
@@ -22,7 +21,6 @@
 @property (nonatomic,copy) NSString *location;
 @property (nonatomic,copy) NSString *ip;
 
-- (instancetype)initWithDict:(NSDictionary *)dict;
 + (instancetype)ipBeanWithDict:(NSDictionary *)dict;
 @end
 
@@ -30,6 +28,5 @@
 @property (nonatomic,strong) UNetMetaBean *meta;
 @property (nonatomic,strong) UNetDataBean *data;
 
-- (instancetype)initWithDict:(NSDictionary *)dict;
 + (instancetype)ipListBeanWithDict:(NSDictionary *)dict;
 @end

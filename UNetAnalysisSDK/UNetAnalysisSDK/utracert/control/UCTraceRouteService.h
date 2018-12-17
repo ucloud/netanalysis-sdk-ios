@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UCTraceRoute.h"
-#import "UCTracerRouteResModel.h"
-#import "URouteReplyModel.h"
-#import "UReportTracertModel.h"
+#import "UTracertModel.h"
 
 @class UCTraceRouteService;
 @protocol UCTraceRouteServiceDelegate <NSObject>

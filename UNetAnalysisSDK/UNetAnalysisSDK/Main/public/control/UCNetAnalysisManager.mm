@@ -40,6 +40,13 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetRegistUNetAnalysisSdkWithCompleteHandler:(UCNetRegisterSdkCompleteHandler _Nonnull )completeHandler
 {
+    if (completeHandler == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:@"no UCNetRegisterSdkCompleteHandler"
+                                     userInfo:nil];
+        return;
+    }
+    
     int res = [[UCNetAnalysis shareInstance] registUNetAnalysisSdk];
     if (res == 0) {
         completeHandler(nil);
@@ -53,6 +60,12 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetManualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler
 {
+    if (completeHandler == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:@"no UCNetManualNetDiagCompleteHandler"
+                                     userInfo:nil];
+        return;
+    }
     [[UCNetAnalysis shareInstance] manualDiagNetStatus:completeHandler];
     
 }

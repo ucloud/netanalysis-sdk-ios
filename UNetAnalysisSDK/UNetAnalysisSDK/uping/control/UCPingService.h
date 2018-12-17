@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UCPing.h"
-#import "UPingResModel.h"
-#import "UReportPingModel.h"
+#import "UPingModel.h"
 
 @class UCPingService;
 

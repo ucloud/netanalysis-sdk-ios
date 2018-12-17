@@ -12,6 +12,5 @@
 @property (nonatomic,assign) NSInteger code;
 @property (nonatomic,copy) NSString *error;
 
-- (instancetype)initWithDict:(NSDictionary *)dict;
 + (instancetype)metaBeanWithDict:(NSDictionary *)dict;
 @end

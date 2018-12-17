@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UReportPingModel.h"
-#import "UReportTracertModel.h"
+#import "UPingModel.h"
+#import "UTracertModel.h"
 #import "UIpInfoModel.h"
 #import "UNetIpListBean.h"
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UPingResModel.h"
+#import "UPingModel.h"
 #import "UCNetDiagnosisHelper.h"
 
 @class UCPing;

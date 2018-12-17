@@ -12,7 +12,7 @@
 #import "UIpInfoModel.h"
 #import "UCPingService.h"
 #import "UCTraceRouteService.h"
-#import "UCTracertUCHostsRecord.h"
+#import "UTracertModel.h"
 #import "UCDateTool.h"
 #include "log4cplus.h"
 #import "UNetAppInfo.h"

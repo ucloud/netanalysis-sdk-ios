@@ -7,10 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UCAppNetInfo.h"
-#import "UCAppInfo.h"
-#import "UCDeviceInfo.h"
-#import "UCIpPingResult.h"
+#import "UCModel.h"
 
 /**
  这是`NSObject`的一个子类。 该类包含手动诊断网络的结果，例如: app信息，手机信息，app网络信息等。

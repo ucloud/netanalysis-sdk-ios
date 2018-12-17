@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UCNetDiagnosisHelper.h"
-#import "UCTracerRouteResModel.h"
+#import "UTracertModel.h"
 
 const int kTracertRouteCount_noRes               = 5;     // 连续无响应的route个数
 const int kTracertMaxTTL                         = 30;    // Max 30 hops（最多30跳）

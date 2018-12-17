@@ -27,10 +27,14 @@
 		AA04BD9B21786E5500792244 /* UNetMetaBean.m in Sources */ = {isa = PBXBuildFile; fileRef = AA04BD9721786E5500792244 /* UNetMetaBean.m */; };
 		AA04BD9F2178815300792244 /* UNetReportResponseBean.h in Headers */ = {isa = PBXBuildFile; fileRef = AA04BD9D2178815300792244 /* UNetReportResponseBean.h */; };
 		AA04BDA02178815300792244 /* UNetReportResponseBean.m in Sources */ = {isa = PBXBuildFile; fileRef = AA04BD9E2178815300792244 /* UNetReportResponseBean.m */; };
-		AA12993A211304E300BEA0D2 /* UPingResModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA129936211304E300BEA0D2 /* UPingResModel.m */; };
-		AA12993C211304E300BEA0D2 /* UPingResModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AA129938211304E300BEA0D2 /* UPingResModel.h */; };
-		AA1299422113051E00BEA0D2 /* UReportPingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1299402113051D00BEA0D2 /* UReportPingModel.m */; };
-		AA1299432113051E00BEA0D2 /* UReportPingModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AA1299412113051E00BEA0D2 /* UReportPingModel.h */; };
+		AA4964ED21C77A6300A48AD8 /* UCModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AA4964EB21C77A6300A48AD8 /* UCModel.h */; };
+		AA4964EE21C77A6300A48AD8 /* UCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4964EC21C77A6300A48AD8 /* UCModel.m */; };
+		AA4964F121C7815C00A48AD8 /* UCErrorModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AA4964EF21C7815C00A48AD8 /* UCErrorModel.h */; };
+		AA4964F221C7815C00A48AD8 /* UCErrorModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4964F021C7815C00A48AD8 /* UCErrorModel.m */; };
+		AA4964F521C7928600A48AD8 /* UPingModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AA4964F321C7928600A48AD8 /* UPingModel.h */; };
+		AA4964F621C7928600A48AD8 /* UPingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4964F421C7928600A48AD8 /* UPingModel.m */; };
+		AA4964F921C794EF00A48AD8 /* UTracertModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AA4964F721C794EF00A48AD8 /* UTracertModel.h */; };
+		AA4964FA21C794EF00A48AD8 /* UTracertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4964F821C794EF00A48AD8 /* UTracertModel.m */; };
 		AA4FFD702181A33B00DC686F /* UCNetAnalysis.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA4FFD6E2181A33B00DC686F /* UCNetAnalysis.mm */; };
 		AA4FFD712181A33B00DC686F /* UCNetAnalysis.h in Headers */ = {isa = PBXBuildFile; fileRef = AA4FFD6F2181A33B00DC686F /* UCNetAnalysis.h */; };
 		AA6605E82146493400C75504 /* UNetAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = AA6605E62146493400C75504 /* UNetAppInfo.h */; };
@@ -40,8 +44,6 @@
 		AA7B63F5210825050043F515 /* UNetAnalysisSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7B63E7210825050043F515 /* UNetAnalysisSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA8660E92124140500393544 /* UCDateTool.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8660E72124140500393544 /* UCDateTool.h */; };
 		AA8660EA2124140500393544 /* UCDateTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8660E82124140500393544 /* UCDateTool.m */; };
-		AA8660ED21241B5500393544 /* UCTracertUCHostsRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8660EB21241B5500393544 /* UCTracertUCHostsRecord.h */; };
-		AA8660EE21241B5500393544 /* UCTracertUCHostsRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8660EC21241B5500393544 /* UCTracertUCHostsRecord.m */; };
 		AA8661A421266A5B00393544 /* log4cplus.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8661A221266A5B00393544 /* log4cplus.h */; };
 		AAA1F98321193E0D0088217E /* UCPingService.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F97F21193E0D0088217E /* UCPingService.h */; };
 		AAA1F98421193E0D0088217E /* UCPingService.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F98021193E0D0088217E /* UCPingService.mm */; };
@@ -49,8 +51,6 @@
 		AAA1F9A1211B000E0088217E /* UCNetDiagnosisHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F99F211B000E0088217E /* UCNetDiagnosisHelper.m */; };
 		AAA1F9A4211B00690088217E /* UCPing.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F9A2211B00690088217E /* UCPing.h */; };
 		AAA1F9A5211B00690088217E /* UCPing.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9A3211B00690088217E /* UCPing.mm */; };
-		AAA1F9AB211B01BE0088217E /* UCTracerRouteResModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9A9211B01BE0088217E /* UCTracerRouteResModel.m */; };
-		AAA1F9AC211B01BE0088217E /* UCTracerRouteResModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F9AA211B01BE0088217E /* UCTracerRouteResModel.h */; };
 		AAA1F9B1211B01FB0088217E /* UCTraceRouteService.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F9AD211B01FB0088217E /* UCTraceRouteService.h */; };
 		AAA1F9B2211B01FB0088217E /* UCTraceRoute.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9AE211B01FB0088217E /* UCTraceRoute.mm */; };
 		AAA1F9B3211B01FB0088217E /* UCTraceRoute.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F9AF211B01FB0088217E /* UCTraceRoute.h */; };
@@ -63,20 +63,8 @@
 		AAA441512121957700141D7B /* UCNetworkService.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA4414D2121957700141D7B /* UCNetworkService.h */; };
 		AAAA0E2B2152294200D7C95A /* UCManualNetDiagResult.h in Headers */ = {isa = PBXBuildFile; fileRef = AAAA0E292152294200D7C95A /* UCManualNetDiagResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AAAA0E2C2152294200D7C95A /* UCManualNetDiagResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA0E2A2152294200D7C95A /* UCManualNetDiagResult.m */; };
-		AAAA0E2F2152369C00D7C95A /* UCDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = AAAA0E2D2152369C00D7C95A /* UCDeviceInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAAA0E302152369C00D7C95A /* UCDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA0E2E2152369C00D7C95A /* UCDeviceInfo.m */; };
-		AAAA0E33215236AA00D7C95A /* UCAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = AAAA0E31215236AA00D7C95A /* UCAppInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAAA0E34215236AA00D7C95A /* UCAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA0E32215236AA00D7C95A /* UCAppInfo.m */; };
-		AAAA0E37215236CF00D7C95A /* UCAppNetInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = AAAA0E35215236CF00D7C95A /* UCAppNetInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAAA0E38215236CF00D7C95A /* UCAppNetInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA0E36215236CF00D7C95A /* UCAppNetInfo.m */; };
-		AAAA0E3B2152413F00D7C95A /* UCIpPingResult.h in Headers */ = {isa = PBXBuildFile; fileRef = AAAA0E392152413F00D7C95A /* UCIpPingResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAAA0E3C2152413F00D7C95A /* UCIpPingResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA0E3A2152413F00D7C95A /* UCIpPingResult.m */; };
 		AAB55D25210969A100F9A561 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = AAB55D23210969A100F9A561 /* Reachability.h */; };
 		AAB55D26210969A100F9A561 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB55D24210969A100F9A561 /* Reachability.m */; };
-		AAB7937F21427602004EB44D /* URouteReplyModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AAB7937B21427601004EB44D /* URouteReplyModel.h */; };
-		AAB7938021427602004EB44D /* URouteReplyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB7937C21427601004EB44D /* URouteReplyModel.m */; };
-		AAB7938121427602004EB44D /* UReportTracertModel.h in Headers */ = {isa = PBXBuildFile; fileRef = AAB7937D21427602004EB44D /* UReportTracertModel.h */; };
-		AAB7938221427602004EB44D /* UReportTracertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB7937E21427602004EB44D /* UReportTracertModel.m */; };
 		AACAE5AE216CA32700A970C7 /* UCNetAnalysisManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AACAE5AC216CA32700A970C7 /* UCNetAnalysisManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AACAE5AF216CA32700A970C7 /* UCNetAnalysisManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = AACAE5AD216CA32700A970C7 /* UCNetAnalysisManager.mm */; };
 		AAD15734218714C2008F70BF /* NSString+USafe.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD15726218714C2008F70BF /* NSString+USafe.m */; };
@@ -113,10 +101,14 @@
 		AA04BD9D2178815300792244 /* UNetReportResponseBean.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UNetReportResponseBean.h; sourceTree = "<group>"; };
 		AA04BD9E2178815300792244 /* UNetReportResponseBean.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UNetReportResponseBean.m; sourceTree = "<group>"; };
 		AA0F77492109996600BBC450 /* UNetAnalysisConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UNetAnalysisConst.h; sourceTree = "<group>"; };
-		AA129936211304E300BEA0D2 /* UPingResModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPingResModel.m; sourceTree = "<group>"; };
-		AA129938211304E300BEA0D2 /* UPingResModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPingResModel.h; sourceTree = "<group>"; };
-		AA1299402113051D00BEA0D2 /* UReportPingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UReportPingModel.m; sourceTree = "<group>"; };
-		AA1299412113051E00BEA0D2 /* UReportPingModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UReportPingModel.h; sourceTree = "<group>"; };
+		AA4964EB21C77A6300A48AD8 /* UCModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCModel.h; sourceTree = "<group>"; };
+		AA4964EC21C77A6300A48AD8 /* UCModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCModel.m; sourceTree = "<group>"; };
+		AA4964EF21C7815C00A48AD8 /* UCErrorModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCErrorModel.h; sourceTree = "<group>"; };
+		AA4964F021C7815C00A48AD8 /* UCErrorModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCErrorModel.m; sourceTree = "<group>"; };
+		AA4964F321C7928600A48AD8 /* UPingModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UPingModel.h; sourceTree = "<group>"; };
+		AA4964F421C7928600A48AD8 /* UPingModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UPingModel.m; sourceTree = "<group>"; };
+		AA4964F721C794EF00A48AD8 /* UTracertModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UTracertModel.h; sourceTree = "<group>"; };
+		AA4964F821C794EF00A48AD8 /* UTracertModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UTracertModel.m; sourceTree = "<group>"; };
 		AA4FFD6E2181A33B00DC686F /* UCNetAnalysis.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCNetAnalysis.mm; sourceTree = "<group>"; };
 		AA4FFD6F2181A33B00DC686F /* UCNetAnalysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCNetAnalysis.h; sourceTree = "<group>"; };
 		AA6605E62146493400C75504 /* UNetAppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UNetAppInfo.h; sourceTree = "<group>"; };
@@ -129,8 +121,6 @@
 		AA7B63F4210825050043F515 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA8660E72124140500393544 /* UCDateTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCDateTool.h; sourceTree = "<group>"; };
 		AA8660E82124140500393544 /* UCDateTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCDateTool.m; sourceTree = "<group>"; };
-		AA8660EB21241B5500393544 /* UCTracertUCHostsRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCTracertUCHostsRecord.h; sourceTree = "<group>"; };
-		AA8660EC21241B5500393544 /* UCTracertUCHostsRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCTracertUCHostsRecord.m; sourceTree = "<group>"; };
 		AA8661A221266A5B00393544 /* log4cplus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log4cplus.h; sourceTree = "<group>"; };
 		AAA1F97F21193E0D0088217E /* UCPingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCPingService.h; sourceTree = "<group>"; };
 		AAA1F98021193E0D0088217E /* UCPingService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCPingService.mm; sourceTree = "<group>"; };
@@ -138,8 +128,6 @@
 		AAA1F99F211B000E0088217E /* UCNetDiagnosisHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UCNetDiagnosisHelper.m; sourceTree = "<group>"; };
 		AAA1F9A2211B00690088217E /* UCPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCPing.h; sourceTree = "<group>"; };
 		AAA1F9A3211B00690088217E /* UCPing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCPing.mm; sourceTree = "<group>"; };
-		AAA1F9A9211B01BE0088217E /* UCTracerRouteResModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UCTracerRouteResModel.m; sourceTree = "<group>"; };
-		AAA1F9AA211B01BE0088217E /* UCTracerRouteResModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCTracerRouteResModel.h; sourceTree = "<group>"; };
 		AAA1F9AD211B01FB0088217E /* UCTraceRouteService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCTraceRouteService.h; sourceTree = "<group>"; };
 		AAA1F9AE211B01FB0088217E /* UCTraceRoute.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCTraceRoute.mm; sourceTree = "<group>"; };
 		AAA1F9AF211B01FB0088217E /* UCTraceRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCTraceRoute.h; sourceTree = "<group>"; };
@@ -152,20 +140,8 @@
 		AAA4414D2121957700141D7B /* UCNetworkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCNetworkService.h; sourceTree = "<group>"; };
 		AAAA0E292152294200D7C95A /* UCManualNetDiagResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCManualNetDiagResult.h; sourceTree = "<group>"; };
 		AAAA0E2A2152294200D7C95A /* UCManualNetDiagResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCManualNetDiagResult.m; sourceTree = "<group>"; };
-		AAAA0E2D2152369C00D7C95A /* UCDeviceInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCDeviceInfo.h; sourceTree = "<group>"; };
-		AAAA0E2E2152369C00D7C95A /* UCDeviceInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCDeviceInfo.m; sourceTree = "<group>"; };
-		AAAA0E31215236AA00D7C95A /* UCAppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCAppInfo.h; sourceTree = "<group>"; };
-		AAAA0E32215236AA00D7C95A /* UCAppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCAppInfo.m; sourceTree = "<group>"; };
-		AAAA0E35215236CF00D7C95A /* UCAppNetInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCAppNetInfo.h; sourceTree = "<group>"; };
-		AAAA0E36215236CF00D7C95A /* UCAppNetInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCAppNetInfo.m; sourceTree = "<group>"; };
-		AAAA0E392152413F00D7C95A /* UCIpPingResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCIpPingResult.h; sourceTree = "<group>"; };
-		AAAA0E3A2152413F00D7C95A /* UCIpPingResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCIpPingResult.m; sourceTree = "<group>"; };
 		AAB55D23210969A100F9A561 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AAB55D24210969A100F9A561 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		AAB7937B21427601004EB44D /* URouteReplyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URouteReplyModel.h; sourceTree = "<group>"; };
-		AAB7937C21427601004EB44D /* URouteReplyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URouteReplyModel.m; sourceTree = "<group>"; };
-		AAB7937D21427602004EB44D /* UReportTracertModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UReportTracertModel.h; sourceTree = "<group>"; };
-		AAB7937E21427602004EB44D /* UReportTracertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UReportTracertModel.m; sourceTree = "<group>"; };
 		AACAE5AC216CA32700A970C7 /* UCNetAnalysisManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCNetAnalysisManager.h; sourceTree = "<group>"; };
 		AACAE5AD216CA32700A970C7 /* UCNetAnalysisManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UCNetAnalysisManager.mm; sourceTree = "<group>"; };
 		AAD15726218714C2008F70BF /* NSString+USafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+USafe.m"; sourceTree = "<group>"; };
@@ -235,10 +211,8 @@
 		AA129935211304CB00BEA0D2 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				AA1299412113051E00BEA0D2 /* UReportPingModel.h */,
-				AA1299402113051D00BEA0D2 /* UReportPingModel.m */,
-				AA129938211304E300BEA0D2 /* UPingResModel.h */,
-				AA129936211304E300BEA0D2 /* UPingResModel.m */,
+				AA4964F321C7928600A48AD8 /* UPingModel.h */,
+				AA4964F421C7928600A48AD8 /* UPingModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -358,14 +332,8 @@
 		AAA1F9A7211B01970088217E /* model */ = {
 			isa = PBXGroup;
 			children = (
-				AAA1F9AA211B01BE0088217E /* UCTracerRouteResModel.h */,
-				AAA1F9A9211B01BE0088217E /* UCTracerRouteResModel.m */,
-				AAB7937D21427602004EB44D /* UReportTracertModel.h */,
-				AAB7937E21427602004EB44D /* UReportTracertModel.m */,
-				AAB7937B21427601004EB44D /* URouteReplyModel.h */,
-				AAB7937C21427601004EB44D /* URouteReplyModel.m */,
-				AA8660EB21241B5500393544 /* UCTracertUCHostsRecord.h */,
-				AA8660EC21241B5500393544 /* UCTracertUCHostsRecord.m */,
+				AA4964F721C794EF00A48AD8 /* UTracertModel.h */,
+				AA4964F821C794EF00A48AD8 /* UTracertModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -425,14 +393,10 @@
 			children = (
 				AAAA0E292152294200D7C95A /* UCManualNetDiagResult.h */,
 				AAAA0E2A2152294200D7C95A /* UCManualNetDiagResult.m */,
-				AAAA0E2D2152369C00D7C95A /* UCDeviceInfo.h */,
-				AAAA0E2E2152369C00D7C95A /* UCDeviceInfo.m */,
-				AAAA0E31215236AA00D7C95A /* UCAppInfo.h */,
-				AAAA0E32215236AA00D7C95A /* UCAppInfo.m */,
-				AAAA0E35215236CF00D7C95A /* UCAppNetInfo.h */,
-				AAAA0E36215236CF00D7C95A /* UCAppNetInfo.m */,
-				AAAA0E392152413F00D7C95A /* UCIpPingResult.h */,
-				AAAA0E3A2152413F00D7C95A /* UCIpPingResult.m */,
+				AA4964EB21C77A6300A48AD8 /* UCModel.h */,
+				AA4964EC21C77A6300A48AD8 /* UCModel.m */,
+				AA4964EF21C7815C00A48AD8 /* UCErrorModel.h */,
+				AA4964F021C7815C00A48AD8 /* UCErrorModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -492,20 +456,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA4964F521C7928600A48AD8 /* UPingModel.h in Headers */,
 				AAD15737218714C2008F70BF /* NSDictionary+USafe.h in Headers */,
 				AAAA0E2B2152294200D7C95A /* UCManualNetDiagResult.h in Headers */,
-				AAAA0E2F2152369C00D7C95A /* UCDeviceInfo.h in Headers */,
-				AAAA0E37215236CF00D7C95A /* UCAppNetInfo.h in Headers */,
-				AAAA0E33215236AA00D7C95A /* UCAppInfo.h in Headers */,
-				AAAA0E3B2152413F00D7C95A /* UCIpPingResult.h in Headers */,
 				AAA441482121954A00141D7B /* UIpInfoModel.h in Headers */,
 				AACAE5AE216CA32700A970C7 /* UCNetAnalysisManager.h in Headers */,
 				AA6605E82146493400C75504 /* UNetAppInfo.h in Headers */,
-				AAB7937F21427602004EB44D /* URouteReplyModel.h in Headers */,
 				AAA1F9A4211B00690088217E /* UCPing.h in Headers */,
 				AAA1F9B3211B01FB0088217E /* UCTraceRoute.h in Headers */,
 				AAD15741218714C2008F70BF /* NSMutableArray+USafe.h in Headers */,
-				AA12993C211304E300BEA0D2 /* UPingResModel.h in Headers */,
+				AA4964F921C794EF00A48AD8 /* UTracertModel.h in Headers */,
 				AAA1F9B1211B01FB0088217E /* UCTraceRouteService.h in Headers */,
 				AA7B63F5210825050043F515 /* UNetAnalysisSDK.h in Headers */,
 				AA8660E92124140500393544 /* UCDateTool.h in Headers */,
@@ -513,16 +473,14 @@
 				AA4FFD712181A33B00DC686F /* UCNetAnalysis.h in Headers */,
 				AAD15735218714C2008F70BF /* NSObject+USafe.h in Headers */,
 				AA04BD9A21786E5500792244 /* UNetMetaBean.h in Headers */,
-				AAA1F9AC211B01BE0088217E /* UCTracerRouteResModel.h in Headers */,
 				AAA1F9A0211B000E0088217E /* UCNetDiagnosisHelper.h in Headers */,
-				AA1299432113051E00BEA0D2 /* UReportPingModel.h in Headers */,
-				AA8660ED21241B5500393544 /* UCTracertUCHostsRecord.h in Headers */,
 				AAD1573D218714C2008F70BF /* NSNull+USafe.h in Headers */,
 				AAB55D25210969A100F9A561 /* Reachability.h in Headers */,
-				AAB7938121427602004EB44D /* UReportTracertModel.h in Headers */,
 				AAA441512121957700141D7B /* UCNetworkService.h in Headers */,
 				AA04BD9821786E5500792244 /* UNetIpListBean.h in Headers */,
 				AAA4414F2121957700141D7B /* UCNetInfoReporter.h in Headers */,
+				AA4964F121C7815C00A48AD8 /* UCErrorModel.h in Headers */,
+				AA4964ED21C77A6300A48AD8 /* UCModel.h in Headers */,
 				AAD1573A218714C2008F70BF /* NSArray+USafe.h in Headers */,
 				AAD1573B218714C2008F70BF /* NSString+USafe.h in Headers */,
 				AAA1F98321193E0D0088217E /* UCPingService.h in Headers */,
@@ -656,34 +614,28 @@
 				AAA1F9A5211B00690088217E /* UCPing.mm in Sources */,
 				AAA1F9B2211B01FB0088217E /* UCTraceRoute.mm in Sources */,
 				AACAE5AF216CA32700A970C7 /* UCNetAnalysisManager.mm in Sources */,
+				AA4964FA21C794EF00A48AD8 /* UTracertModel.m in Sources */,
 				AAAA0E2C2152294200D7C95A /* UCManualNetDiagResult.m in Sources */,
 				AAD15736218714C2008F70BF /* NSMutableString+USafe.m in Sources */,
-				AA12993A211304E300BEA0D2 /* UPingResModel.m in Sources */,
 				AA4FFD702181A33B00DC686F /* UCNetAnalysis.mm in Sources */,
 				AA04BD9B21786E5500792244 /* UNetMetaBean.m in Sources */,
-				AAAA0E3C2152413F00D7C95A /* UCIpPingResult.m in Sources */,
 				AAA441492121954A00141D7B /* UIpInfoModel.m in Sources */,
 				AAD1573F218714C2008F70BF /* NSDictionary+USafe.m in Sources */,
 				AAD15740218714C2008F70BF /* NSNull+USafe.m in Sources */,
 				AAA1F98421193E0D0088217E /* UCPingService.mm in Sources */,
-				AAAA0E34215236AA00D7C95A /* UCAppInfo.m in Sources */,
 				AAB55D26210969A100F9A561 /* Reachability.m in Sources */,
-				AAAA0E302152369C00D7C95A /* UCDeviceInfo.m in Sources */,
 				AA04BD9921786E5500792244 /* UNetIpListBean.m in Sources */,
-				AAB7938221427602004EB44D /* UReportTracertModel.m in Sources */,
 				AAA4414E2121957700141D7B /* UCNetInfoReporter.mm in Sources */,
-				AAB7938021427602004EB44D /* URouteReplyModel.m in Sources */,
 				AAA1F9A1211B000E0088217E /* UCNetDiagnosisHelper.m in Sources */,
 				AAD15738218714C2008F70BF /* NSArray+USafe.m in Sources */,
 				AA6605E92146493400C75504 /* UNetAppInfo.m in Sources */,
-				AAAA0E38215236CF00D7C95A /* UCAppNetInfo.m in Sources */,
 				AA8660EA2124140500393544 /* UCDateTool.m in Sources */,
+				AA4964EE21C77A6300A48AD8 /* UCModel.m in Sources */,
 				AAD15739218714C2008F70BF /* NSMutableArray+USafe.m in Sources */,
-				AA8660EE21241B5500393544 /* UCTracertUCHostsRecord.m in Sources */,
-				AA1299422113051E00BEA0D2 /* UReportPingModel.m in Sources */,
 				AAD1573C218714C2008F70BF /* NSObject+USafe.m in Sources */,
-				AAA1F9AB211B01BE0088217E /* UCTracerRouteResModel.m in Sources */,
+				AA4964F221C7815C00A48AD8 /* UCErrorModel.m in Sources */,
 				AAA1F9B4211B01FB0088217E /* UCTraceRouteService.m in Sources */,
+				AA4964F621C7928600A48AD8 /* UPingModel.m in Sources */,
 				AA04BDA02178815300792244 /* UNetReportResponseBean.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
