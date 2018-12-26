@@ -8,6 +8,7 @@
 
 #import "UCNetAnalysisManager.h"
 #import "UCNetAnalysis.h"
+#import "UNetTools.h"
 
 @implementation UCNetAnalysisManager
 
@@ -37,17 +38,23 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     [[UCNetAnalysis shareInstance] settingSDKLogLevel:logLevel];
 }
 
-
-- (void)uNetRegistUNetAnalysisSdkWithCompleteHandler:(UCNetRegisterSdkCompleteHandler _Nonnull )completeHandler
+- (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey publicToken:(NSString * _Nonnull)publickToken completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
 {
-    if (completeHandler == nil) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:@"no UCNetRegisterSdkCompleteHandler"
-                                     userInfo:nil];
+    NSString *errorInfo = nil;
+    if ([UNetTools un_isEmpty:appkey]) {
+        errorInfo = @"no APPKEY";
+    }
+    if ([UNetTools un_isEmpty:publickToken]) {
+        errorInfo = @"no PUBLIC TOKEN";
+    }
+    if (!completeHandler) {
+        errorInfo = @"no UCNetRegisterSdkCompleteHandler";
+    }
+    if (errorInfo) {
+        completeHandler([UCError sysErrorWithInvalidArgument:errorInfo]);
         return;
     }
-    
-    int res = [[UCNetAnalysis shareInstance] registUNetAnalysisSdk];
+    int res = [[UCNetAnalysis shareInstance] registSdkWithAppKey:appkey publicToken:publickToken];
     if (res == 0) {
         completeHandler(nil);
     }

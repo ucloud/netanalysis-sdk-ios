@@ -9,7 +9,7 @@
 #import "UCNetAnalysis.h"
 #import "UNetAnalysisConst.h"
 #import "UCNetInfoReporter.h"
-#import "UIpInfoModel.h"
+#import "UCServerResponseModel.h"
 #import "UCPingService.h"
 #import "UCTraceRouteService.h"
 #import "UTracertModel.h"
@@ -114,13 +114,12 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
     }
 }
 
-- (int)registUNetAnalysisSdk
+- (int)registSdkWithAppKey:(NSString *)appkey publicToken:(NSString *)publicToken
 {
-    // 1. check Appkey
-    
     self.isManualNetDiag = NO;
     self.shouldDoTracert = YES;
     self.shouldDoUserIpTracert = YES;
+    [[UCNetInfoReporter shareInstance] setAppKey:appkey publickToken:publicToken];
     log4cplus_info("UNetSDK", "regist UCNetAnalysis success...\n");
     [UCPingService shareInstance].delegate = self;
     [UCTraceRouteService shareInstance].delegate = self;
@@ -309,14 +308,14 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
             log4cplus_warn("UNetSDK", "have not get device public ip info , cancel device network info collection...\n");
             return;
         }
-        self.devicePublicIp = ipInfoModel.ip;
+        self.devicePublicIp = ipInfoModel.addr;
         log4cplus_debug("UNetSDK", "success get the device public ip info , info: %s",[ipInfoModel.description UTF8String]);
         [[UCNetInfoReporter shareInstance] uGetUHostListWithCompletionHandler:^(UNetIpListBean *_Nullable ipListBean) {
             if (ipListBean == NULL) {
                 log4cplus_warn("UNetSDK", "have not get ucloud ip list , cancel device network info collection...\n");
                 return;
             }
-            log4cplus_debug("UNetSDK", "success get the ucloud ip list...\n");
+            log4cplus_debug("UNetSDK", "success get the ucloud ip list-->%s..\n",[ipListBean.data.description UTF8String]);
             
             self.hostList = [ipListBean.data uGetUHosts];
             // 乱序
@@ -462,6 +461,10 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
         return;
     }
 //    log4cplus_info("UNetTracert", "%s",[uReportTracertModel.description UTF8String]);
+    
+    if (uReportTracertModel.routeReplyArray.count == 1) {   // 防止icmp发送时间很久之后的响应,eg: 63.245.208.212
+        return;
+    }
     
     [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel];
 }

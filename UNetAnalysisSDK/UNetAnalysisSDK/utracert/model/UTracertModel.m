@@ -73,6 +73,21 @@
     return @{@"src_ip":self.src_ip,@"dst_ip":self.dst_ip,@"route_info":array};
 }
 
+- (NSDictionary *)objConvertToReportDict
+{
+    NSMutableArray *array = [NSMutableArray array];
+    for (int i = 0; i < self.routeReplyArray.count; i++) {
+        URouteReplyModel *model = (URouteReplyModel*)self.routeReplyArray[i];
+        @try {
+            [array addObject:model.objConvertToDict];
+        } @catch (NSException *exception) {
+            NSLog(@"%s, %@",__func__,exception.description);
+        }
+        
+    }
+    return @{@"route_info":array};
+}
+
 - (NSString *)description
 {
     NSMutableString *routeReplay = [NSMutableString string];

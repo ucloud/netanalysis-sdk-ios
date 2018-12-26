@@ -32,6 +32,11 @@
     return @{@"loss":@(self.loss),@"delay":@((int)self.delay),@"src_ip":self.src_ip,@"dst_ip":self.dst_ip,@"TTL":@(self.ttl)};
 }
 
+- (NSDictionary *)objConvertToReportDict
+{
+    return @{@"delay":@((int)self.delay),@"loss":@(self.loss)};
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"src_ip:%@ , dst_ip:%@ , loss:%d , delay:%@ , ttl:%d ",self.src_ip,self.dst_ip,self.loss,[NSString stringWithFormat:@"%.3fms",self.delay],self.ttl];

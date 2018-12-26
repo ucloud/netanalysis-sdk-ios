@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UCManualNetDiagResult.h"
+#import "UCErrorModel.h"
 
 
 /**
@@ -41,7 +42,7 @@ typedef enum UCNetSDKLogLevel
  @brief 注册SDK的block
  @discussion 该block用于告知用户是否注册结果。`error`为空则注册成功； 反之注册失败。
  */
-typedef void(^UCNetRegisterSdkCompleteHandler)(NSError *_Nullable error);
+typedef void(^UCNetRegisterSdkCompleteHandler)(UCError *_Nullable error);
 
 /**
  @brief 手动诊断网络状况的block
@@ -76,9 +77,12 @@ typedef void(^UNetTracerouteResultHandler)(NSString *_Nullable tracertRes ,NSStr
 /**
  @brief 注册 `SDK`
  @discussion 你应该在应用最初启动的地方调用此方法。 因为应用安装后第一次初始化应用程序时，应用将连接到 `UCloud` 服务器验证你的 `APP KEY`
+
+ @param appkey 使用该网络数据分析SDK时`UCloud`会分配给你一个appkey
+ @param publickToken 公钥，用于数据传输加密
  @param completeHandler 一个 `UCNetRegisterSdkCompleteHandler` 类型的 `block`，通过这个 `block` 来告知用户是否注册成功 `SDK`.  如果成功，则 `error` 为空。
  */
-- (void)uNetRegistUNetAnalysisSdkWithCompleteHandler:(UCNetRegisterSdkCompleteHandler _Nonnull )completeHandler;
+- (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey publicToken:(NSString * _Nonnull)publickToken completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler;
 
 #pragma mark - public setting api
 /**

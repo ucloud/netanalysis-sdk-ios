@@ -107,13 +107,13 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
     }
     
     dispatch_async(self.serialQueue, ^{
-        NSMutableArray *pingItems = [self.tracerouteResDict objectForKey:host];
-        if (pingItems == NULL) {
-            pingItems = [NSMutableArray arrayWithArray:@[tracertRes]];
+        NSMutableArray *tracertItems = [self.tracerouteResDict objectForKey:host];
+        if (tracertItems == NULL) {
+            tracertItems = [NSMutableArray arrayWithArray:@[tracertRes]];
         }else{
-            [pingItems addObject:tracertRes];
+            [tracertItems addObject:tracertRes];
         }
-        [self.tracerouteResDict setObject:pingItems forKey:host];
+        [self.tracerouteResDict setObject:tracertItems forKey:host];
 //        NSLog(@"%@",self.tracerouteResDict);
         
         if (tracertRes.status == Enum_Traceroute_Status_finish) {

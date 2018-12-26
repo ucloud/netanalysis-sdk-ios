@@ -16,7 +16,7 @@
 
  @return the number of dasy form 1970.1.1
  */
-+ (int)daysFrom1970;
++ (NSInteger)daysFrom1970;
 
 
 /**
@@ -24,7 +24,7 @@
 
  @return the number of seconds form 1970.1.1
  */
-+ (int)secondsFrom1970;
++ (NSInteger)secondsFrom1970;
 
 
 /**
@@ -32,6 +32,6 @@
 
  @return The current timestamp
  */
-+ (int)currentTimestamp;
++ (NSInteger)currentTimestamp;
 
 @end

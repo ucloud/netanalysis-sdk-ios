@@ -12,22 +12,22 @@
 
 @implementation UCDateTool
 
-+ (int)daysFrom1970
++ (NSInteger)daysFrom1970
 {
     NSTimeInterval seconds = [[NSDate date] timeIntervalSince1970];
-    return (int)(seconds/kDaySeconds);
+    return (NSInteger)(seconds/kDaySeconds);
 }
 
-+ (int)secondsFrom1970
++ (NSInteger)secondsFrom1970
 {
     NSTimeInterval seconds = [[NSDate date] timeIntervalSince1970];
-    return (int)seconds;
+    return (NSInteger)seconds;
 }
 
-+ (int)currentTimestamp
++ (NSInteger)currentTimestamp
 {
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970]*1000;
-    return (int)currentTime;
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    return (NSInteger)currentTime;
 }
 
 @end

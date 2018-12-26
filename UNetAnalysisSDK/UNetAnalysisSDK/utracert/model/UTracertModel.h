@@ -40,7 +40,7 @@ typedef enum Enum_Traceroute_Status
 
 
 + (instancetype)uReportTracertModel:(NSDictionary *)dict;
-- (NSDictionary *)objConvertToDict;
+- (NSDictionary *)objConvertToReportDict;
 @end
 
 

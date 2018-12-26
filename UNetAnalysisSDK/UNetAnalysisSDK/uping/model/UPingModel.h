@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (instancetype)uReporterPingmodelWithDict:(NSDictionary *)dict;
-- (NSDictionary *)objConvertToDict;
+- (NSDictionary *)objConvertToReportDict;
 @end
 
 

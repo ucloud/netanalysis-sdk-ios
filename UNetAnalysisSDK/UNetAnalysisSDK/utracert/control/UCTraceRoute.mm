@@ -234,6 +234,7 @@ typedef enum UNetRecTracertIcmpType{
             inet_ntop(AF_INET, &((struct sockaddr_in *)&remote_addr)->sin_addr.s_addr, ip, sizeof(ip));
             remoteAddress = [NSString stringWithUTF8String:ip];
             
+            // [remoteAddress isEqualToString:self.hostList[self.hostArrayIndex]]
             if ([UCNetDiagnosisHelper isTimeoutPacket:buff len:(int)resultLen]) {
                 NSDate *startTime = [self getSendIcmpPacketDateFromContainerWithSeq:tracert_recev_route_index];
                 NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:startTime];
