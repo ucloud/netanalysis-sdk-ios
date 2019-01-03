@@ -77,25 +77,4 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     
 }
 
-#pragma mark - interface for SDK Demo
-- (void)uNetSettingIsCloseAutoAnalysisNet:(BOOL)isClose;
-{
-    [[UCNetAnalysis shareInstance] settingIsCloseAutoAnalysisNet:isClose];
-}
-
-- (BOOL)uNetAutoAnalysisNetIsAvailable
-{
-    return [[UCNetAnalysis shareInstance] autoAnalysisNetIsAvailable];
-}
-
-- (void)uNetStartPing:(NSString *)host pingResultHandler:(UNetPingResultHandler _Nonnull)handler
-{
-    [[UCNetAnalysis shareInstance] startPing:host pingResultHandler:handler];
-}
-
-- (void)uNetStartTraceroute:(NSString *_Nonnull)host tracerouteResultHandler:(UNetTracerouteResultHandler _Nonnull)handler
-{
-    [[UCNetAnalysis shareInstance] startTraceroute:host tracerouteResultHadler:handler];
-}
-
 @end

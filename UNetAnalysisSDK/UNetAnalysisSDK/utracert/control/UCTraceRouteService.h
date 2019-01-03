@@ -14,7 +14,6 @@
 @protocol UCTraceRouteServiceDelegate <NSObject>
 
 @optional
-- (void)tracerouteDetailWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService tracertResModel:(UCTracerRouteResModel *)uTracertResModel;
 - (void)tracerouteResultWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService tracerouteResult:(UReportTracertModel *)uReportTracertModel;
 - (void)tracerouteFinishedWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService;
 

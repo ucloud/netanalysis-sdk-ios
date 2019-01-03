@@ -50,10 +50,6 @@ typedef void(^UCNetRegisterSdkCompleteHandler)(UCError *_Nullable error);
  */
 typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullable manualNetDiagRes);
 
-/* for sdk demo */
-typedef void(^UNetPingResultHandler)(NSString *_Nullable pingres);
-typedef void(^UNetTracerouteResultHandler)(NSString *_Nullable tracertRes ,NSString *_Nullable destIp);
-
 
 /**
 这是 `NSObject` 的一个子类。 它是`UNetAnalysisSDK`的主要操作类，在这个类中定义了SDK的主要操作。
@@ -108,40 +104,4 @@ typedef void(^UNetTracerouteResultHandler)(NSString *_Nullable tracertRes ,NSStr
  */
 - (void)uNetManualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
 
-
-#pragma mark - interface for SDK Demo
-
-/*!
- @description
- setting is auto collection the device network status or not
- 
- @param isClose  YES: close auto collection ;  NO: open auto collection ;   the default is open auto collection
- */
-- (void)uNetSettingIsCloseAutoAnalysisNet:(BOOL)isClose;
-
-
-/*!
- @description
- Get current automatic network analysis function is available
-
- @return YES ： is available;  NO: unavailable
- */
-- (BOOL)uNetAutoAnalysisNetIsAvailable;
-
-/*！
- @description
- ping function
-
- @param host ip address or domain name
- @param handler ping detail information
- */
-- (void)uNetStartPing:(NSString *_Nonnull)host pingResultHandler:(UNetPingResultHandler _Nonnull)handler;
-
-/*!
- @description
-
- @param host ip address or domain name
- @param handler traceroute detail information
- */
-- (void)uNetStartTraceroute:(NSString *_Nonnull)host tracerouteResultHandler:(UNetTracerouteResultHandler _Nonnull)handler;
 @end

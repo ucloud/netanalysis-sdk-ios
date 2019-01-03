@@ -143,7 +143,6 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
 - (void)tracerouteWithUCTraceRoute:(UCTraceRoute *)ucTraceRoute tracertResult:(UCTracerRouteResModel *)tracertRes
 {
     [self addTracerouteResModelToTracerouteResContainer:tracertRes andHost:tracertRes.dstIp];
-    [self.delegate tracerouteDetailWithUCTraceRouteService:self tracertResModel:tracertRes];
 }
 
 - (void)tracerouteFinishedWithUCTraceRoute:(UCTraceRoute *)ucTraceRoute

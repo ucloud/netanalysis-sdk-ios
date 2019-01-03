@@ -46,10 +46,6 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 @property (nonatomic,assign) BOOL  isDoingUHostIpTracert;
 @property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
 
-/** for SDK demo **/
-@property (nonatomic,assign) BOOL isCloseAutoAnalysis;
-@property (nonatomic,copy,readonly) UNetPingResultHandler pingResultHandler;
-@property (nonatomic,copy,readonly) UNetTracerouteResultHandler tracertResultHandler;
 @end
 
 @implementation UCNetAnalysis
@@ -197,41 +193,6 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
     [self startPingHosts:self.userIpList];
 }
 
-- (void)settingIsCloseAutoAnalysisNet:(BOOL)isClose
-{
-    self.isCloseAutoAnalysis = isClose;
-}
-
-- (BOOL)autoAnalysisNetIsAvailable
-{
-    return !self.isCloseAutoAnalysis;
-}
-
-- (void)startPing:(NSString *)host pingResultHandler:(UNetPingResultHandler _Nonnull)handler
-{
-    if (!self.isCloseAutoAnalysis) {
-        log4cplus_warn("UNetSDK", "manual ping function is unavailable..\n");
-        return;
-    }
-    _pingResultHandler = handler;
-    [self startPingHosts:@[host]];
-}
-
-- (void)startTraceroute:(NSString *)host tracerouteResultHadler:(UNetTracerouteResultHandler _Nonnull)handler
-{
-    if (!self.isCloseAutoAnalysis) {
-        log4cplus_warn("UNetSDK", "manual traceroute function is unavailable..\n");
-        return;
-    }
-    _tracertResultHandler = handler;
-    
-    UCTraceRouteService *tracertService = [UCTraceRouteService shareInstance];
-    if ([tracertService uIsTracert]) {
-        [tracertService uStopTracert];
-    }
-    [tracertService uStartTracerouteAddressList:@[host]];
-}
-
 - (BOOL)isIpAddress:(NSString *)ipStr
 {
     if (nil == ipStr) {
@@ -298,11 +259,6 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
 
 - (void)doPingAndTracertUHosts
 {
-    if (self.isCloseAutoAnalysis) {
-        log4cplus_warn("UNetSDK", "the use closed auto analysis device network status..\n");
-        return;
-    }
-    
     [[UCNetInfoReporter shareInstance] uGetDevicePublicIpInfoWithCompletionHandle:^(UIpInfoModel * _Nullable ipInfoModel) {
         if (ipInfoModel == NULL) {
             log4cplus_warn("UNetSDK", "have not get device public ip info , cancel device network info collection...\n");
@@ -368,25 +324,8 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
 }
 
 #pragma mark- UCPingServiceDelegate
-- (void)pingDetailWithUCPingService:(UCPingService *)ucPingService pingModel:(UPingResModel *)pingRes pingStatus:(UCloudPingStatus)status
-{
-    if (!self.isCloseAutoAnalysis) {
-        return;
-    }
-    
-    if (pingRes.ICMPSequence == 5) {
-        return;
-    }
-    NSString *pingDetail = [NSString stringWithFormat:@"%d bytes form %@: icmp_seq=%d ttl=%d time=%.3fms",(int)pingRes.dateBytesLength,pingRes.IPAddress,(int)pingRes.ICMPSequence,(int)pingRes.timeToLive,pingRes.timeMilliseconds];
-    _pingResultHandler(pingDetail);
-}
-
 - (void)pingResultWithUCPingService:(UCPingService *)ucPingService pingResult:(UReportPingModel *)uReportPingModel
 {
-    if (self.isCloseAutoAnalysis) {
-        return;
-    }
-    
     log4cplus_info("UNetPing", "%s\n",[uReportPingModel.description UTF8String]);
     [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel];
     
@@ -400,9 +339,6 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
 
 - (void)pingFinishedWithUCPingService:(UCPingService *)ucPingService
 {
-    if (self.isCloseAutoAnalysis) {
-        return;
-    }
     if (self.userIpList == NULL) {
         return;
     }
@@ -429,37 +365,8 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
 }
 
 #pragma mark- UCTraceRouteServiceDelegate
-- (void)tracerouteDetailWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService tracertResModel:(UCTracerRouteResModel *)uTracertResModel
-{
-    if (!self.isCloseAutoAnalysis) {
-        return;
-    }
-    NSMutableString *tracertTimeoutRes = [NSMutableString string];
-    NSMutableString *mutableDurations = [NSMutableString string];
-    for (int i = 0; i < uTracertResModel.count; i++) {
-        if (uTracertResModel.durations[i] <= 0) {
-            [tracertTimeoutRes appendString:@" *"];
-        }else{
-            [mutableDurations appendString:[NSString stringWithFormat:@" %.3fms",uTracertResModel.durations[i] * 1000]];
-        }
-    }
-    NSMutableString *tracertDetail = [NSMutableString string];
-    if (tracertTimeoutRes.length > 0) {
-        [tracertDetail appendString:[NSString stringWithFormat:@"%d %@",(int)uTracertResModel.hop,tracertTimeoutRes]];
-        _tracertResultHandler(tracertDetail,uTracertResModel.dstIp);
-        return;
-    }
-    
-    NSString *tracertNormalDetail = [NSString stringWithFormat:@"%d  %@(%@) %@",(int)uTracertResModel.hop,uTracertResModel.ip,uTracertResModel.ip,mutableDurations];
-    [tracertDetail appendString:tracertNormalDetail];
-    _tracertResultHandler(tracertDetail,uTracertResModel.dstIp);
-}
-
 - (void)tracerouteResultWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService tracerouteResult:(UReportTracertModel *)uReportTracertModel
 {
-    if (self.isCloseAutoAnalysis) {
-        return;
-    }
 //    log4cplus_info("UNetTracert", "%s",[uReportTracertModel.description UTF8String]);
     
     if (uReportTracertModel.routeReplyArray.count == 1) {   // 防止icmp发送时间很久之后的响应,eg: 63.245.208.212
@@ -471,9 +378,6 @@ static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
 
 - (void)tracerouteFinishedWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService
 {
-    if (self.isCloseAutoAnalysis) {
-        return;
-    }
     if (self.userIpList == NULL) {
         return;
     }

@@ -16,7 +16,6 @@
 
 @optional
 
-- (void)pingDetailWithUCPingService:(UCPingService *)ucPingService pingModel:(UPingResModel *)pingRes pingStatus:(UCloudPingStatus)status;
 - (void)pingResultWithUCPingService:(UCPingService *)ucPingService pingResult:(UReportPingModel *)uReportPingModel;
 - (void)pingFinishedWithUCPingService:(UCPingService *)ucPingService;
 

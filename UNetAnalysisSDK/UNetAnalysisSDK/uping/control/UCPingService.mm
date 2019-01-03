@@ -140,7 +140,6 @@ static UCPingService *ucPingservice_instance = NULL;
 {
     @try {
         [self addPingResToPingResContainer:pingRes andHost:pingRes.IPAddress];
-        [self.delegate pingDetailWithUCPingService:self pingModel:pingRes pingStatus:status];
     } @catch (NSException *exception) {
          log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
     }

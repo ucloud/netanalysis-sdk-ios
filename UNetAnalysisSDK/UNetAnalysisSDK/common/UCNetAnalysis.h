@@ -17,11 +17,4 @@
 - (void)settingSDKLogLevel:(UCNetSDKLogLevel)logLevel;
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList;
 - (void)manualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
-
-/* for sdk demo */
-- (void)settingIsCloseAutoAnalysisNet:(BOOL)isClose;
-- (BOOL)autoAnalysisNetIsAvailable;
-- (void)startPing:(NSString * _Nonnull)host pingResultHandler:(UNetPingResultHandler _Nonnull)handler;
-- (void)startTraceroute:(NSString * _Nonnull)host tracerouteResultHadler:(UNetTracerouteResultHandler _Nonnull)handler;
-
 @end
