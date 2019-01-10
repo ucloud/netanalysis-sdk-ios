@@ -11,18 +11,6 @@
 * 快速集成
 * 联系我们
 
-## 简要说明
-
-This open-source library allows you to integrate UCloud Global network analysis service into your app, which will detect and report the network availability between app end-user and locations where the service has been deployed. 
-
-API is available as well for app developer to configure the service location (IP Address)  you would like to detect and analysis between your app users. UCloud IDC centers have been set as default locations.
-
-The network detection is automatically triggered for following two situations:
-
-Ping and Tracerout the server from end-user when app initial 
-
-Ping the server when the network environment change between WIFI and Cellular
-
 ## 目录结构
 
 该仓库主要包括`SDK`的源码以及示例项目，示例项目包含`Objective-C`和`Swift`两个版本。 
