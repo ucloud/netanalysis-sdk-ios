@@ -19,17 +19,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-//    [[UCNetAnalysisManager shareInstance] uNetSettingSDKLogLevel:UCNetSDKLogLevel_ERROR];  // set log level
+    [[UCNetAnalysisManager shareInstance] uNetSettingSDKLogLevel:UCNetSDKLogLevel_DEBUG];  // set log level
     
-    [[UCNetAnalysisManager shareInstance] uNetRegistUNetAnalysisSdkWithCompleteHandler:^(NSError * _Nullable error) {
-       
-        if (!error) {
+    // appkey和rsa公钥需要从ucloud控制台获取，或者联系技术支持获取
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:@"你的appkey" publicToken:@"你的rsa公钥" completeHandler:^(UCError * _Nullable error) {
+        if (error == nil) {
             NSLog(@"regist UNetAnalysisSDK success...");
-            
-            [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:@[@"63.245.208.212",@"216.239.32.27"]];
-            
+            NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // 此处填入你要手动诊断的网络地址
+            [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:customerIps];
         }
     }];
+    
+    
     return YES;
 }
 

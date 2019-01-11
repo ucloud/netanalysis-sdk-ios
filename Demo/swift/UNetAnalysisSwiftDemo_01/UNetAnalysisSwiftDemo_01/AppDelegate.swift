@@ -18,15 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         UCNetAnalysisManager.shareInstance().uNetSettingSDKLogLevel(UCNetSDKLogLevel_DEBUG)
-        UCNetAnalysisManager.shareInstance().uNetRegistUNetAnalysisSdk { (error) in
-            if(error == nil){
+        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey: "你的appkey", publicToken: "你的rsa公钥") { (error) in
+            if (error == nil){
                 print("Regist UNetAnalysisSDK success..")
-                let customerIpList = ["63.245.208.212","216.239.32.27"]
+                let customerIpList = ["220.181.112.244","221.230.143.58"]  // 此处填入你要手动诊断的网络地址
                 UCNetAnalysisManager.shareInstance().uNetSettingCustomerIpList(customerIpList)
-                
             }
         }
-        
         
         return true
     }
