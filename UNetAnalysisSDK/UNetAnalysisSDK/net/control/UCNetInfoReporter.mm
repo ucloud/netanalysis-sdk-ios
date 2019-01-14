@@ -14,6 +14,7 @@
 #import "UCURLSessionManager.h"
 #import "UNetAppInfo.h"
 #import "UCRSA.h"
+#import "UCModel.h"
 
 typedef enum UCNetOperateType
 {
@@ -29,6 +30,7 @@ typedef enum UCNetOperateType
 @property (nonatomic,strong) UCURLSessionManager *urlSessionManager;
 @property (nonatomic,strong) NSString *appKey; // api-key
 @property (nonatomic,strong) NSString *appSecret; // rsa public secret key
+@property (nonatomic,strong) NSString *userOptField;  // user opt report field
 
 @end
 
@@ -53,10 +55,16 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     return ucNetInfoReporter;
 }
 
-- (void)setAppKey:(NSString *)appKey publickToken:(NSString *)publicToken
+- (void)setAppKey:(NSString *)appKey publickToken:(NSString *)publicToken optReportField:(UCOptReportField * _Nullable)field
 {
     _appKey = appKey;
     _appSecret = publicToken;
+    if (!field) {
+        log4cplus_debug("UNetSDK", "user opt field is nil..\n");
+        return;
+    }
+    self.userOptField = [field convertToKeyValueStr];
+    log4cplus_debug("UNetSDK", "user opt field is: %s",[self.userOptField UTF8String]);
 }
 
 - (UCURLSessionManager *)urlSessionManager
@@ -138,6 +146,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
     [request setTimeoutInterval:timeOut];
+    [request setValue:[NSString stringWithFormat:@"ios/%@",KSDKVERSION] forHTTPHeaderField:@"User-Agent"];
     if ([method isEqualToString:@"GET"]) {
         return request;
     }
@@ -176,7 +185,12 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     static int reportPingIndex = 0;
     NSString *paramJson = NULL;
     try {
-        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl];
+        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION];
+        
+        if (self.userOptField) {
+            tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
+        }
+        
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
         NSString *ip_info_rsa = [UCRSA encryptString:[self.ipInfoModel objConvertToReportStr] publicKey:self.appSecret];
         NSDictionary *dict_data = @{@"action":@"ping",
@@ -224,7 +238,6 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 #pragma mark- report tracert results
 - (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel
 {
-    
     if (self.ipInfoModel == NULL) {
         log4cplus_warn("UNetSDK", "reportTracert, the device public ip info is null..\n");
         return;
@@ -232,7 +245,10 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     static int reportTracertIndex = 0;
     NSString *paramJson = NULL;
     try {
-        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip];
+        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION];
+        if (self.userOptField) {
+            tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
+        }
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
         NSString *ip_info_rsa = [UCRSA encryptString:[self.ipInfoModel objConvertToReportStr] publicKey:self.appSecret];
         NSDictionary *dict_data = @{@"action":@"traceroute",

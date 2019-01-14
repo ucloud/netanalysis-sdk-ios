@@ -18,5 +18,4 @@ FOUNDATION_EXPORT const unsigned char UCloudNetAnalysisSDKVersionString[];
 
 #import <UNetAnalysisSDK/UCNetAnalysisManager.h>
 #import <UNetAnalysisSDK/UCErrorModel.h>
-#import <UNetAnalysisSDK/UCManualNetDiagResult.h>
 #import <UNetAnalysisSDK/UCModel.h>

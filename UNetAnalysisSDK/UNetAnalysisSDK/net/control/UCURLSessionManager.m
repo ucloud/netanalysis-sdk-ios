@@ -23,7 +23,7 @@ static dispatch_queue_t url_session_manager_creation_queue() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         queue =
-        dispatch_queue_create("com.ucloud.mobile.ufilesdk.session.manager.creation", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_create("com.ucloud.mobile.unet.session.manager.creation", DISPATCH_QUEUE_SERIAL);
     });
     
     return queue;
@@ -44,7 +44,7 @@ static dispatch_queue_t url_session_manager_processing_queue() {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        queue = dispatch_queue_create("com.ucloud.mobile.ufilesdk.session.manager.processing", DISPATCH_QUEUE_CONCURRENT);
+        queue = dispatch_queue_create("com.ucloud.mobile.unet.session.manager.processing", DISPATCH_QUEUE_CONCURRENT);
     });
     
     return queue;
@@ -128,8 +128,6 @@ typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
 @end
 
 
-
-typedef NSURL  * (^UFileDestinationURL)(NSURL *targetPath, NSURLResponse *response);
 @interface UCURLSessionManager()
 
 @property (readwrite, nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
@@ -172,38 +170,6 @@ typedef NSURL  * (^UFileDestinationURL)(NSURL *targetPath, NSURLResponse *respon
     [self.lock unlock];
 }
 
-- (void)addDelegateForUploadTask:(NSURLSessionUploadTask *)uploadTask
-                        progress:(void (^)(NSProgress *uploadProgress)) uploadProgressBlock
-               completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
-{
-    UCURLSessionManagerTaskDelegate *delegate = [[UCURLSessionManagerTaskDelegate alloc] init];
-    delegate.manager = self;
-    delegate.completionHandler = completionHandler;
-    uploadTask.taskDescription = self.taskDescriptionForSessionTasks;
-    
-    [self setDelegate:delegate forTask:uploadTask];
-}
-
-
-- (NSURLSessionUploadTask* _Nullable)uploadTaskWithRequest:(nonnull NSURLRequest*)request
-                                                  fromFile:(NSURL*)fileURL
-                                                  progress:(void (^ _Nullable)(NSProgress* _Nonnull)) uploadProgressBlock
-                                         completionHandler:(void (^ _Nullable)(NSURLResponse* _Nonnull response, id _Nullable responseObject, NSError  * _Nullable error))completionHandler
-{
-    __block NSURLSessionUploadTask *uploadTask = nil;
-    url_session_manager_create_task_safely(^{
-        uploadTask = [self.defaultSession uploadTaskWithRequest:request fromFile:fileURL];
-    });
-    
-    
-    if (!uploadTask) {
-        return nil;
-    }
-    [self addDelegateForUploadTask:uploadTask progress:uploadProgressBlock completionHandler:completionHandler];
-    
-    return uploadTask;
-}
-
 - (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
                             completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler {
     __block NSURLSessionDataTask *dataTask = nil;
@@ -240,12 +206,10 @@ typedef NSURL  * (^UFileDestinationURL)(NSURL *targetPath, NSURLResponse *respon
 
 - (void)removeDelegateForTask:(NSURLSessionTask *)task {
     NSParameterAssert(task);
-    UCURLSessionManagerTaskDelegate *delegate = [self delegateForTask:task];
     [self.lock lock];
     [self.mutableTaskDelegatesKeyedByTaskIdentifier removeObjectForKey:@(task.taskIdentifier)];
     [self.lock unlock];
 }
-
 
 #pragma mark -NSURLSessionDataDelegate
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
@@ -265,12 +229,6 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask
         [self removeDelegateForTask:dataTask];
         [self setDelegate:delegate forTask:downloadTask];
     }
-}
-
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
-didBecomeStreamTask:(NSURLSessionStreamTask *)streamTask
-{
-
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask

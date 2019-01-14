@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "UPingModel.h"
 #import "UTracertModel.h"
+#import "UCModel.h"
 #import "UCServerResponseModel.h"
 
 
@@ -19,7 +20,7 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean);
 @interface UCNetInfoReporter : NSObject
 
 + (instancetype _Nonnull )shareInstance;
-- (void)setAppKey:(NSString * _Nonnull)appKey publickToken:(NSString * _Nonnull)publicToken;
+- (void)setAppKey:(NSString * _Nonnull)appKey publickToken:(NSString * _Nonnull)publicToken optReportField:(UCOptReportField * _Nullable)field;
 - (void)uGetDevicePublicIpInfoWithCompletionHandle:(UNetGetDevicePublicIpInfoHandler _Nonnull)handler;
 - (UIpInfoModel * _Nonnull)ipInfoModel;
 

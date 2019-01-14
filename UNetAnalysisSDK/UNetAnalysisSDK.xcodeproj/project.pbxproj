@@ -59,8 +59,6 @@
 		AAA1F9B4211B01FB0088217E /* UCTraceRouteService.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9B0211B01FB0088217E /* UCTraceRouteService.m */; };
 		AAA4414E2121957700141D7B /* UCNetInfoReporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA4414A2121957700141D7B /* UCNetInfoReporter.mm */; };
 		AAA4414F2121957700141D7B /* UCNetInfoReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA4414B2121957700141D7B /* UCNetInfoReporter.h */; };
-		AAAA0E2B2152294200D7C95A /* UCManualNetDiagResult.h in Headers */ = {isa = PBXBuildFile; fileRef = AAAA0E292152294200D7C95A /* UCManualNetDiagResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAAA0E2C2152294200D7C95A /* UCManualNetDiagResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA0E2A2152294200D7C95A /* UCManualNetDiagResult.m */; };
 		AAB55D25210969A100F9A561 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = AAB55D23210969A100F9A561 /* Reachability.h */; };
 		AAB55D26210969A100F9A561 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB55D24210969A100F9A561 /* Reachability.m */; };
 		AACAE5AE216CA32700A970C7 /* UCNetAnalysisManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AACAE5AC216CA32700A970C7 /* UCNetAnalysisManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -134,8 +132,6 @@
 		AAA1F9B0211B01FB0088217E /* UCTraceRouteService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UCTraceRouteService.m; sourceTree = "<group>"; };
 		AAA4414A2121957700141D7B /* UCNetInfoReporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCNetInfoReporter.mm; sourceTree = "<group>"; };
 		AAA4414B2121957700141D7B /* UCNetInfoReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCNetInfoReporter.h; sourceTree = "<group>"; };
-		AAAA0E292152294200D7C95A /* UCManualNetDiagResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCManualNetDiagResult.h; sourceTree = "<group>"; };
-		AAAA0E2A2152294200D7C95A /* UCManualNetDiagResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCManualNetDiagResult.m; sourceTree = "<group>"; };
 		AAB55D23210969A100F9A561 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AAB55D24210969A100F9A561 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		AACAE5AC216CA32700A970C7 /* UCNetAnalysisManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCNetAnalysisManager.h; sourceTree = "<group>"; };
@@ -367,8 +363,6 @@
 		AAAA0E3F2152428E00D7C95A /* model */ = {
 			isa = PBXGroup;
 			children = (
-				AAAA0E292152294200D7C95A /* UCManualNetDiagResult.h */,
-				AAAA0E2A2152294200D7C95A /* UCManualNetDiagResult.m */,
 				AA4964EB21C77A6300A48AD8 /* UCModel.h */,
 				AA4964EC21C77A6300A48AD8 /* UCModel.m */,
 				AA4964EF21C7815C00A48AD8 /* UCErrorModel.h */,
@@ -438,7 +432,6 @@
 				AA0C458A21D1D642002983CC /* UCRSA.h in Headers */,
 				AA4964F121C7815C00A48AD8 /* UCErrorModel.h in Headers */,
 				AAD15737218714C2008F70BF /* NSDictionary+USafe.h in Headers */,
-				AAAA0E2B2152294200D7C95A /* UCManualNetDiagResult.h in Headers */,
 				AA4964ED21C77A6300A48AD8 /* UCModel.h in Headers */,
 				AACAE5AE216CA32700A970C7 /* UCNetAnalysisManager.h in Headers */,
 				AA6605E82146493400C75504 /* UNetAppInfo.h in Headers */,
@@ -592,7 +585,6 @@
 				AACAE5AF216CA32700A970C7 /* UCNetAnalysisManager.mm in Sources */,
 				AA4964FA21C794EF00A48AD8 /* UTracertModel.m in Sources */,
 				AA0C458B21D1D642002983CC /* UCRSA.m in Sources */,
-				AAAA0E2C2152294200D7C95A /* UCManualNetDiagResult.m in Sources */,
 				AAD15736218714C2008F70BF /* NSMutableString+USafe.m in Sources */,
 				AA4FFD702181A33B00DC686F /* UCNetAnalysis.mm in Sources */,
 				AA0C458F21D3533B002983CC /* UCServerResponseModel.m in Sources */,

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 //extern NSString* _Nullable UFilePercentEscapedStringFromString(NSString* _Nonnull);
 
 
-@interface UCURLSessionManager : NSObject<NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
+@interface UCURLSessionManager : NSObject<NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 /**
  The dispatch queue for `completionBlock`. If `NULL` (default), the main queue is used.

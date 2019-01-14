@@ -17,8 +17,8 @@
 
 
 /***********  About http Interface   ***********/
-#define     U_Get_Public_Ip_Url   @"http://120.132.6.62/myip"   //get public ip info interface
-#define     U_Get_UCloud_iplist_URL   @"http://106.75.189.244:8000/api/iplist/getpinglist/"  // get ucloud ip list interface
+#define     U_Get_Public_Ip_Url   @"https://net-trace.ucloud.cn:8098/v1/ipip"   //get public ip info interface
+#define     U_Get_UCloud_iplist_URL   @"https://net-trace.ucloud.cn:8000/api/iplist/getpinglist/"  // get ucloud ip list interface
 
 /***********      Global define       ***********/
 #define      UCNotification       [NSNotificationCenter defaultCenter]
@@ -35,6 +35,6 @@ typedef enum  Enum_Tracert_UC_Hosts_State
     Enum_Tracert_UC_Hosts_State_Complete
 }Enum_Tracert_UC_Hosts_State;
 
-
+#define KSDKVERSION   @"1.0.0"
 
 #endif /* UNetAnalysisConst_h */

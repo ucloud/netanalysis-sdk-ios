@@ -90,6 +90,10 @@ NSString * const U_4G           = @"4G";
     
     if ([deviceModel isEqualToString:@"iPhone10,3"])    return @"iPhone X";
     if ([deviceModel isEqualToString:@"iPhone10,6"])    return @"iPhone X";
+    if ([deviceModel isEqualToString:@"iPhone11,8"])    return @"iPhone XR";
+    if ([deviceModel isEqualToString:@"iPhone11,2"])    return @"iPhone XS";
+    if ([deviceModel isEqualToString:@"iPhone11,4"])    return @"iPhone XS Max";
+    if ([deviceModel isEqualToString:@"iPhone11,6"])    return @"iPhone XS Max";
     
     if ([deviceModel isEqualToString:@"iPhone5,1"])    return @"iPhone 5";
     if ([deviceModel isEqualToString:@"iPhone5,2"])    return @"iPhone 5";

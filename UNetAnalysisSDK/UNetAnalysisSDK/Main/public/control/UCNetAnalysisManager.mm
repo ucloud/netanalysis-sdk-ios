@@ -7,8 +7,12 @@
 //
 
 #import "UCNetAnalysisManager.h"
+#import "UNetAnalysisConst.h"
 #import "UCNetAnalysis.h"
 #import "UNetTools.h"
+#import "log4cplus.h"
+
+
 
 @implementation UCNetAnalysisManager
 
@@ -38,23 +42,32 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     [[UCNetAnalysis shareInstance] settingSDKLogLevel:logLevel];
 }
 
-- (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey publicToken:(NSString * _Nonnull)publickToken completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
+- (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey
+                    publicToken:(NSString * _Nonnull)publickToken
+                completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
 {
+    if (!completeHandler) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:@"no UCNetRegisterSdkCompleteHandler"
+                                     userInfo:nil];
+        return;
+    }
     NSString *errorInfo = nil;
     if ([UNetTools un_isEmpty:appkey]) {
         errorInfo = @"no APPKEY";
     }
-    if ([UNetTools un_isEmpty:publickToken]) {
+    else if ([UNetTools un_isEmpty:publickToken]) {
         errorInfo = @"no PUBLIC TOKEN";
     }
-    if (!completeHandler) {
-        errorInfo = @"no UCNetRegisterSdkCompleteHandler";
-    }
+//    else if(optReportField && [UCOptReportField validOptReportField:optReportField] ){
+//        errorInfo = [UCOptReportField validOptReportField:optReportField];
+//    }
     if (errorInfo) {
+        log4cplus_warn("UNetSDK", "regist sdk error , error info->%s",[errorInfo UTF8String]);
         completeHandler([UCError sysErrorWithInvalidArgument:errorInfo]);
         return;
     }
-    int res = [[UCNetAnalysis shareInstance] registSdkWithAppKey:appkey publicToken:publickToken];
+    int res = [[UCNetAnalysis shareInstance] registSdkWithAppKey:appkey publicToken:publickToken optReportField:nil];
     if (res == 0) {
         completeHandler(nil);
     }
@@ -74,7 +87,6 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
         return;
     }
     [[UCNetAnalysis shareInstance] manualDiagNetStatus:completeHandler];
-    
 }
 
 @end
