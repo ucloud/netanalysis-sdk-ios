@@ -22,7 +22,9 @@
     [[UCNetAnalysisManager shareInstance] uNetSettingSDKLogLevel:UCNetSDKLogLevel_DEBUG];  // set log level
     
     // appkey和rsa公钥需要从ucloud控制台获取，或者联系技术支持获取
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:@"你的appkey" publicToken:@"你的rsa公钥" completeHandler:^(UCError * _Nullable error) {
+    NSString *appKey = @""; //你的appKey
+    NSString *appToken = @""; // 你的App公钥
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable error) {
         if (error == nil) {
             NSLog(@"regist UNetAnalysisSDK success...");
             NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // 此处填入你要手动诊断的网络地址

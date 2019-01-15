@@ -18,7 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         UCNetAnalysisManager.shareInstance().uNetSettingSDKLogLevel(UCNetSDKLogLevel_DEBUG)
-        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey: "你的appkey", publicToken: "你的rsa公钥") { (error) in
+        
+        // appkey和rsa公钥需要从ucloud控制台获取，或者联系技术支持获取
+        let appKey = ""; //你的appKey
+        let appToken = ""; // 你的App公钥
+        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey: appKey, publicToken: appToken) { (error) in
             if (error == nil){
                 print("Regist UNetAnalysisSDK success..")
                 let customerIpList = ["220.181.112.244","221.230.143.58"]  // 此处填入你要手动诊断的网络地址

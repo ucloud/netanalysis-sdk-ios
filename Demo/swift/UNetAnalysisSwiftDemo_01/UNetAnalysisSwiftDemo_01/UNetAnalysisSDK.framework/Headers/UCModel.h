@@ -146,4 +146,88 @@ extern NSString *const U_4G;
 - (instancetype)initUIpPingResultWithIp:(NSString *)ip loss:(int)loss delay:(float)delay;
 @end
 
+
+/**
+ 这是`NSObject`的一个子类。 该类包含手动诊断网络的结果，例如: app信息，手机信息，app网络信息等。
+ */
+@interface UCManualNetDiagResult : NSObject
+
+/**
+ @brief 应用信息
+ @discussion 例如： app版本，app名称，app的bundleID 等
+ */
+@property (nonatomic,strong) UCAppInfo       *appInfo;
+
+/**
+ @brief 手机信息
+ @discussion 例如： 设备型号，操作系统版本
+ */
+@property (nonatomic,strong) UCDeviceInfo    *deviceInfo;
+
+/**
+ @brief 应用网络信息
+ @discussion 应用的网络信息， 例如： 网络类型，公网IP等
+ */
+@property (nonatomic,strong) UCAppNetInfo    *appNetInfo;         // The app net info. eg: net type,public ip,etc..
+
+/**
+ @brief 用户服务地址诊断结果
+ @discussion 对用户设置的服务地址列表的ping的结果。详情可查看 `UCIpPingResult`
+ */
+@property (nonatomic,strong) NSMutableArray<UCIpPingResult *> *pingInfo;
+
+@end
+
+
+
+/**
+ `NSObject`的子类。该类定义的是用户自定义上报的字段。
+ */
+@interface UCOptReportField : NSObject
+
+/**
+ @brief 上报字段对应的key(规则：长度最大为20且不能包含半角逗号和等号)
+ */
+@property (nonatomic,strong) NSString *key;
+
+/**
+ @brief 上报字段的key所对应的内容(规则：长度最大为90且不能包含半角逗号和等号)
+ */
+@property (nonatomic,strong) NSString *value;
+
+/**
+ @brief 实例化上报字段.
+ 
+ @discussion 该字段是用户自定义的上报字段，SDK把尊重用户隐私看为重中之重，所以请务必不要上传带有用户隐私的信息，包括但不局限于：用户姓名，手机号，
+ 身份证号等用户个人信息以及设备的`device id`等设备唯一id信息。除此之外还要注意上报字段的命名规则(key&value命名规则)：
+ 
+ * key: 长度最大为20
+ * value: 长度最大为90
+ * 两者都不能包含半角逗号和等号
+
+ @param key 上报字段对应的key，最大长度为20且不能包含半角逗号和等号
+ @param value 报字段的key所对应的内容，最大长度为90且不能包含半角逗号和等号
+ @return 上报字段实例
+ */
++ (instancetype)instanceWithKey:(NSString *)key andValue:(NSString *)value;
+
+
+/**
+ @brief 校验`UCOptReportField`对象(内部使用)
+
+ @param field `UCOptReportField`对象
+ @return 如果内容非法，则返回非法信息；如果内容合法，则返回空
+ */
++ (NSString *)validOptReportField:(UCOptReportField *)field;
+
+/**
+ @brief 转化为key:value 格式的字符串 (内部使用)
+
+ @return key:value 字符串
+ */
+- (NSString *)convertToKeyValueStr;
+
+@end
+
+
 NS_ASSUME_NONNULL_END

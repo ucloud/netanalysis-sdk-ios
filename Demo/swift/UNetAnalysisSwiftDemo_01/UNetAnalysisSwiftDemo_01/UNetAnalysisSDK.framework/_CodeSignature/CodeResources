@@ -8,21 +8,17 @@
 		<data>
 		vN3203BSBK0g2cn1icHJSBcKIsQ=
 		</data>
-		<key>Headers/UCManualNetDiagResult.h</key>
-		<data>
-		kSDnjqir+fuM5G4B2TY/PKLsjJQ=
-		</data>
 		<key>Headers/UCModel.h</key>
 		<data>
-		koXlEqeQLxsXsJAddwvLbB1CKmg=
+		GCYJYrGpSB4E0jylhhFBsTYxvPI=
 		</data>
 		<key>Headers/UCNetAnalysisManager.h</key>
 		<data>
-		VbmDWErVv2bsvAF8LIn+S0YWkkU=
+		q3vfF1pFDmZSiPS50KgDoqsCGOA=
 		</data>
 		<key>Headers/UNetAnalysisSDK.h</key>
 		<data>
-		u0UwUXp1m1mZRCFqWaD52Ko/H0A=
+		ME8nnSpiOE83Kx7twl8swjaTz4M=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -46,48 +42,37 @@
 			yZaZCKBRnQIEqkNE//TKHSuYiFFvHCAodo8BRvz4vTc=
 			</data>
 		</dict>
-		<key>Headers/UCManualNetDiagResult.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			kSDnjqir+fuM5G4B2TY/PKLsjJQ=
-			</data>
-			<key>hash2</key>
-			<data>
-			yEnV+EX2gHTW+Jck+VflzbsArhqEsQuRX1rGvzR9C30=
-			</data>
-		</dict>
 		<key>Headers/UCModel.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			koXlEqeQLxsXsJAddwvLbB1CKmg=
+			GCYJYrGpSB4E0jylhhFBsTYxvPI=
 			</data>
 			<key>hash2</key>
 			<data>
-			Un5IgF1pjLxV96ahj3nR6a3FmcFzc2RcTF1KvXmbBxI=
+			+IG+bUMPaSYNhv2hOZdZIJMOWfiMMeUvbyFG/D0BQSc=
 			</data>
 		</dict>
 		<key>Headers/UCNetAnalysisManager.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			VbmDWErVv2bsvAF8LIn+S0YWkkU=
+			q3vfF1pFDmZSiPS50KgDoqsCGOA=
 			</data>
 			<key>hash2</key>
 			<data>
-			I1VLMYp78SITvezrKbTN6mBXf44MmcmPExzr9EVQtMk=
+			Waknd9pgcD2IB31gOys31msJCs12pi+mgxSXZM89IYU=
 			</data>
 		</dict>
 		<key>Headers/UNetAnalysisSDK.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			u0UwUXp1m1mZRCFqWaD52Ko/H0A=
+			ME8nnSpiOE83Kx7twl8swjaTz4M=
 			</data>
 			<key>hash2</key>
 			<data>
-			wpOSx4vflH96eZE2AB82RRLl1mHmdZu/0BOlTyY+yQE=
+			jpd/+O/zZ2gz+t70KO+IUWRAqRF9QTD+a36PFpQHJMg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
