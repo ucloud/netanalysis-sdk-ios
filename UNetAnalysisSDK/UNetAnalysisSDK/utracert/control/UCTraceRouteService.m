@@ -86,10 +86,18 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
             if (tracertResModel.ip) {
                 routeIp = tracertResModel.ip;
                 
+                int validToute = 0;
                 for (int m = 0; m < kTracertSendIcmpPacketTimes; m++) {
+                    validToute++;
                     avgDelay += tracertResModel.durations[m] *1000;
+                    if (tracertResModel.durations[m] == 0) {
+                        validToute--;
+                    }
                 }
-                avgDelay = avgDelay/kTracertSendIcmpPacketTimes;
+                if (validToute) {
+                    avgDelay = avgDelay/validToute;
+                }
+                
             }
             
             URouteReplyModel *routeReplay = [URouteReplyModel uRouteReplayModelWithDict:@{@"route_ip":routeIp, @"avgDelay":[NSNumber numberWithFloat:avgDelay]}];
