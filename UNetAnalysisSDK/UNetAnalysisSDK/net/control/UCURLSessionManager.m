@@ -60,11 +60,6 @@ static dispatch_group_t url_session_manager_completion_group() {
     return queueGroup;
 }
 
-typedef NSURL * (^AFURLSessionDownloadTaskDidFinishDownloadingBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location);
-typedef void (^AFURLSessionDownloadTaskDidWriteDataBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
-typedef void (^AFURLSessionDownloadTaskDidResumeBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t fileOffset, int64_t expectedTotalBytes);
-typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
-
 typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id responseObject, NSError *error);
 @interface UCURLSessionManagerTaskDelegate: NSObject <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 @property (nonatomic, weak) UCURLSessionManager *manager;
@@ -218,16 +213,6 @@ didReceiveResponse:(NSURLResponse *)response
 {
     if (completionHandler) {
         completionHandler(NSURLSessionResponseAllow);
-    }
-}
-
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
-didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask
-{
-    UCURLSessionManagerTaskDelegate *delegate  = [self delegateForTask:dataTask];
-    if (delegate) {
-        [self removeDelegateForTask:dataTask];
-        [self setDelegate:delegate forTask:downloadTask];
     }
 }
 

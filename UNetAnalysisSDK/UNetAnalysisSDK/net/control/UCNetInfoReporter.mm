@@ -192,7 +192,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         }
         
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
-        NSString *ip_info_rsa = [UCRSA encryptString:[self.ipInfoModel objConvertToReportStr] publicKey:self.appSecret];
+        
+        NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
+        NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
         NSDictionary *dict_data = @{@"action":@"ping",
                                     @"app_key":self.appKey,
                                     @"ping_data":[uReportPingModel objConvertToReportDict],
@@ -250,7 +252,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
             tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
         }
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
-        NSString *ip_info_rsa = [UCRSA encryptString:[self.ipInfoModel objConvertToReportStr] publicKey:self.appSecret];
+        
+        NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
+        NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
         NSDictionary *dict_data = @{@"action":@"traceroute",
                                     @"app_key":self.appKey,
                                     @"traceroute_data":[uReportTracertModel objConvertToReportDict],
