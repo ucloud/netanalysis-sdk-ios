@@ -11,50 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- `NSObject`的子类。 该类定义的是设备信息，具体包括： 操作系统版本，屏幕分辨率，设备型号
- */
-@interface UCDeviceInfo : NSObject
-
-/**
- @brief 操作系统版本
- */
-@property (nonatomic,readonly) NSString *osVersion;
-
-/**
- @brief 屏幕分辨率
- */
-@property (nonatomic,readonly) NSString *screenResolution;
-
-/**
- @brief 设备型号
- */
-@property (nonatomic,readonly) NSString *deviceModelName;
-@end
-
-
-/**
- `NSObject`的子类。 该类定义的是APP信息，具体包括： app名称，app的bundleID，app版本
- */
-@interface UCAppInfo : NSObject
-
-/**
- @brief app名称
- */
-@property (nonatomic,readonly) NSString *appName;
-
-/**
- @brief app的bundleID
- */
-@property (nonatomic,readonly) NSString *appBundleId;
-
-/**
- @brief app版本
- */
-@property (nonatomic,readonly) NSString *appVersion;
-@end
-
-
-/**
  *  The network type is NO NETWORK .
  */
 extern NSString *const U_NO_NETWORK;
@@ -104,24 +60,6 @@ extern NSString *const U_HRPD;
  */
 extern NSString *const U_4G;
 
-/**
- `NSObject`的子类。 该类定义的是APP网络信息，具体包括： 手机公网IP，网络类型
- */
-@interface UCAppNetInfo : NSObject
-
-/**
- @brief 手机公网IP
- */
-@property (nonatomic,readonly) NSString *publicIp;
-
-/**
- @brief 手机网络类型
- */
-@property (nonatomic,readonly) NSString *networkType;
-
-- (instancetype)initUAppNetInfoWithPublicIp:(NSString *)publicIp networkType:(NSString *)type;
-@end
-
 
 /**
  `NSObject`的子类。 该类定义的是对IP地址诊断(`ping`)的结果，具体包括：目的ip，平均丢包率，平均延迟
@@ -153,79 +91,84 @@ extern NSString *const U_4G;
 @interface UCManualNetDiagResult : NSObject
 
 /**
- @brief 应用信息
- @discussion 例如： app版本，app名称，app的bundleID 等
+ @brief 手机网络类型
  */
-@property (nonatomic,strong) UCAppInfo       *appInfo;
-
-/**
- @brief 手机信息
- @discussion 例如： 设备型号，操作系统版本
- */
-@property (nonatomic,strong) UCDeviceInfo    *deviceInfo;
-
-/**
- @brief 应用网络信息
- @discussion 应用的网络信息， 例如： 网络类型，公网IP等
- */
-@property (nonatomic,strong) UCAppNetInfo    *appNetInfo;         // The app net info. eg: net type,public ip,etc..
+@property (nonatomic,readonly) NSString *networkType;
 
 /**
  @brief 用户服务地址诊断结果
  @discussion 对用户设置的服务地址列表的ping的结果。详情可查看 `UCIpPingResult`
  */
-@property (nonatomic,strong) NSMutableArray<UCIpPingResult *> *pingInfo;
+@property (nonatomic,readonly) NSMutableArray<UCIpPingResult *> *pingInfo;
+
+
+/**
+ @brief 实例化手动诊断结果(内部使用)
+
+ @param pingRes 对用户设置的ip列表ping的结果
+ @return 手动诊断结果实例
+ */
++ (instancetype)instanceWithPingRes:(NSMutableArray *)pingRes;
 
 @end
 
 
-
 /**
- `NSObject`的子类。该类定义的是用户自定义上报的字段。
+  @brief 这是一个枚举定义，定义SDK错误类型
+
+ - UCErrorType_Sys: 非服务器错误，包括参数错误，逻辑业务错误等，可通过错误的具体描述获知错误原因
+ - UCErrorType_Server: 服务器错误，可通过错误的具体描述获取错误原因
  */
-@interface UCOptReportField : NSObject
+typedef NS_ENUM(NSUInteger,UCErrorType)
+{
+    UCErrorType_Sys,
+    UCErrorType_Server
+};
+
+@interface UCError : NSObject
 
 /**
- @brief 上报字段对应的key(规则：长度最大为20且不能包含半角逗号和等号)
+ *  错误类型，请参考`UCErrorType`
  */
-@property (nonatomic,strong) NSString *key;
+@property (nonatomic,readonly)  UCErrorType type;
 
 /**
- @brief 上报字段的key所对应的内容(规则：长度最大为90且不能包含半角逗号和等号)
+ *  系统错误信息
  */
-@property (nonatomic,strong) NSString *value;
+@property (nonatomic,readonly)  NSError     *error;
 
 /**
- @brief 实例化上报字段.
+ @brief 构造错误(参数错误，内部使用)
  
- @discussion 该字段是用户自定义的上报字段，SDK把尊重用户隐私看为重中之重，所以请务必不要上传带有用户隐私的信息，包括但不局限于：用户姓名，手机号，
- 身份证号等用户个人信息以及设备的`device id`等设备唯一id信息。除此之外还要注意上报字段的命名规则(key&value命名规则)：
+ @param desc 错误信息
+ @return 错误实例
+ */
++ (instancetype)sysErrorWithInvalidArgument:(NSString *)desc;
+
+/**
+ @brief 构造错误(容器中的元素非法，内部使用)
  
- * key: 长度最大为20
- * value: 长度最大为90
- * 两者都不能包含半角逗号和等号
-
- @param key 上报字段对应的key，最大长度为20且不能包含半角逗号和等号
- @param value 报字段的key所对应的内容，最大长度为90且不能包含半角逗号和等号
- @return 上报字段实例
+ @param desc 错误描述
+ @return 错误实例
  */
-+ (instancetype)instanceWithKey:(NSString *)key andValue:(NSString *)value;
-
++ (instancetype)sysErrorWithInvalidElements:(NSString *)desc;
 
 /**
- @brief 校验`UCOptReportField`对象(内部使用)
-
- @param field `UCOptReportField`对象
- @return 如果内容非法，则返回非法信息；如果内容合法，则返回空
+ @brief 构造错误(调用SDK中的方法时，条件不满足。内部使用)
+ 
+ @param desc 错误描述
+ @return 错误实例
  */
-+ (NSString *)validOptReportField:(UCOptReportField *)field;
++ (instancetype)sysErrorWithInvalidCondition:(NSString *)desc;
 
 /**
- @brief 转化为key:value 格式的字符串 (内部使用)
-
- @return key:value 字符串
+ 构造错误
+ 
+ @param error 系统错误实例(内部使用)
+ @return 错误实例
  */
-- (NSString *)convertToKeyValueStr;
++ (instancetype)sysErrorWithError:(NSError *)error;
+
 
 @end
 

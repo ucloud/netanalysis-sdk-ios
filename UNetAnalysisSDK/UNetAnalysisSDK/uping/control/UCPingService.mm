@@ -91,7 +91,7 @@ static UCPingService *ucPingservice_instance = NULL;
             log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
         }
         
-        if (pingItem.status == UCloudPingStatusFinished) {
+        if (pingItem.status == UCPingStatus_Finish) {
             NSArray *pingItems = [self.pingResDic objectForKey:host];
             NSDictionary *dict = [UPingResModel pingResultWithPingItems:pingItems];
 //            NSLog(@"dict----res:%@, pingRes:%@",dict,self.pingResDic);
@@ -136,7 +136,7 @@ static UCPingService *ucPingservice_instance = NULL;
     [self.delegate pingFinishedWithUCPingService:self];
 }
 
-- (void)pingResultWithUCPing:(UCPing *)ucPing pingResult:(UPingResModel *)pingRes pingStatus:(UCloudPingStatus)status
+- (void)pingResultWithUCPing:(UCPing *)ucPing pingResult:(UPingResModel *)pingRes pingStatus:(UCPingStatus)status
 {
     @try {
         [self addPingResToPingResContainer:pingRes andHost:pingRes.IPAddress];

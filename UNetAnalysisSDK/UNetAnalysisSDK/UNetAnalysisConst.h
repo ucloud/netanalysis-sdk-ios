@@ -20,6 +20,7 @@
 #define     U_Get_Public_Ip_Url   @"https://net-trace.ucloud.cn:8098/v1/ipip"   //get public ip info interface
 #define     U_Get_UCloud_iplist_URL   @"https://net-trace.ucloud.cn:8000/api/iplist/getpinglist/"  // get ucloud ip list interface
 
+
 /***********      Global define       ***********/
 #define      UCNotification       [NSNotificationCenter defaultCenter]
 #define      UCUserDefaults       [NSUserDefaults standardUserDefaults]

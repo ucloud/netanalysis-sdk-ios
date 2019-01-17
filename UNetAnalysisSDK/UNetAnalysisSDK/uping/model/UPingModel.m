@@ -18,6 +18,7 @@
         self.ttl   = [dict[@"ttl"] intValue];
         self.src_ip = dict[@"src_ip"];
         self.dst_ip = dict[@"dst_ip"];
+        self.beginTime = [dict[@"beginTime"] integerValue];
     }
     return self;
 }
@@ -61,10 +62,11 @@
     __block NSInteger receivedCount = 0, allCount = 0;
     __block NSInteger ttlSum = 0;
     __block double    timeSum = 0;
+    NSInteger beginTime = [(UPingResModel *)[pingItems objectAtIndex:0] beginTime];
     [pingItems enumerateObjectsUsingBlock:^(UPingResModel *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.status != UCloudPingStatusFinished && obj.status != UCloudPingStatusError) {
+        if (obj.status != UCPingStatus_Finish && obj.status != UCPingStatus_Error) {
             allCount ++;
-            if (obj.status == UCloudPingStatusDidReceivePacket) {
+            if (obj.status == UCPingStatus_ReceivePacket) {
                 receivedCount ++;
                 ttlSum += obj.timeToLive;
                 timeSum += obj.timeMilliseconds;
@@ -89,7 +91,7 @@
     
     NSDictionary *dict = NULL;
     @try {
-        dict = @{@"src_ip":address,@"dst_ip":dst, @"loss":[NSNumber numberWithFloat:lossPercent],@"delay":[NSNumber  numberWithDouble:avgTime],@"ttl":[NSNumber numberWithLong:avgTTL]};
+        dict = @{@"src_ip":address,@"dst_ip":dst, @"loss":[NSNumber numberWithFloat:lossPercent],@"delay":[NSNumber  numberWithDouble:avgTime],@"ttl":[NSNumber numberWithLong:avgTTL],@"beginTime":[NSNumber numberWithInteger:beginTime]};
     } @catch (NSException *exception) {
         NSLog(@"%s, %@",__func__,exception.description);
     }

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy)   NSString *src_ip;
 @property (nonatomic,copy)   NSString *dst_ip;
 
+@property (nonatomic,assign) NSInteger beginTime;
+
 
 + (instancetype)uReporterPingmodelWithDict:(NSDictionary *)dict;
 - (NSDictionary *)objConvertToReportDict;
@@ -25,14 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-typedef NS_ENUM(NSInteger, UCloudPingStatus) {
-    UCloudPingStatusDidStart,
-    UCloudPingStatusDidFailToSendPacket,
-    UCloudPingStatusDidReceivePacket,
-    UCloudPingStatusDidReceiveUnexpectedPacket,
-    UCloudPingStatusDidTimeout,
-    UCloudPingStatusError,
-    UCloudPingStatusFinished,
+typedef NS_ENUM(NSInteger, UCPingStatus) {
+    UCPingStatus_Start,
+    UCPingStatus_FailSendPacket,
+    UCPingStatus_ReceivePacket,
+    UCPingStatus_ReceiveUnexpectedPacket,
+    UCPingStatus_Timeout,
+    UCPingStatus_Error,
+    UCPingStatus_Finish,
 };
 
 @interface UPingResModel : NSObject
@@ -44,7 +46,9 @@ typedef NS_ENUM(NSInteger, UCloudPingStatus) {
 @property(nonatomic) NSInteger  timeToLive;
 @property(nonatomic) NSInteger   tracertCount;
 @property(nonatomic) NSInteger  ICMPSequence;
-@property(nonatomic) UCloudPingStatus status;
+@property(nonatomic) UCPingStatus status;
+
+@property (nonatomic,assign) NSInteger beginTime; // record start ping timestamp
 
 + (NSDictionary *)pingResultWithPingItems:(NSArray *)pingItems;
 

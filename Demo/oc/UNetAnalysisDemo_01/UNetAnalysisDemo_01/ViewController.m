@@ -20,12 +20,27 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self checkAppNetwork];
+}
+
 - (void)checkAppNetwork
 {
-    [[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes) {
+    [[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes, UCError * _Nullable ucError) {
+        if (ucError) {
+            if (ucError.type == UCErrorType_Sys) {
+                NSLog(@"error info: %@",ucError.error.description);
+            }else{
+                NSLog(@"error info: %@",ucError.error.description);
+            }
+            
+            return;
+        }
         
-       // your processing logic
-        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"netType:%@, pingInfo:%@ ",manualNetDiagRes.networkType,manualNetDiagRes.pingInfo);
+        });
     }];
 }
 

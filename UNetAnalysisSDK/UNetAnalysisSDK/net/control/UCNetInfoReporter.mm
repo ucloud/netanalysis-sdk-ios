@@ -16,12 +16,20 @@
 #import "UCRSA.h"
 #import "UCModel.h"
 
-typedef enum UCNetOperateType
+
+/**
+ @brief 枚举定义，定义网路请求的类型
+
+ - UCNetOperateType_GetIpInfo: 获取设备公网信息
+ - UCNetOperateType_GetIpList: 获取ucloud ip列表
+ - UCNetOperateType_DoReport: 对网络状况上报
+ */
+typedef NS_ENUM(NSUInteger,UCNetOperateType)
 {
-    UCNetOperateType_GetIpInfo = 0,
+    UCNetOperateType_GetIpInfo,
     UCNetOperateType_GetIpList,
     UCNetOperateType_DoReport
-}UFBucketOperateType;
+};
 
 @interface UCNetInfoReporter()
 
@@ -55,7 +63,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     return ucNetInfoReporter;
 }
 
-- (void)setAppKey:(NSString *)appKey publickToken:(NSString *)publicToken optReportField:(UCOptReportField * _Nullable)field
+- (void)setAppKey:(NSString *)appKey publickToken:(NSString *)publicToken optReportField:(NSString * _Nullable)field
 {
     _appKey = appKey;
     _appSecret = publicToken;
@@ -63,7 +71,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         log4cplus_debug("UNetSDK", "user opt field is nil..\n");
         return;
     }
-    self.userOptField = [field convertToKeyValueStr];
+    self.userOptField = [NSString stringWithFormat:@"opt_key=%@",field];
     log4cplus_debug("UNetSDK", "user opt field is: %s",[self.userOptField UTF8String]);
 }
 
@@ -80,7 +88,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 {
     NSURLSessionDataTask *dataTask = [self.urlSessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         if (error) {
-            log4cplus_warn("UNetSDK", "http request error ,error info->%s",[error.description UTF8String]);
+            log4cplus_warn("UNetSDK", "http request error ,error info->%s \n",[error.description UTF8String]);
             return;
         }
         
@@ -96,9 +104,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
             handler(nil);
             return;
         }
-        
-        switch (type) {
-            case UCNetOperateType_GetIpInfo:
+        try {
+            switch (type) {
+                case UCNetOperateType_GetIpInfo:
                 {
                     if (dict[@"data"] == nil) {
                         handler(nil);
@@ -109,29 +117,32 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                     handler(ipModel);
                 }
                     break;
-            case UCNetOperateType_GetIpList:
-            {
-                UNetIpListBean *ipListBean = [UNetIpListBean ipListBeanWithDict:dict];
-                if (ipListBean.meta.code != 200) {
-                    log4cplus_warn("UNetSDK", "get ulcoud ip list error , meta code:%ld ,error info:%s \n",(long)ipListBean.meta.code ,[ipListBean.meta.error UTF8String]);
-                    return;
+                case UCNetOperateType_GetIpList:
+                {
+                    UNetIpListBean *ipListBean = [UNetIpListBean ipListBeanWithDict:dict];
+                    if (ipListBean.meta.code != 200) {
+                        log4cplus_warn("UNetSDK", "get ulcoud ip list error , meta code:%ld ,error info:%s \n",(long)ipListBean.meta.code ,[ipListBean.meta.error UTF8String]);
+                        return;
+                    }
+                    self.reportServiceArray = ipListBean.data.url;
+                    handler(ipListBean);
                 }
-                self.reportServiceArray = ipListBean.data.url;
-                handler(ipListBean);
-            }
-                break;
-            case UCNetOperateType_DoReport:
-            {
-                UNetReportResponseBean *reportResponseBean = [UNetReportResponseBean reportResponseWithDict:dict];
-                if (reportResponseBean.meta.code == 200) {
-                    handler(reportResponseBean);
-                    return;
+                    break;
+                case UCNetOperateType_DoReport:
+                {
+                    UNetReportResponseBean *reportResponseBean = [UNetReportResponseBean reportResponseWithDict:dict];
+                    if (reportResponseBean.meta.code == 200) {
+                        handler(reportResponseBean);
+                        return;
+                    }
+                    handler(nil);
                 }
-                handler(nil);
+                    break;
             }
-                break;
-                    
+        } catch (NSException *exception) {
+            log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
         }
+        
     }];
     
      [dataTask resume];
@@ -168,15 +179,17 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 }
 
 #pragma mark- Get ucloud ip list
-- (void)uGetUHostListWithCompletionHandler:(UNetGetUHostListHandler)handler
+- (void)uGetUHostListWithIpInfoModel:(UIpInfoModel * _Nonnull)ipInfoModel completionHandler:(UNetGetUHostListHandler _Nonnull)handler
 {
-    NSDictionary *requestParam = @{@"app_key":self.appKey};
+    NSString *lat = ipInfoModel.latitude == nil ? @"" : ipInfoModel.latitude;
+    NSString *lon = ipInfoModel.longitude == nil ? @"" : ipInfoModel.longitude;
+    NSDictionary *requestParam = @{@"app_key":self.appKey,@"latitude":lat,@"longitude":lon};
     NSString *paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:requestParam options:0 error:nil] encoding:NSUTF8StringEncoding];
     [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:U_Get_UCloud_iplist_URL jsonParamStr:paramStr timeOut:10.0] type:UCNetOperateType_GetIpList handler:handler];
 }
 
 #pragma mark- report ping results
-- (void)uReportPingResultWithUReportPingModel:(UReportPingModel *)uReportPingModel
+- (void)uReportPingResultWithUReportPingModel:(UReportPingModel * _Nonnull)uReportPingModel destIpType:(int)type
 {
     if (self.ipInfoModel == NULL) {
         log4cplus_warn("UNetSDK", "reportPing, the device public ip info is null..\n");
@@ -185,14 +198,12 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     static int reportPingIndex = 0;
     NSString *paramJson = NULL;
     try {
-        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION];
+        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@,cus=%d",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION,type];
         
         if (self.userOptField) {
             tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
         }
-        
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
-        
         NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
         NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
         NSDictionary *dict_data = @{@"action":@"ping",
@@ -200,33 +211,33 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                     @"ping_data":[uReportPingModel objConvertToReportDict],
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
-                                    @"timestamp":[NSNumber numberWithInteger:[UCDateTool currentTimestamp]]
+                                    @"timestamp":[NSNumber numberWithInteger:uReportPingModel.beginTime]
                                     };
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
-//        log4cplus_debug("UNetSDK", "ReportPing , paramJson is : %s",[dataJson UTF8String]);
         NSData *data = [dataJson dataUsingEncoding:NSUTF8StringEncoding];
         NSString *strBase64 = [data base64EncodedStringWithOptions:0];
         NSDictionary *param = @{@"data":strBase64};
         paramJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:param options:0 error:nil] encoding:NSUTF8StringEncoding];
-        log4cplus_debug("UNetSDK", "ReportPing , param is : %s",[paramJson UTF8String]);
+        log4cplus_debug("UNetSDK", "ReportTracert, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);
+        log4cplus_debug("UNetSDK", "ReportPing , param is : %s",[dataJson UTF8String]);
     } catch (NSException *exception) {
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
     }
     [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportPingIndex] jsonParamStr:paramJson timeOut:10.0] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj) {
         if (obj) {
             UNetReportResponseBean *reportResponseBean = (UNetReportResponseBean *)obj;
-            log4cplus_debug("UNetSDK", "ReportPing , report success, dst_ip:%s, meta code:%ld , message:%s",[uReportPingModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String]);
+            log4cplus_debug("UNetSDK", "ReportPing , report success, dst_ip:%s, meta code:%ld , message:%s , line:%d",[uReportPingModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String],__LINE__);
             reportPingIndex = 0;
             return;
         }
-        log4cplus_warn("UNetSDK", "ReportPing, http request error..\n");
+
         if (self.reportServiceArray.count-1 > reportPingIndex) {
-            log4cplus_warn("UNetSDK", "ReportPing , %d time report failed , report the next service..\n",reportPingIndex);
             reportPingIndex++;
+            log4cplus_warn("UNetSDK", "ReportPing , %d time report failed , report the next service..\n",reportPingIndex);
             [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportPingIndex] jsonParamStr:paramJson timeOut:10.0] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj) {
                 if (obj) {
                     UNetReportResponseBean *reportResponseBean = (UNetReportResponseBean *)obj;
-                    log4cplus_debug("UNetSDK", "ReportPing , report success, dst_ip:%s, meta code:%ld , message:%s",[uReportPingModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String]);
+                    log4cplus_debug("UNetSDK", "ReportPing , report success, dst_ip:%s, meta code:%ld , message:%s , line:%d \n",[uReportPingModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String],__LINE__);
                     reportPingIndex = 0;
                     return;
                 }
@@ -238,7 +249,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 }
 
 #pragma mark- report tracert results
-- (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel
+- (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel destIpType:(int)type
 {
     if (self.ipInfoModel == NULL) {
         log4cplus_warn("UNetSDK", "reportTracert, the device public ip info is null..\n");
@@ -247,7 +258,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     static int reportTracertIndex = 0;
     NSString *paramJson = NULL;
     try {
-        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION];
+        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@,cus=%d",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION,type];
         if (self.userOptField) {
             tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
         }
@@ -260,14 +271,15 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                     @"traceroute_data":[uReportTracertModel objConvertToReportDict],
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
-                                    @"timestamp":[NSNumber numberWithInteger:[UCDateTool currentTimestamp]]};
+                                    @"timestamp":[NSNumber numberWithInteger:uReportTracertModel.beginTime]};
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
-//        log4cplus_debug("UNetSDK", "ReportTracert , paramJson is : %s",[dataJson UTF8String]);
+        log4cplus_debug("UNetSDK", "ReportTracert, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);
+        log4cplus_debug("UNetSDK", "ReportTracert , paramJson is : %s",[dataJson UTF8String]);
         NSData *data = [dataJson dataUsingEncoding:NSUTF8StringEncoding];
         NSString *strBase64 = [data base64EncodedStringWithOptions:0];
         NSDictionary *param = @{@"data":strBase64};
         paramJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:param options:0 error:nil] encoding:NSUTF8StringEncoding];
-        log4cplus_debug("UNetSDK", "ReportTracert , param is : %s",[paramJson UTF8String]);
+//        log4cplus_debug("UNetSDK", "ReportTracert , param is : %s",[paramJson UTF8String]);
     } catch (NSException *exception) {
          log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
     }
@@ -275,19 +287,18 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportTracertIndex] jsonParamStr:paramJson timeOut:10.0] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj) {
         if (obj) {
             UNetReportResponseBean *reportResponseBean = (UNetReportResponseBean *)obj;
-            log4cplus_debug("UNetSDK", "ReportTracert , report success, dst_ip:%s , meta code:%ld , message:%s",[uReportTracertModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String]);
+            log4cplus_debug("UNetSDK", "ReportTracert , report success, dst_ip:%s , meta code:%ld , message:%s , line:%d \n",[uReportTracertModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String],__LINE__);
             reportTracertIndex = 0;
             return;
         }
-        log4cplus_warn("UNetSDK", "ReportTracert, http request error..\n");
         
         if (self.reportServiceArray.count-1 > reportTracertIndex) {
-            log4cplus_warn("UNetSDK", "ReportTracert , %d time report failed , report the next service...\n",reportTracertIndex);
             reportTracertIndex++;
+            log4cplus_warn("UNetSDK", "ReportTracert , %d time report failed , report the next service...\n",reportTracertIndex);
             [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportTracertIndex] jsonParamStr:paramJson timeOut:10.0]  type:UCNetOperateType_DoReport handler:^(id  _Nullable obj) {
                 if (obj) {
                     UNetReportResponseBean *reportResponseBean = (UNetReportResponseBean *)obj;
-                    log4cplus_debug("UNetSDK", "ReportTracert , report success, dst_ip:%s , meta code:%ld , message:%s",[uReportTracertModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String]);
+                    log4cplus_debug("UNetSDK", "ReportTracert , report success, dst_ip:%s , meta code:%ld , message:%s ,line:%d \n",[uReportTracertModel.dst_ip UTF8String],(long)reportResponseBean.meta.code,[reportResponseBean.data.message UTF8String],__LINE__);
                     reportTracertIndex = 0;
                     return;
                 }

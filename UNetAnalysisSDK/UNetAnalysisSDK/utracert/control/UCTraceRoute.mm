@@ -9,13 +9,25 @@
 #import "UCTraceRoute.h"
 #import "UNetAnalysisConst.h"
 #include "log4cplus.h"
+#import "UNetQueue.h"
+#import "UCDateTool.h"
 
-typedef enum UNetRecTracertIcmpType{
-    UNetRecTracertIcmpType_None = 0,
-    UNetRecTracertIcmpType_noReply,
-    UNetRecTracertIcmpType_routeReceive,
-    UNetRecTracertIcmpType_Dest
-}UNetRecTracertIcmpType;
+
+/**
+ @brief 枚举定义，定义icmp包的状态
+
+ - UCTracertIcmpType_None: 无状态
+ - UCTracertIcmpType_NoReply: 路由节点无响应
+ - UCTracertIcmpType_Receive: 路由节点接收到了icmp包
+ - UCTracertIcmpType_Dest: 到达目的主机地址
+ */
+typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
+{
+    UCTracertIcmpType_None,
+    UCTracertIcmpType_NoReply,
+    UCTracertIcmpType_Receive,
+    UCTracertIcmpType_Dest
+};
 
 @interface UCTraceRoute()
 {
@@ -23,12 +35,11 @@ typedef enum UNetRecTracertIcmpType{
     struct sockaddr_in  remote_addr;   // server address
 }
 
-@property (nonatomic,strong) dispatch_queue_t tracert_sq;
 @property (nonatomic,strong) NSMutableDictionary *sendIcmpPacketDateDict;
 @property (nonatomic,strong) NSMutableArray *hostList;
 @property (atomic,assign)  int hostArrayIndex;
 @property (nonatomic,assign) BOOL isStopTracert;
-@property (nonatomic,assign) UNetRecTracertIcmpType lastRecTracertIcmpType;
+@property (nonatomic,assign) UCTracertIcmpType lastRecTracertIcmpType;
 @end
 
 @implementation UCTraceRoute
@@ -41,17 +52,9 @@ typedef enum UNetRecTracertIcmpType{
         _isStopTracert = NO;
         _hostList = [NSMutableArray array];
         _sendIcmpPacketDateDict = [NSMutableDictionary dictionary];
-        _lastRecTracertIcmpType = UNetRecTracertIcmpType_None;
+        _lastRecTracertIcmpType = UCTracertIcmpType_None;
     }
     return self;
-}
-
-- (dispatch_queue_t)tracert_sq
-{
-    if (!_tracert_sq) {
-        _tracert_sq = dispatch_queue_create("tracert_sq",DISPATCH_QUEUE_SERIAL);
-    }
-    return _tracert_sq;
 }
 
 - (void)stopTracert
@@ -126,10 +129,10 @@ typedef enum UNetRecTracertIcmpType{
     }
     self.hostArrayIndex = 0;
     
-    dispatch_async(self.tracert_sq, ^{
+    [UNetQueue unet_trace_async:^{
         [self settingUHostSocketAddressWithHost:self.hostList[self.hostArrayIndex]];
         [self startTracert:self->socket_client andRemoteAddr:self->remote_addr];
-    });
+    }];
 }
 
 - (void)startTracert:(int)socketClient andRemoteAddr:(struct sockaddr_in)remoteAddr
@@ -140,10 +143,10 @@ typedef enum UNetRecTracertIcmpType{
     
     int ttl = 1;
     int continuousLossPacketRoute = 0;
-    UNetRecTracertIcmpType rec = UNetRecTracertIcmpType_noReply;
+    UCTracertIcmpType rec = UCTracertIcmpType_NoReply;
     log4cplus_info("UNetTracert", "begin tracert ip: %s",[self.hostList[self.hostArrayIndex] UTF8String]);
     do {
-        rec = UNetRecTracertIcmpType_noReply;
+        rec = UCTracertIcmpType_NoReply;
         int setTtlRes = setsockopt(socketClient,
                                    IPPROTO_IP,
                                    IP_TTL,
@@ -164,21 +167,22 @@ typedef enum UNetRecTracertIcmpType{
             }
         }
         rec = [self receiverRemoteIpTracertRes:ttl];
-        if (self.lastRecTracertIcmpType == UNetRecTracertIcmpType_None) {
+        if (self.lastRecTracertIcmpType == UCTracertIcmpType_None) {
             self.lastRecTracertIcmpType = rec;
         }
         
-        if (rec == UNetRecTracertIcmpType_noReply){
+        if (rec == UCTracertIcmpType_NoReply){
             continuousLossPacketRoute++;
-            if (self.lastRecTracertIcmpType == UNetRecTracertIcmpType_noReply) {
+            if (self.lastRecTracertIcmpType == UCTracertIcmpType_NoReply) {
                 if (continuousLossPacketRoute == kTracertRouteCount_noRes) {
                     log4cplus_info("UNetTracert", "%d consecutive routes are not responding ,and end the tracert ip: %s\n",kTracertRouteCount_noRes,[self.hostList[self.hostArrayIndex] UTF8String]);
-                    rec = UNetRecTracertIcmpType_Dest;
-                    self.lastRecTracertIcmpType = UNetRecTracertIcmpType_None;
+                    rec = UCTracertIcmpType_Dest;
+                    self.lastRecTracertIcmpType = UCTracertIcmpType_None;
                     
                     UCTracerRouteResModel *record = [[UCTracerRouteResModel alloc] init:ttl+1 count:kTracertSendIcmpPacketTimes];
+                    record.beginTime = [UCDateTool currentTimestamp];
                     record.dstIp = self.hostList[self.hostArrayIndex];
-                    record.status = Enum_Traceroute_Status_finish;
+                    record.status = UCTracertStatus_Finish;
                     [self.delegate tracerouteWithUCTraceRoute:self tracertResult:record];
                 }
             }
@@ -189,9 +193,9 @@ typedef enum UNetRecTracertIcmpType{
         free(packet);
         usleep(500);
         
-    } while (++ttl <= kTracertMaxTTL && (rec == UNetRecTracertIcmpType_routeReceive || rec == UNetRecTracertIcmpType_noReply) && !self.isStopTracert);
+    } while (++ttl <= kTracertMaxTTL && (rec == UCTracertIcmpType_Receive || rec == UCTracertIcmpType_NoReply) && !self.isStopTracert);
     
-    if (rec == UNetRecTracertIcmpType_Dest) {
+    if (rec == UCTracertIcmpType_Dest) {
         log4cplus_info("UNetTracert", "done tracert , ip :%s",[self.hostList[self.hostArrayIndex] UTF8String]);
         self.hostArrayIndex++;
         
@@ -207,14 +211,15 @@ typedef enum UNetRecTracertIcmpType{
     }
 }
 
-- (UNetRecTracertIcmpType)receiverRemoteIpTracertRes:(int)ttl
+- (UCTracertIcmpType)receiverRemoteIpTracertRes:(int)ttl
 {
-    UNetRecTracertIcmpType res = UNetRecTracertIcmpType_routeReceive;
+    UCTracertIcmpType res = UCTracertIcmpType_Receive;
     char buff[200];
     socklen_t addrLen = sizeof(struct sockaddr_in);
     
     UCTracerRouteResModel *record = [[UCTracerRouteResModel alloc] init:ttl count:kTracertSendIcmpPacketTimes];
     record.dstIp = self.hostList[self.hostArrayIndex];
+    record.beginTime = [UCDateTool currentTimestamp];
     
     int tracert_recev_index = 0;
     int tracert_recev_route_index = 0;
@@ -224,7 +229,7 @@ typedef enum UNetRecTracertIcmpType{
         if ((int)resultLen < 0) {
             reacert_recev_route_timeout_index++;
             if (reacert_recev_route_timeout_index == kTracertSendIcmpPacketTimes) {
-                res = UNetRecTracertIcmpType_noReply;
+                res = UCTracertIcmpType_NoReply;
                 break;
             }
             continue;
@@ -268,12 +273,12 @@ typedef enum UNetRecTracertIcmpType{
                 
                 record.durations[tracert_recev_index] = duration;
                 record.ip = remoteAddress;
-                record.status = Enum_Traceroute_Status_finish;
+                record.status = UCTracertStatus_Finish;
 //                log4cplus_info("UNetTracert", "tracert %s , duration:%f",[remoteAddress UTF8String],duration*1000);
                 tracert_recev_index++;
                 if (tracert_recev_index == kTracertSendIcmpPacketTimes) {
                     close(socket_client);
-                    res = UNetRecTracertIcmpType_Dest;
+                    res = UCTracertIcmpType_Dest;
                     
                     break;
                 }

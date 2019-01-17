@@ -16,7 +16,7 @@
         _hop = hop;
         _durations = (NSTimeInterval*)calloc(count, sizeof(NSTimeInterval));
         _count = count;
-        _status = Enum_Traceroute_Status_doing;
+        _status = UCTracertStatus_Doing;
     }
     return self;
 }
@@ -110,6 +110,7 @@
     if (self = [super  init]) {
         self.route_ip = dict[@"route_ip"];
         self.avgDelay = [dict[@"avgDelay"] floatValue];
+        self.loss = [dict[@"loss"] intValue];
     }
     return self;
 }
@@ -123,7 +124,7 @@
 {
     NSDictionary *dict  = NULL;
     @try {
-        dict  = @{@"route_ip":self.route_ip,@"delay":@((int)self.avgDelay)};
+        dict  = @{@"route_ip":self.route_ip,@"delay":@((int)self.avgDelay),@"loss":@(self.loss)};
     } @catch (NSException *exception) {
         NSLog(@"%s,%@",__func__,exception.description);
     }
@@ -132,7 +133,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"route_ip:%@ , avgDelay:%@",self.route_ip,[NSString stringWithFormat:@"%.3fms",self.avgDelay]];
+    return [NSString stringWithFormat:@"route_ip:%@ , avgDelay:%@ , loss:%@" ,self.route_ip,[NSString stringWithFormat:@"%.3fms",self.avgDelay],[NSString stringWithFormat:@"%d",self.loss]];
 }
 @end
 

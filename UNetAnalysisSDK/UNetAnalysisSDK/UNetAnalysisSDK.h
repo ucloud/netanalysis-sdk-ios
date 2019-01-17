@@ -17,5 +17,4 @@ FOUNDATION_EXPORT const unsigned char UCloudNetAnalysisSDKVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <UCloudNetAnalysisSDK/PublicHeader.h>
 
 #import <UNetAnalysisSDK/UCNetAnalysisManager.h>
-#import <UNetAnalysisSDK/UCErrorModel.h>
 #import <UNetAnalysisSDK/UCModel.h>

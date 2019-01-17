@@ -15,8 +15,8 @@
 + (instancetype _Nonnull)shareInstance;
 - (int)registSdkWithAppKey:(NSString * _Nonnull)appkey
                publicToken:(NSString * _Nonnull)publicToken
-           optReportField:(UCOptReportField * _Nullable)field;
-- (void)settingSDKLogLevel:(UCNetSDKLogLevel)logLevel;
+           optReportField:(NSString * _Nullable)field;
+- (void)settingSDKLogLevel:(UCSDKLogLevel)logLevel;
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList;
 - (void)manualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
 @end

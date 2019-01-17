@@ -10,6 +10,8 @@
 #import "UNetAnalysisConst.h"
 #import "UCNetInfoReporter.h"
 #include "log4cplus.h"
+#import "UNetQueue.h"
+#import "UCDateTool.h"
 
 
 @interface UCPing()
@@ -19,7 +21,6 @@
 }
 @property (nonatomic,assign) BOOL isPing;
 
-@property (nonatomic,strong) NSThread *pingThread;
 @property (nonatomic,assign) BOOL isStopPingThread;
 @property (nonatomic,strong) NSMutableDictionary *sendPacketDateDict;
 @property (nonatomic,strong) NSMutableArray *hostList;
@@ -128,9 +129,9 @@
     }
     self.hostArrayIndex = 0;
     
-    _pingThread = [[NSThread alloc] initWithTarget:self selector:@selector(sendAndrecevPingPacket) object:nil];
-    [_pingThread setName:@"ping_thread"];
-    [_pingThread start];
+    [UNetQueue unet_ping_sync:^{
+        [self sendAndrecevPingPacket];
+    }];
 }
 
 - (void)sendAndrecevPingPacket
@@ -189,13 +190,10 @@
             free(packet);
             usleep(500);
             
-        } while (++index < 5);
+        } while (++index < 5 && !self.isStopPingThread);
     } catch (NSException *exception) {
         log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
     }
-    
-
-    
 }
 
 - (BOOL)receiverRemoteIpPingRes
@@ -218,7 +216,7 @@
             // 针对于一个新的ip，全部是timeout的情况，那么收到5个就开始ping下一个； 如果在ping一个ip的5个包中，其中第2个包以后开始timeout，那么针对于这个ip再timeout 3个包即开始下一个
 //            NSLog(@"ping ,rec ping error,bytesRead < 0，bytesRead:%d ,ping_recev_index:%d ,ping_timeout_index:%d",(int)bytesRead,ping_recev_index,ping_timeout_index);
             
-            [self reporterPingResWithSorceIp:self.hostList[self.hostArrayIndex] destinationIp:devicePublicIp ttl:0 timeMillSecond:0 seq:ping_timeout_index icmpId:0 dataSize:0 pingStatus:UCloudPingStatusDidTimeout];
+            [self reporterPingResWithSorceIp:self.hostList[self.hostArrayIndex] destinationIp:devicePublicIp ttl:0 timeMillSecond:0 seq:ping_timeout_index icmpId:0 dataSize:0 pingStatus:UCPingStatus_Timeout];
             
             if (ping_recev_index != 0 && ping_timeout_index == 0 ) {
                 ping_timeout_index = ping_recev_index;
@@ -227,7 +225,7 @@
             if (ping_timeout_index == 5) {
                 res = YES;
                 log4cplus_info("UNetPing", "done ping , ip:%s \n",[self.hostList[self.hostArrayIndex] UTF8String]);
-                [self reporterPingResWithSorceIp:self.hostList[self.hostArrayIndex] destinationIp:devicePublicIp ttl:0 timeMillSecond:0 seq:ping_timeout_index icmpId:0 dataSize:0 pingStatus:UCloudPingStatusFinished];
+                [self reporterPingResWithSorceIp:self.hostList[self.hostArrayIndex] destinationIp:devicePublicIp ttl:0 timeMillSecond:0 seq:ping_timeout_index icmpId:0 dataSize:0 pingStatus:UCPingStatus_Finish];
                 break;
             }
             
@@ -261,14 +259,14 @@
                 
                 
 //                log4cplus_info("UNetPing", "ping %s , receive icmp packet..\n",[self.hostList[self.hostArrayIndex] UTF8String]);
-                [self reporterPingResWithSorceIp:sorceIp destinationIp:destIp ttl:ttl timeMillSecond:duration*1000 seq:seq icmpId:OSSwapBigToHostInt16(icmpPtr->identifier) dataSize:size pingStatus:UCloudPingStatusDidReceivePacket];
+                [self reporterPingResWithSorceIp:sorceIp destinationIp:destIp ttl:ttl timeMillSecond:duration*1000 seq:seq icmpId:OSSwapBigToHostInt16(icmpPtr->identifier) dataSize:size pingStatus:UCPingStatus_ReceivePacket];
                 
                 
                 ping_recev_index++;
                 if (ping_recev_index == 5) {
                     
                     log4cplus_info("UNetPing", "done ping , ip:%s \n",[self.hostList[self.hostArrayIndex] UTF8String]);
-                    [self reporterPingResWithSorceIp:sorceIp destinationIp:destIp ttl:ttl timeMillSecond:duration*1000 seq:seq icmpId:OSSwapBigToHostInt16(icmpPtr->identifier) dataSize:size pingStatus:UCloudPingStatusFinished];
+                    [self reporterPingResWithSorceIp:sorceIp destinationIp:destIp ttl:ttl timeMillSecond:duration*1000 seq:seq icmpId:OSSwapBigToHostInt16(icmpPtr->identifier) dataSize:size pingStatus:UCPingStatus_Finish];
                     
                     close(socket_client);
                     res = YES;
@@ -284,15 +282,21 @@
     return res;
 }
 
-- (void)reporterPingResWithSorceIp:(NSString *)sorceIp destinationIp:(NSString *)destIp ttl:(int)ttl timeMillSecond:(double)timeMillSec seq:(int)seq icmpId:(int)icmpId dataSize:(int)size pingStatus:(UCloudPingStatus)status
+- (void)reporterPingResWithSorceIp:(NSString *)sorceIp destinationIp:(NSString *)destIp ttl:(int)ttl timeMillSecond:(double)timeMillSec seq:(int)seq icmpId:(int)icmpId dataSize:(int)size pingStatus:(UCPingStatus)status
 {
+    static NSInteger initBeginTime = 0;
+    if (initBeginTime == 0) {
+        initBeginTime = [UCDateTool currentTimestamp];
+    }
     UPingResModel *pingResModel = [[UPingResModel alloc] init];
     pingResModel.status = status;
     pingResModel.originalAddress = destIp;
     pingResModel.IPAddress = sorceIp;
-    
+    if (initBeginTime != 0) {
+        pingResModel.beginTime = initBeginTime;
+    }
     switch (status) {
-        case UCloudPingStatusDidReceivePacket:
+        case UCPingStatus_ReceivePacket:
         {
             pingResModel.ICMPSequence = seq;
             pingResModel.timeToLive = ttl;
@@ -300,12 +304,13 @@
             pingResModel.dateBytesLength = size;
         }
             break;
-        case UCloudPingStatusFinished:
+        case UCPingStatus_Finish:
         {
             pingResModel.ICMPSequence = 5;
+            initBeginTime = 0;
         }
             break;
-        case UCloudPingStatusDidTimeout:
+        case UCPingStatus_Timeout:
         {
             pingResModel.ICMPSequence = seq;
         }
@@ -315,9 +320,7 @@
             break;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate pingResultWithUCPing:self pingResult:pingResModel pingStatus:status];
-    });
+    [self.delegate pingResultWithUCPing:self pingResult:pingResModel pingStatus:status];
     
 }
 

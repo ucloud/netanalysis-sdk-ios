@@ -7,7 +7,6 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "UDeviceNetworkInfo.h"
 #import "UNetAnalysis.h"
 
 @interface UCloudNetAnalysisSDKTests : XCTestCase

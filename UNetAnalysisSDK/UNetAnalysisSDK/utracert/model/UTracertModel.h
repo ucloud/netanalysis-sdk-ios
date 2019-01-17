@@ -11,11 +11,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef enum Enum_Traceroute_Status
+
+/**
+ @brief 枚举定义，定义做tracert时的状态
+
+ - UCTracertStatus_Doing: 正在对当前路由节点做tracert
+ - UCTracertStatus_Finish: 已经完成了对当前路由节点的tracert
+ */
+typedef NS_ENUM(NSUInteger,UCTracertStatus)
 {
-    Enum_Traceroute_Status_doing = 0,
-    Enum_Traceroute_Status_finish
-}Enum_Traceroute_Status;
+    UCTracertStatus_Doing,
+    UCTracertStatus_Finish
+};
 
 
 @interface UCTracerRouteResModel : NSObject
@@ -24,8 +31,10 @@ typedef enum Enum_Traceroute_Status
 @property NSString* ip;
 @property NSTimeInterval* durations; //ms
 @property (readonly) NSInteger count; //ms
-@property (nonatomic,assign) Enum_Traceroute_Status status;
+@property (nonatomic,assign) UCTracertStatus status;
 @property (nonatomic,copy) NSString *dstIp;
+
+@property (nonatomic,assign) NSInteger beginTime;
 
 
 - (instancetype)init:(NSInteger)hop
@@ -38,6 +47,8 @@ typedef enum Enum_Traceroute_Status
 @property (nonatomic,copy) NSString *dst_ip;
 @property (nonatomic,strong) NSMutableArray *routeReplyArray;
 
+@property (nonatomic,assign) NSInteger beginTime;
+
 
 + (instancetype)uReportTracertModel:(NSDictionary *)dict;
 - (NSDictionary *)objConvertToReportDict;
@@ -46,6 +57,7 @@ typedef enum Enum_Traceroute_Status
 
 @interface URouteReplyModel : NSObject
 @property (nonatomic,copy) NSString *route_ip;
+@property (nonatomic,assign) int     loss;
 @property (nonatomic,assign) float   avgDelay;
 
 + (instancetype)uRouteReplayModelWithDict:(NSDictionary *)dict;

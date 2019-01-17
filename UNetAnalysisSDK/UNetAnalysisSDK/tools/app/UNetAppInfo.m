@@ -12,17 +12,6 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <sys/utsname.h>
 
-//static NSString * const U_NO_NETWORK   = @"NO NETWORK";
-//static NSString * const U_WIFI         = @"WIFI";
-//static NSString * const U_GPRS         = @"GPRS";
-//static NSString * const U_2G           = @"2G";
-//static NSString * const U_2_75G_EDGE   = @"2.75G EDGE";
-//static NSString * const U_3G           = @"3G";
-//static NSString * const U_3_5G_HSDPA   = @"3.5G HSDPA";
-//static NSString * const U_3_5G_HSUPA   = @"3.5G HSUPA";
-//static NSString * const U_HRPD         = @"HRPD";
-//static NSString * const U_4G           = @"4G";
-
 NSString * const U_NO_NETWORK   = @"NO NETWORK";
 NSString * const U_WIFI         = @"WIFI";
 NSString * const U_GPRS         = @"GPRS";

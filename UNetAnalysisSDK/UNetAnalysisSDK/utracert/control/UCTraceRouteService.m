@@ -46,7 +46,7 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
 
 + (instancetype)shareInstance
 {
-    if (ucTraceRouteService_instance == NULL) {
+    if (!ucTraceRouteService_instance) {
         ucTraceRouteService_instance = [[UCTraceRouteService alloc] init];
     }
     return ucTraceRouteService_instance;
@@ -67,6 +67,10 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
     if (_ucTraceroute) {
         _ucTraceroute = nil;
     }
+    if (_tracerouteResDict) {
+        _tracerouteResDict = nil;
+    }
+    
     _ucTraceroute = [[UCTraceRoute alloc] init];
     _ucTraceroute.delegate = self;
     [_ucTraceroute startTracerouteHosts:addressList];
@@ -83,6 +87,7 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
             UCTracerRouteResModel *tracertResModel = (UCTracerRouteResModel *)tracertItems[i];
             NSString *routeIp = @"*";
             float  avgDelay = 0;
+            int    recCount = kTracertSendIcmpPacketTimes;
             if (tracertResModel.ip) {
                 routeIp = tracertResModel.ip;
                 
@@ -92,15 +97,17 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
                     avgDelay += tracertResModel.durations[m] *1000;
                     if (tracertResModel.durations[m] == 0) {
                         validToute--;
+                        recCount--;
                     }
                 }
                 if (validToute) {
                     avgDelay = avgDelay/validToute;
                 }
-                
+            }else{
+                recCount = 0;
             }
-            
-            URouteReplyModel *routeReplay = [URouteReplyModel uRouteReplayModelWithDict:@{@"route_ip":routeIp, @"avgDelay":[NSNumber numberWithFloat:avgDelay]}];
+            float lossPercent = (kTracertSendIcmpPacketTimes - recCount)/MAX(1.0, kTracertSendIcmpPacketTimes) * 100;
+            URouteReplyModel *routeReplay = [URouteReplyModel uRouteReplayModelWithDict:@{@"route_ip":routeIp, @"avgDelay":[NSNumber numberWithFloat:avgDelay],@"loss":[NSNumber numberWithInt:(int)lossPercent]}];
             [routeReplayArray addObject:routeReplay];
         }
         
@@ -124,8 +131,9 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
         [self.tracerouteResDict setObject:tracertItems forKey:host];
 //        NSLog(@"%@",self.tracerouteResDict);
         
-        if (tracertRes.status == Enum_Traceroute_Status_finish) {
+        if (tracertRes.status == UCTracertStatus_Finish) {
             UReportTracertModel *reportTracertModel = [self constructTracertReportModelUseTracertRes:tracertRes andHost:host];
+            reportTracertModel.beginTime = tracertRes.beginTime;
             [self.delegate tracerouteResultWithUCTraceRouteService:self tracerouteResult:reportTracertModel];
 //            NSLog(@"%@",reportTracertModel);
             

@@ -11,68 +11,6 @@
 #import "UNetTools.h"
 #import <objc/runtime.h>
 
-
-@implementation UCDeviceInfo
-
-- (instancetype)init
-{
-    if (self = [super init]) {
-        _osVersion = [UNetAppInfo uIosVersion];
-        _screenResolution = [UNetAppInfo uScreenResolution];
-        _deviceModelName = [UNetAppInfo uDeviceModelName];
-    }
-    return self;
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"osVersion:%@, screenResolution:%@, deviceModel:%@",_osVersion,_screenResolution,_deviceModelName];
-}
-@end
-
-
-@implementation UCAppInfo
-
-- (instancetype)init
-{
-    if (self = [super init]) {
-        _appName = [UNetAppInfo uGetAppName];
-        _appBundleId = [UNetAppInfo uGetAppBundleId];
-        _appVersion = [UNetAppInfo uGetAppVersion];
-    }
-    
-    return self;
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"appName:%@, bundleId:%@, appVersion:%@",_appName,_appBundleId,_appVersion];
-}
-
-
-@end
-
-
-@implementation UCAppNetInfo
-
-- (instancetype)initUAppNetInfoWithPublicIp:(NSString *)publicIp networkType:(NSString *)type
-{
-    if (self = [super init]) {
-        _publicIp = publicIp;
-        _networkType = type;
-    }
-    return self;
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"publicIp:%@, networkType:%@",_publicIp,_networkType];
-}
-
-@end
-
-
-
 @implementation UCIpPingResult
 
 - (instancetype)initUIpPingResultWithIp:(NSString *)ip loss:(int)loss delay:(float)delay
@@ -93,57 +31,67 @@
 
 @implementation UCManualNetDiagResult
 
-@end
-
-
-@implementation UCOptReportField
-
-- (instancetype)initWithKey:(NSString *)key andValue:(NSString *)value
+- (instancetype)initWithPingRes:(NSMutableArray *)pingRes
 {
     if (self = [super init]) {
-        _key = key;
-        _value = value;
+        _networkType = [UNetAppInfo uGetNetworkType];
+        _pingInfo = pingRes;
     }
     return self;
 }
 
-+ (instancetype)instanceWithKey:(NSString *)key andValue:(NSString *)value
++ (instancetype)instanceWithPingRes:(NSMutableArray *)pingRes
 {
-    return [[self alloc] initWithKey:key andValue:value];
+    return [[self alloc] initWithPingRes:pingRes];
 }
 
-+ (NSString *)validOptReportField:(UCOptReportField *)field
-{
-    if ([[self class] validElement:field.key elementName:@"key"]) {
-        return [[self class] validElement:field.key elementName:@"key"];
-    }
-    if ([[self class] validElement:field.value elementName:@"value"]) {
-        return [[self class] validElement:field.value elementName:@"value"];
-    }
-    return nil;
-}
-
-+ (NSString *)validElement:(NSString *)element elementName:(NSString *)name
-{
-    int eleLength = 90;
-    if ([name isEqualToString:@"key"]) {
-        eleLength = 20;
-    }
-    if ([UNetTools un_isEmpty:element] ) {
-        return [NSString stringWithFormat:@"%@ 非法(不能为空或空串)",name];
-    }
-    if (element.length > eleLength || [element containsString:@","] || [element containsString:@"，"] || [element containsString:@"="]) {
-        return [NSString stringWithFormat:@"%@ 非法(长度最大为%d且不能包含半角逗号和等号)",name,eleLength];
-    }
-    return nil;
-}
-
-
-- (NSString *)convertToKeyValueStr
-{
-    return [NSString stringWithFormat:@"%@=%@",self.key,self.value];
-}
 @end
+
+
+
+
+static NSString * domain = @"ucloud.cn";
+static const int KUCInvalidArguments = -2;
+static const int KUCInvalidElements = -3; // instance array or dictionary error
+static const int KUCInvalidCondition = -4;
+
+@implementation UCError
+
+- (instancetype)init:(UCErrorType)type
+            sysError:(NSError *)error
+{
+    if (self = [super init]) {
+        _type = type;
+        _error = error;
+    }
+    return self;
+}
+
++ (instancetype)sysErrorWithInvalidArgument:(NSString *)desc
+{
+    NSError *error = [[NSError alloc] initWithDomain:domain code:KUCInvalidArguments userInfo:@{@"error":desc}];
+    return [[self alloc] init:UCErrorType_Sys sysError:error];
+}
+
++ (instancetype)sysErrorWithInvalidElements:(NSString *)desc
+{
+    NSError *error = [[NSError alloc] initWithDomain:domain code:KUCInvalidElements userInfo:@{@"error":desc}];
+    return [[self alloc] init:UCErrorType_Sys sysError:error];
+}
+
++ (instancetype)sysErrorWithInvalidCondition:(NSString *)desc
+{
+    NSError *error = [[NSError alloc] initWithDomain:domain code:KUCInvalidCondition userInfo:@{@"error":desc}];
+    return [[self alloc] init:UCErrorType_Sys sysError:error];
+}
+
++ (instancetype)sysErrorWithError:(NSError *)error
+{
+    return [[self alloc] init:UCErrorType_Sys sysError:error];
+}
+
+@end
+
 
 
 
