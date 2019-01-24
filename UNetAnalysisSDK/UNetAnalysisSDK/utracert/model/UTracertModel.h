@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UNetAnalysisConst.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,14 +63,6 @@ typedef NS_ENUM(NSUInteger,UCTracertStatus)
 - (NSDictionary *)objConvertToDict;
 @end
 
-
-@interface UCTracertUCHostsRecord : NSObject<NSCoding>
-@property (nonatomic,assign) int currentDays;        // days form 1970.1.1
-@property (nonatomic,copy) NSString *currentTracertIp;   // default is 127.0.0.1
-@property (nonatomic,assign) Enum_Tracert_UC_Hosts_State tracertUCHostsState;
-
-+ (instancetype)ucTracertUCHostsRecordWithDict:(NSDictionary *)dict;
-@end
 
 
 NS_ASSUME_NONNULL_END

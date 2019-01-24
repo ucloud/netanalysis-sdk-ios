@@ -3,9 +3,6 @@
 
 #endif //  WIN32
 
-#include <cstdio>
-#include <cstring>
-
 #if (defined (_MSC_VER) && _MSC_VER >= 1900) || (defined(__cplusplus) && __cplusplus>= 201103L)
 #define __STDC_FORMAT_MACROS
 #include <cinttypes>

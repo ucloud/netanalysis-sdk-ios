@@ -28,13 +28,6 @@
 /***********      Ping model       ***********/
 #define   KPingIcmpIdBeginNum     8000
 
-/***********      Tracert model       ***********/
-
-typedef enum  Enum_Tracert_UC_Hosts_State
-{
-    Enum_Tracert_UC_Hosts_State_Doing = 0,
-    Enum_Tracert_UC_Hosts_State_Complete
-}Enum_Tracert_UC_Hosts_State;
 
 #define KSDKVERSION   @"1.0.0"
 
