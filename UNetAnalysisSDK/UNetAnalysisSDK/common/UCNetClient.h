@@ -1,5 +1,5 @@
 //
-//  UCNetAnalysis.h
+//  UCNetClient.h
 //  UNetAnalysisSDK
 //
 //  Created by ethan on 26/07/2018.
@@ -10,7 +10,7 @@
 #import "UCNetAnalysisManager.h"
 
 
-@interface UCNetAnalysis : NSObject
+@interface UCNetClient : NSObject
 
 + (instancetype _Nonnull)shareInstance;
 - (int)registSdkWithAppKey:(NSString * _Nonnull)appkey

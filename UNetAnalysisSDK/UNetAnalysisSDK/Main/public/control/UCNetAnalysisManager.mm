@@ -8,7 +8,7 @@
 
 #import "UCNetAnalysisManager.h"
 #import "UNetAnalysisConst.h"
-#import "UCNetAnalysis.h"
+#import "UCNetClient.h"
 #import "UNetTools.h"
 #import "log4cplus.h"
 
@@ -39,7 +39,7 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetSettingSDKLogLevel:(UCSDKLogLevel)logLevel
 {
-    [[UCNetAnalysis shareInstance] settingSDKLogLevel:logLevel];
+    [[UCNetClient shareInstance] settingSDKLogLevel:logLevel];
 }
 
 + (BOOL)validRegistParamsWithAppKey:(NSString *)appkey
@@ -84,7 +84,7 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     if (![UCNetAnalysisManager validRegistParamsWithAppKey:appkey publicToken:publickToken optReportField:optField completeHandler:completeHandler]) {
         return;
     }
-    int res = [[UCNetAnalysis shareInstance] registSdkWithAppKey:appkey publicToken:publickToken optReportField:optField];
+    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey publicToken:publickToken optReportField:optField];
     if (res == 0) {
         completeHandler(nil);
     }
@@ -92,7 +92,7 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetSettingCustomerIpList:(NSArray *_Nullable)customerIpList
 {
-    [[UCNetAnalysis shareInstance] settingCustomerIpList:customerIpList];
+    [[UCNetClient shareInstance] settingCustomerIpList:customerIpList];
 }
 
 - (void)uNetManualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler
@@ -103,7 +103,7 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
                                      userInfo:nil];
         return;
     }
-    [[UCNetAnalysis shareInstance] manualDiagNetStatus:completeHandler];
+    [[UCNetClient shareInstance] manualDiagNetStatus:completeHandler];
 }
 
 @end

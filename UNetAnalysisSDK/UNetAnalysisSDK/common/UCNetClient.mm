@@ -1,12 +1,12 @@
 //
-//  UCNetAnalysis.m
+//  UCNetClient.m
 //  UNetAnalysisSDK
 //
 //  Created by ethan on 26/07/2018.
 //  Copyright © 2018 ucloud. All rights reserved.
 //
 
-#import "UCNetAnalysis.h"
+#import "UCNetClient.h"
 #import "UNetAnalysisConst.h"
 #import "UCNetInfoReporter.h"
 #import "UCServerResponseModel.h"
@@ -28,7 +28,7 @@ int UCLOUD_IOS_FLAG_INFO = 0x02;
 int UCLOUD_IOS_FLAG_DEBUG = 0x01;
 int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_IOS_FLAG_ERROR;
 
-@interface UCNetAnalysis()<UCPingServiceDelegate,UCTraceRouteServiceDelegate>
+@interface UCNetClient()<UCPingServiceDelegate,UCTraceRouteServiceDelegate>
 @property (nonatomic,copy) NSString *appName;
 @property (nonatomic,copy) NSArray *hostList;
 
@@ -50,27 +50,27 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 
 @end
 
-@implementation UCNetAnalysis
+@implementation UCNetClient
 
-static UCNetAnalysis *ucloudNetAnalysis_instance = nil;
+static UCNetClient *ucloudNetClient_instance = nil;
 
 + (instancetype)shareInstance
 {
-    static dispatch_once_t ucloudNetAnalysis_onceToken;
-    dispatch_once(&ucloudNetAnalysis_onceToken, ^{
-        ucloudNetAnalysis_instance = [[super allocWithZone:NULL] init];
+    static dispatch_once_t ucloudNetClient_onceToken;
+    dispatch_once(&ucloudNetClient_onceToken, ^{
+        ucloudNetClient_instance = [[super allocWithZone:NULL] init];
     });
-    return ucloudNetAnalysis_instance;
+    return ucloudNetClient_instance;
 }
 
 +(id)allocWithZone:(struct _NSZone *)zone
 {
-    return [UCNetAnalysis shareInstance];
+    return [UCNetClient shareInstance];
 }
 
 - (id)copyWithZone:(struct _NSZone *)zone
 {
-    return [UCNetAnalysis shareInstance];
+    return [UCNetClient shareInstance];
 }
 
 - (void)settingSDKLogLevel:(UCSDKLogLevel)logLevel
