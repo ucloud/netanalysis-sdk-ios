@@ -1,86 +1,149 @@
-# NetAnalysis SDK for iOS
+# UCloud NetAnalysis SDK for iOS
 
+## [README of Chinese](https://github.com/ucloud/netanalysis-sdk-ios/blob/master/README-CN.md)
 
-## 概要
+## Introduction
 
-本文档主要是`NetAnalysis SDK for iOS`的使用说明文档，下面我们从以下几个方面做介绍： 
+![](https://camo.githubusercontent.com/86885d3ee622f43456c8b890b56c3f05d6ec2c5e/687474703a2f2f636c692d75636c6f75642d6c6f676f2e73672e7566696c656f732e636f6d2f75636c6f75642e706e67)
 
-* 简要说明
-* 目录结构
-* 环境要求
-* 快速集成
-* 联系我们
+This document is intended to help users integrate with the `UCloud NetAnalysis SDK for iOS`. We will introduce the following aspects: 
 
-## 目录结构
+* About SDK repository
+* Environmental requirements
+* Installation
+* Function introduction
+* F&Q
+* Contact us
 
-该仓库主要包括`SDK`的源码以及示例项目，示例项目包含`Objective-C`和`Swift`两个版本。 
+## About SDK repository
 
-目录  | 说明
+The repository includes the source code of the `SDK` and sample projects. The sample project contains two versions of "Objective-C" and `Swift". 
+
+Directory  | Description
 ------------- | -------------
-`SDK/UNetAnalysisSDK` | SDK源码
-`SDK/documents/devDocuments.zip` | SDK开发文档(解压后可用浏览器查看)
-`SDK/Demo/oc/UNetAnalysisDemo_01` | Demo程序(`Objective-c`版本)
-`SDK/Demo/swift/UNetAnalysisSwiftDemo_01` | Demo程序(`Swift`版本)
+`SDK/UNetAnalysisSDK` | SDK source code
+`SDK/documents/devDocuments.zip` | SDK development documentation
+`SDK/Demo/oc/UNetAnalysisDemo_01` | sample project(`OC`)
+`SDK/Demo/swift/UNetAnalysisSwiftDemo_01` | sample project(`Swift`)
 
-## 环境要求
+## Environmental requirements
 
-* iOS系统版本>=8.3
+* iOS version >= 9.0
+* The customer of `UCloud` and opened `UCloud net analysis service`
 
-## 快速集成
 
-我们假设你有一些ios平台的开发经验，所以一些基本的名词解释在此不做说明。 
+### Xcode version
 
-### Xcode Version
-
-`UNetAnalysis SDK`的 `Deployment target`是8.3，所以你可以使用XCode6.3及其以上的版本。如果你使用的是XCode版本是XCode7.x或者是更高的版本，那么你首先要设置`Enable Bitcode`为`NO`: 
+The `Deployment target` of `UNetAnalysisSDK` is 9.0, so you can use XCode7.0 and above and first set `Enable Bitcode` to `NO`: 
 
 `Project`->`Build Setting`->`Build Operation`->`Enable Bitcode`
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fwj45s1t65j30n207s0ts.jpg)
 
-### 设置other link flags
+## Installation
 
-由于我们的库中利用了和c++相关的东西，所以需要设置支持c++链接。 库中也是用了分类，所以也要支持分类。
+### Pod dependency
 
-`Project`->`Build Setting`->`other link flags`
+Add the following dependencies to your project's `Podfile`:
 
-![](https://ws1.sinaimg.cn/large/006tNbRwly1fwpaep7ndoj30wn0biwfr.jpg)
+```
+pod 'UNetAnalysisSDK'
+```
 
+### Quick start
 
-### 导入SDK到项目中并初始化
+Import the SDK header file to the project:
 
-你可以下载`UNetAnalysisSDK.framework`从UCLoud官方网站。 
+```
+#import <UNetAnalysisSDK/UNetAnalysisSDK.h>
+```
 
-把`UNetAnalysisSDK.framework`拖入你的项目. 
+In addition, you need to add `-lc++`,`-ObjC`,`$(inherited)` to the project's `Build Setting`->`other link flags`. As shown below:
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fwj49vo9gij30s90cigod.jpg)
-
-
-接下来，你需要在`AppDelegate`中对`UNetAnalysisSDK`做初始化，进而就可以使用SDK中的各项功能了。 
-
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fwj4c0l824j30v30h5wiz.jpg)
-
-### 设置自己的服务地址
-
-在SDK中如果设置自己的服务地址，能利用sdk的检测功能做手动网络检测。按如下方法设置自己的服务地址：
-
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fwj4faujz9j30vc0ih0ym.jpg)
-
-### 手动网络检测
-
-在手动检测网络接口的回调中，可以获取你设置的服务列表的网络连通性分析结果，以及设备和app的各种信息。
-
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fwj4heolpyj30mq05074p.jpg)
+![](https://ws3.sinaimg.cn/large/006tNc79gy1fzipcaj0ecj30u80ee0ud.jpg)
 
 
-## 常见问题
+## Function introduction
 
-* `iOS 9+`强制使用`HTTPS`,使用`XCode`创建的项目默认不只支持`HTTP`，所以需要在`project build info` 添加`NSAppTransportSecurity`,在`NSAppTransportSecurity`下添加`NSAllowsArbitraryLoads`值设为`YES`,如下图。 
-	![](https://raw.githubusercontent.com/ufilesdk-dev/ufile-ios-sdk/master/documents/resources/readme_02.png)
+### Network diagnosis function
 
-## 联系我们
+* You can set the ip address of the app's server,which is used for network diagnosis
+* SDK will auto diagnose the network status and report it(Triggered when opening `APP` and network is switching[`WWAN`<=>`WIFI`])
+* You can manually diagnose network conditions
 
-* [UCloud官方网站: https://www.ucloud.cn/](https://www.ucloud.cn/)
-*  如有任何问题，欢迎提交[issue](https://github.com/ucloud/netanalysis-sdk-ios/issues)或联系我们的技术支持，我们会第一时间解决问题。
+### Other functions
+
+* Setting SDK log level
+
+
+### Code example
+
+#### Regist SDK
+
+Suppose you have already registered your app in the `UCloud Console` and opened the `UCloud net analysis service`, then you will get a pair of `AppKey` and `PublicToken (public key)`, when registering `SDK` need to use these parameters.
+
+We hope that you register as early as possible `SDK`, we recommend but not limited to register when the application is just started. You can register in the `- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions` method in `AppDelegate`. 
+
+```
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [[UCNetAnalysisManager shareInstance] uNetSettingSDKLogLevel:UCSDKLogLevel_DEBUG];  // setting log level
+    
+    // Appkey and public token can be obtained from the ucloud console, or contact our technical support
+    NSString *appKey = @""; //your AppKey
+    NSString *appToken = @""; // your publick token
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken optReportField:nil completeHandler:^(UCError * _Nullable ucError) {
+        if (ucError) {
+            NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
+            return;
+        }
+        NSLog(@"regist UNetAnalysisSDK success...");
+        NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // Fill in your application's main service address here (only support ip address, which is used for manual network diagnostics)
+        [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:customerIps];
+        
+    }];
+    
+    return YES;
+}
+```
+
+#### Manually diagnose network conditions
+
+When the mobile phone network is not good, you can call the manual network diagnostic interface of `SDK` in the network diagnosis of your application to get the current network status of your application, and the `SDK` will report the current network status.
+
+```
+[[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes, UCError * _Nullable ucError) {
+        if (ucError) {
+            if (ucError)
+                NSLog(@"Manual diagnosis error info: %@",ucError.error.description);
+            return;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"netType:%@, pingInfo:%@ ",manualNetDiagRes.networkType,manualNetDiagRes.pingInfo);
+        });
+    }];
+```
+
+For more detailed introduction of each interface, please refer to the declaration of each interface in `SDK` or `SDK development documentation`.
+
+
+### Respect User Privacy
+
+When registering `SDK`, there is an `optField` parameter. If you don't need to report the field, you can pass `nil` directly; if you need to report a field to better troubleshoot the network problem, then you can directly pass the report field.
+
+We regard user privacy as a top priority, so please do not upload information with user privacy, including but not limited to: user name, mobile phone number, ID number and other user personal information as well as device 'device id', etc. Device unique id information. In addition to this, the report field has a content verification rule (1. The maximum length is 100; 2. The half-width comma and the equal sign cannot be included).
+
+We will check the fields you report from time to time. If you do not follow the rules to report user privacy data, we will immediately stop your network data analysis service and delete the user privacy data you reported.
+
+
+
+## F&Q
+
+* The app on `iOS 9+` is forced to use `HTTPS`. Projects created with `XCode` do not support `HTTP` by default, so you need to add `NSAppTransportSecurity` in `project build info` and `NSAllowsArbitraryLoads` in `NSAppTransportSecurity`,The value is set to `YES`, as shown below:
+	![](https://ws2.sinaimg.cn/large/006tNc79gy1fzitnl2r6ej30ih0c5tb0.jpg)
+
+## Contact us
+
+* [UCloud official website](https://www.ucloud.cn/)
+* If you have any questions, please submit [issue](https://github.com/ucloud/netanalysis-sdk-ios/issues) or contact our technical support, we will solve the problem in the first time.
 
 
