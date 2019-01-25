@@ -1,6 +1,0 @@
-framework module UNetAnalysisSDK {
-  umbrella header "UNetAnalysisSDK.h"
-
-  export *
-  module * { export * }
-}

@@ -17,17 +17,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        UCNetAnalysisManager.shareInstance().uNetSettingSDKLogLevel(UCNetSDKLogLevel_DEBUG)
+        UCNetAnalysisManager.shareInstance().uNetSettingSDKLogLevel(UCSDKLogLevel.DEBUG) // 设置日志级别，推荐开发的时候使用DEBUG级别，发布的时候使用ERROR级别
         
         // appkey和rsa公钥需要从ucloud控制台获取，或者联系技术支持获取
-        let appKey = ""; //你的appKey
-        let appToken = ""; // 你的App公钥
-        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey: appKey, publicToken: appToken) { (error) in
-            if (error == nil){
-                print("Regist UNetAnalysisSDK success..")
-                let customerIpList = ["220.181.112.244","221.230.143.58"]  // 此处填入你要手动诊断的网络地址
-                UCNetAnalysisManager.shareInstance().uNetSettingCustomerIpList(customerIpList)
+        let appKey = "" //你的appKey
+        let appToken = "" // 你的App公钥
+        
+        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey:appKey, publicToken:appToken, optReportField: nil) { (ucError:UCError?) in
+            if (ucError != nil){
+                let error  = ucError!.error as NSError
+                print("regist UNetAnalysisSDK error , error info: %s",error.description)
+                return;
             }
+            
+            print("Regist UNetAnalysisSDK success..")
+            let customerIpList = ["220.181.112.244","221.230.143.58"]  // 此处填入你要手动诊断的网络地址
+            UCNetAnalysisManager.shareInstance().uNetSettingCustomerIpList(customerIpList)
         }
         
         return true

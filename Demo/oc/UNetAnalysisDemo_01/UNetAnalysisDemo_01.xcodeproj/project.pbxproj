@@ -15,7 +15,7 @@
 		AA6062DE218010B100F7B24B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6062DD218010B100F7B24B /* main.m */; };
 		AA6062E8218010B200F7B24B /* UNetAnalysisDemo_01Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6062E7218010B200F7B24B /* UNetAnalysisDemo_01Tests.m */; };
 		AA6062F3218010B200F7B24B /* UNetAnalysisDemo_01UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6062F2218010B200F7B24B /* UNetAnalysisDemo_01UITests.m */; };
-		AA6063032180141A00F7B24B /* UNetAnalysisSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6063022180141A00F7B24B /* UNetAnalysisSDK.framework */; };
+		C053AD47B1E294616BF2F291 /* libPods-UNetAnalysisDemo_01.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FED22B9866DC5555B6BE3AAE /* libPods-UNetAnalysisDemo_01.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		30C6059DF086935C377EEB5E /* Pods-UNetAnalysisDemo_01.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UNetAnalysisDemo_01.release.xcconfig"; path = "Target Support Files/Pods-UNetAnalysisDemo_01/Pods-UNetAnalysisDemo_01.release.xcconfig"; sourceTree = "<group>"; };
+		793D41E5BC0B4C40E40AFED3 /* Pods-UNetAnalysisDemo_01.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UNetAnalysisDemo_01.debug.xcconfig"; path = "Target Support Files/Pods-UNetAnalysisDemo_01/Pods-UNetAnalysisDemo_01.debug.xcconfig"; sourceTree = "<group>"; };
 		AA6062CB218010AF00F7B24B /* UNetAnalysisDemo_01.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UNetAnalysisDemo_01.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6062CE218010AF00F7B24B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AA6062CF218010AF00F7B24B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -52,7 +54,7 @@
 		AA6062EE218010B200F7B24B /* UNetAnalysisDemo_01UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UNetAnalysisDemo_01UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6062F2218010B200F7B24B /* UNetAnalysisDemo_01UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UNetAnalysisDemo_01UITests.m; sourceTree = "<group>"; };
 		AA6062F4218010B200F7B24B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AA6063022180141A00F7B24B /* UNetAnalysisSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UNetAnalysisSDK.framework; sourceTree = "<group>"; };
+		FED22B9866DC5555B6BE3AAE /* libPods-UNetAnalysisDemo_01.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UNetAnalysisDemo_01.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA6063032180141A00F7B24B /* UNetAnalysisSDK.framework in Frameworks */,
+				C053AD47B1E294616BF2F291 /* libPods-UNetAnalysisDemo_01.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +83,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		80BFE4CE5ED7710B88A7BD2F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FED22B9866DC5555B6BE3AAE /* libPods-UNetAnalysisDemo_01.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AA6062C2218010AF00F7B24B = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +98,8 @@
 				AA6062E6218010B200F7B24B /* UNetAnalysisDemo_01Tests */,
 				AA6062F1218010B200F7B24B /* UNetAnalysisDemo_01UITests */,
 				AA6062CC218010AF00F7B24B /* Products */,
+				D07145E01DDF84D81A7819C4 /* Pods */,
+				80BFE4CE5ED7710B88A7BD2F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,7 +116,6 @@
 		AA6062CD218010AF00F7B24B /* UNetAnalysisDemo_01 */ = {
 			isa = PBXGroup;
 			children = (
-				AA6063022180141A00F7B24B /* UNetAnalysisSDK.framework */,
 				AA6062CE218010AF00F7B24B /* AppDelegate.h */,
 				AA6062CF218010AF00F7B24B /* AppDelegate.m */,
 				AA6062D1218010AF00F7B24B /* ViewController.h */,
@@ -136,6 +147,15 @@
 			path = UNetAnalysisDemo_01UITests;
 			sourceTree = "<group>";
 		};
+		D07145E01DDF84D81A7819C4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				793D41E5BC0B4C40E40AFED3 /* Pods-UNetAnalysisDemo_01.debug.xcconfig */,
+				30C6059DF086935C377EEB5E /* Pods-UNetAnalysisDemo_01.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +163,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA6062F7218010B200F7B24B /* Build configuration list for PBXNativeTarget "UNetAnalysisDemo_01" */;
 			buildPhases = (
+				BBA28498D184AE34AFD3C50B /* [CP] Check Pods Manifest.lock */,
 				AA6062C7218010AF00F7B24B /* Sources */,
 				AA6062C8218010AF00F7B24B /* Frameworks */,
 				AA6062C9218010AF00F7B24B /* Resources */,
@@ -260,6 +281,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BBA28498D184AE34AFD3C50B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UNetAnalysisDemo_01-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AA6062C7218010AF00F7B24B /* Sources */ = {
@@ -435,6 +481,7 @@
 		};
 		AA6062F8218010B200F7B24B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 793D41E5BC0B4C40E40AFED3 /* Pods-UNetAnalysisDemo_01.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -453,6 +500,7 @@
 				OTHER_LDFLAGS = (
 					"-lc++",
 					"-ObjC",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.ucloud.UNetAnalysisDemo-01";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -462,6 +510,7 @@
 		};
 		AA6062F9218010B200F7B24B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30C6059DF086935C377EEB5E /* Pods-UNetAnalysisDemo_01.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -480,6 +529,7 @@
 				OTHER_LDFLAGS = (
 					"-lc++",
 					"-ObjC",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.ucloud.UNetAnalysisDemo-01";
 				PRODUCT_NAME = "$(TARGET_NAME)";

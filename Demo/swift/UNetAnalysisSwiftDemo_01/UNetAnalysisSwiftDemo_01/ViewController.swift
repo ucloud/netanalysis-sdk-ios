@@ -20,11 +20,26 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        checkAppNetwork()
+    }
+    
     
     func checkAppNetwork(){
-        UCNetAnalysisManager.shareInstance().uNetManualDiagNetStatus { (netDiagResult) in
-            // your processing logic
+        
+        UCNetAnalysisManager.shareInstance().uNetManualDiagNetStatus { (manualNetDiagRes:UCManualNetDiagResult?, ucError:UCError?) in
+            if(ucError != nil){
+                let error = ucError!.error as NSError
+                print("Manual diagnosis,error info:%s",error.description)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                print("netType:%s , pingInfo:%s",manualNetDiagRes!.networkType,manualNetDiagRes!.pingInfo);
+            }
         }
+        
+       
     }
 
 

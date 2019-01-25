@@ -29,12 +29,8 @@
 {
     [[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes, UCError * _Nullable ucError) {
         if (ucError) {
-            if (ucError.type == UCErrorType_Sys) {
-                NSLog(@"error info: %@",ucError.error.description);
-            }else{
-                NSLog(@"error info: %@",ucError.error.description);
-            }
-            
+            if (ucError)
+                NSLog(@"Manual diagnosis error info: %@",ucError.error.description);
             return;
         }
         
