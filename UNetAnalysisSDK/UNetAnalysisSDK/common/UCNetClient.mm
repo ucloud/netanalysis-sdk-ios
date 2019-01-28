@@ -269,16 +269,14 @@ static UCNetClient *ucloudNetClient_instance = nil;
 {
     self.shouldDoUserIpTracert = YES;
     __weak typeof(self) weakSelf = self;
-    [[UCNetInfoReporter shareInstance] uGetDevicePublicIpInfoWithCompletionHandle:^(UIpInfoModel * _Nullable ipInfoModel) {
-        if (ipInfoModel == NULL) {
-            log4cplus_warn("UNetSDK", "have not get device public ip info , cancel device network info collection...\n");
+    [[UCNetInfoReporter shareInstance] uGetDevicePublicIpInfoWithCompletionHandle:^(UIpInfoModel * _Nullable ipInfoModel,UCError * _Nullable ucError) {
+        if ([weakSelf processingErrorWith:ucError responseObject:ipInfoModel module:@"GetDevicePublicIp"]) {
             return;
         }
         weakSelf.devicePubIpInfo = ipInfoModel;
         log4cplus_debug("UNetSDK", "success get the device public ip info , info: %s",[ipInfoModel.description UTF8String]);
-        [[UCNetInfoReporter shareInstance] uGetUHostListWithIpInfoModel:ipInfoModel completionHandler:^(UNetIpListBean *_Nullable ipListBean) {
-            if (ipListBean == NULL) {
-                log4cplus_warn("UNetSDK", "have not get ucloud ip list , cancel device network info collection...\n");
+        [[UCNetInfoReporter shareInstance] uGetUHostListWithIpInfoModel:ipInfoModel completionHandler:^(UNetIpListBean *_Nullable ipListBean,UCError * _Nullable ucError) {
+            if ([weakSelf processingErrorWith:ucError responseObject: ipListBean module:@"GetUHostList"]) {
                 return;
             }
             log4cplus_debug("UNetSDK", "success get the ucloud ip list-->%s..\n",[ipListBean.data.description UTF8String]);
@@ -333,6 +331,25 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return [self.userIpList containsObject:dstIp];
     }
     return 0;
+}
+
+- (BOOL)processingErrorWith:(UCError *)ucError
+             responseObject:(id)obj
+                     module:(NSString *)module
+{
+    if (ucError) {
+        if (ucError.type == UCErrorType_Sys)
+            log4cplus_warn("UNetSDK", "%s error , error info->%s \n",[module UTF8String],[ucError.error.description UTF8String]);
+        else
+            log4cplus_warn("UNetSDK", "%s error , error info->%s \n",[module UTF8String],[ucError.serverError.description UTF8String]);
+        return YES;
+    }
+    
+    if (!obj) {
+        log4cplus_warn("UNetSDK", "%s error , server response obj is nil, cancel device network info collection...\n",[module UTF8String]);
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark- UCPingServiceDelegate

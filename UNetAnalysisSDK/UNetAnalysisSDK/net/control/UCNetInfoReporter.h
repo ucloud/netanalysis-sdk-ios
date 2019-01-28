@@ -13,9 +13,9 @@
 #import "UCServerResponseModel.h"
 
 
-typedef void (^UNetOperationGetInfoHandler)(id _Nullable obj);
-typedef  void(^UNetGetDevicePublicIpInfoHandler) (UIpInfoModel *_Nullable ipInfoModel);
-typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean);
+typedef void (^UNetOperationGetInfoHandler)(id _Nullable obj,UCError * _Nullable ucError);
+typedef  void(^UNetGetDevicePublicIpInfoHandler) (UIpInfoModel *_Nullable ipInfoModel,UCError *_Nullable ucError);
+typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCError * _Nullable ucError);
 
 @interface UCNetInfoReporter : NSObject
 

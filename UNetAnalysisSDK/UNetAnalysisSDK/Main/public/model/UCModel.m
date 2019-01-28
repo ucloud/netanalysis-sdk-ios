@@ -48,6 +48,31 @@
 @end
 
 
+@implementation UCServerError
+
+- (instancetype)initWithCode:(NSInteger)code
+                      errMsg:(NSString *)errMsg
+{
+    if (self = [super init]) {
+        _code = code;
+        _errMsg = errMsg;
+    }
+    return self;
+}
+
++ (instancetype)instanceWithCode:(NSInteger)code
+                                 errMsg:(NSString *)errMsg
+{
+    return [[self alloc] initWithCode:code errMsg:errMsg];
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"code: %ld , errMsg:%@",(long)self.code,self.errMsg];
+}
+
+@end
+
 
 
 static NSString * domain = @"ucloud.cn";
@@ -63,6 +88,16 @@ static const int KUCInvalidCondition = -4;
     if (self = [super init]) {
         _type = type;
         _error = error;
+    }
+    return self;
+}
+
+- (instancetype)init:(UCErrorType)type
+            sysError:(NSError *)error
+         serverError:(UCServerError *)serverError
+{
+    if (self  = [self init:type sysError:error]) {
+        _serverError = serverError;
     }
     return self;
 }
@@ -88,6 +123,11 @@ static const int KUCInvalidCondition = -4;
 + (instancetype)sysErrorWithError:(NSError *)error
 {
     return [[self alloc] init:UCErrorType_Sys sysError:error];
+}
+
++ (instancetype)httpErrorWithServerError:(UCServerError *)serverError
+{
+    return [[self alloc] init:UCErrorType_Server sysError:nil serverError:serverError];
 }
 
 @end

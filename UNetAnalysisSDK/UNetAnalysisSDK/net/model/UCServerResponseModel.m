@@ -38,8 +38,11 @@
             return self;
         }
         
-        NSArray *infoArray = [dict objectForKey:@"info"];
-        if (infoArray == NULL || ![infoArray isKindOfClass:[NSArray class]]) {
+        NSArray *infoArray = nil;
+        if ([[dict objectForKey:@"info"] isKindOfClass:[NSArray class]]) {
+            infoArray = [dict objectForKey:@"info"];
+        }
+        if (!infoArray) {
             return self;
         }
         NSMutableArray *ipArray = [NSMutableArray array];
@@ -117,15 +120,14 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        NSDictionary *metaDict = [dict objectForKey:@"meta"];
-        NSDictionary *dataDict = [dict objectForKey:@"data"];
-        if (metaDict != NULL && [metaDict isKindOfClass:[NSDictionary class]]) {
+        if ([[dict objectForKey:@"meta"] isKindOfClass:[NSDictionary class]]) {
+             NSDictionary *metaDict = [dict objectForKey:@"meta"];
             self.meta = [UNetMetaBean metaBeanWithDict:metaDict];
         }
-        if (dataDict != NULL && [metaDict isKindOfClass:[NSDictionary class]]) {
+        if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dataDict = [dict objectForKey:@"data"];
             self.data = [UNetDataBean dataBeanWithDict:dataDict];
         }
-        
     }
     return self;
 }
@@ -204,15 +206,15 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        NSDictionary *metaDict  = [dict objectForKey:@"meta"];
-        NSDictionary *dataDict  = [dict objectForKey:@"data"];
-        if (metaDict != NULL && [metaDict isKindOfClass:[NSDictionary class]]) {
+        
+        if ([[dict objectForKey:@"meta"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *metaDict = [dict objectForKey:@"meta"];
             self.meta = [UNetMetaBean metaBeanWithDict:metaDict];
         }
-        if (dataDict != NULL && [dataDict isKindOfClass:[NSDictionary class]]) {
+        if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dataDict = [dict objectForKey:@"data"];
             self.data = [UNetReportResponseDataBean reportResponseDataWithDict:dataDict];
         }
-        
     }
     return self;
 }
