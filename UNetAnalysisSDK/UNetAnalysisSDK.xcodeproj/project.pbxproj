@@ -37,9 +37,9 @@
 		AA4FFD712181A33B00DC686F /* UCNetClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AA4FFD6F2181A33B00DC686F /* UCNetClient.h */; };
 		AA6605E82146493400C75504 /* UNetAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = AA6605E62146493400C75504 /* UNetAppInfo.h */; };
 		AA6605E92146493400C75504 /* UNetAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6605E72146493400C75504 /* UNetAppInfo.m */; };
-		AA7B63EE210825050043F515 /* UNetAnalysisSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7B63E4210825050043F515 /* UNetAnalysisSDK.framework */; };
-		AA7B63F3210825050043F515 /* UNetAnalysisSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7B63F2210825050043F515 /* UNetAnalysisSDKTests.m */; };
 		AA7B63F5210825050043F515 /* UNetAnalysisSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7B63E7210825050043F515 /* UNetAnalysisSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AA82FBC421FB17E5008996D6 /* UNetAnalysisSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7B63E4210825050043F515 /* UNetAnalysisSDK.framework */; };
+		AA82FBCB21FB1828008996D6 /* UCNetAnalysisManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AA82FBCA21FB1828008996D6 /* UCNetAnalysisManagerTest.m */; };
 		AA832B2221DDB841008641D9 /* UNetTools.h in Headers */ = {isa = PBXBuildFile; fileRef = AA832B2021DDB841008641D9 /* UNetTools.h */; };
 		AA832B2321DDB841008641D9 /* UNetTools.m in Sources */ = {isa = PBXBuildFile; fileRef = AA832B2121DDB841008641D9 /* UNetTools.m */; };
 		AA8660E92124140500393544 /* UCDateTool.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8660E72124140500393544 /* UCDateTool.h */; };
@@ -66,12 +66,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		AA7B63EF210825050043F515 /* PBXContainerItemProxy */ = {
+		AA82FBC521FB17E5008996D6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AA7B63DB210825050043F515 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = AA7B63E3210825050043F515;
-			remoteInfo = UCloudNetAnalysisSDK;
+			remoteInfo = UNetAnalysisSDK;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -96,9 +96,9 @@
 		AA7B63E4210825050043F515 /* UNetAnalysisSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UNetAnalysisSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA7B63E7210825050043F515 /* UNetAnalysisSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UNetAnalysisSDK.h; sourceTree = "<group>"; };
 		AA7B63E8210825050043F515 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AA7B63ED210825050043F515 /* UNetAnalysisSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UNetAnalysisSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA7B63F2210825050043F515 /* UNetAnalysisSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UNetAnalysisSDKTests.m; sourceTree = "<group>"; };
-		AA7B63F4210825050043F515 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA82FBBF21FB17E5008996D6 /* UNetAnalysisSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UNetAnalysisSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA82FBCA21FB1828008996D6 /* UCNetAnalysisManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UCNetAnalysisManagerTest.m; sourceTree = "<group>"; };
+		AA82FBCC21FB1852008996D6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA832B2021DDB841008641D9 /* UNetTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UNetTools.h; sourceTree = "<group>"; };
 		AA832B2121DDB841008641D9 /* UNetTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UNetTools.m; sourceTree = "<group>"; };
 		AA8660E72124140500393544 /* UCDateTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UCDateTool.h; sourceTree = "<group>"; };
@@ -132,11 +132,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AA7B63EA210825050043F515 /* Frameworks */ = {
+		AA82FBBC21FB17E5008996D6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA7B63EE210825050043F515 /* UNetAnalysisSDK.framework in Frameworks */,
+				AA82FBC421FB17E5008996D6 /* UNetAnalysisSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				AA7B63E6210825050043F515 /* UNetAnalysisSDK */,
-				AA7B63F1210825050043F515 /* UNetAnalysisSDKTests */,
+				AA82FBC021FB17E5008996D6 /* UNetAnalysisSDKTests */,
 				AA7B63E5210825050043F515 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -196,7 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				AA7B63E4210825050043F515 /* UNetAnalysisSDK.framework */,
-				AA7B63ED210825050043F515 /* UNetAnalysisSDKTests.xctest */,
+				AA82FBBF21FB17E5008996D6 /* UNetAnalysisSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -217,11 +217,11 @@
 			path = UNetAnalysisSDK;
 			sourceTree = "<group>";
 		};
-		AA7B63F1210825050043F515 /* UNetAnalysisSDKTests */ = {
+		AA82FBC021FB17E5008996D6 /* UNetAnalysisSDKTests */ = {
 			isa = PBXGroup;
 			children = (
-				AA7B63F2210825050043F515 /* UNetAnalysisSDKTests.m */,
-				AA7B63F4210825050043F515 /* Info.plist */,
+				AA82FBCC21FB1852008996D6 /* Info.plist */,
+				AA82FBCA21FB1828008996D6 /* UCNetAnalysisManagerTest.m */,
 			);
 			path = UNetAnalysisSDKTests;
 			sourceTree = "<group>";
@@ -423,22 +423,22 @@
 			productReference = AA7B63E4210825050043F515 /* UNetAnalysisSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		AA7B63EC210825050043F515 /* UNetAnalysisSDKTests */ = {
+		AA82FBBE21FB17E5008996D6 /* UNetAnalysisSDKTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AA7B63FB210825050043F515 /* Build configuration list for PBXNativeTarget "UNetAnalysisSDKTests" */;
+			buildConfigurationList = AA82FBC721FB17E5008996D6 /* Build configuration list for PBXNativeTarget "UNetAnalysisSDKTests" */;
 			buildPhases = (
-				AA7B63E9210825050043F515 /* Sources */,
-				AA7B63EA210825050043F515 /* Frameworks */,
-				AA7B63EB210825050043F515 /* Resources */,
+				AA82FBBB21FB17E5008996D6 /* Sources */,
+				AA82FBBC21FB17E5008996D6 /* Frameworks */,
+				AA82FBBD21FB17E5008996D6 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				AA7B63F0210825050043F515 /* PBXTargetDependency */,
+				AA82FBC621FB17E5008996D6 /* PBXTargetDependency */,
 			);
 			name = UNetAnalysisSDKTests;
-			productName = UCloudNetAnalysisSDKTests;
-			productReference = AA7B63ED210825050043F515 /* UNetAnalysisSDKTests.xctest */;
+			productName = UNetAnalysisSDKTests;
+			productReference = AA82FBBF21FB17E5008996D6 /* UNetAnalysisSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -456,8 +456,8 @@
 					AA7B63E3210825050043F515 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
-					AA7B63EC210825050043F515 = {
-						CreatedOnToolsVersion = 9.4.1;
+					AA82FBBE21FB17E5008996D6 = {
+						CreatedOnToolsVersion = 10.0;
 					};
 				};
 			};
@@ -474,8 +474,8 @@
 			projectRoot = "";
 			targets = (
 				AA7B63E3210825050043F515 /* UNetAnalysisSDK */,
-				AA7B63EC210825050043F515 /* UNetAnalysisSDKTests */,
 				AA4FFD692181723D00DC686F /* appledoc */,
+				AA82FBBE21FB17E5008996D6 /* UNetAnalysisSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -488,7 +488,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AA7B63EB210825050043F515 /* Resources */ = {
+		AA82FBBD21FB17E5008996D6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -544,21 +544,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AA7B63E9210825050043F515 /* Sources */ = {
+		AA82FBBB21FB17E5008996D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA7B63F3210825050043F515 /* UNetAnalysisSDKTests.m in Sources */,
+				AA82FBCB21FB1828008996D6 /* UCNetAnalysisManagerTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		AA7B63F0210825050043F515 /* PBXTargetDependency */ = {
+		AA82FBC621FB17E5008996D6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AA7B63E3210825050043F515 /* UNetAnalysisSDK */;
-			targetProxy = AA7B63EF210825050043F515 /* PBXContainerItemProxy */;
+			targetProxy = AA82FBC521FB17E5008996D6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -765,35 +765,42 @@
 			};
 			name = Release;
 		};
-		AA7B63FC210825050043F515 /* Debug */ = {
+		AA82FBC821FB17E5008996D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CFP9KY4MGC;
 				INFOPLIST_FILE = UNetAnalysisSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cn.ucloud.www.UCloudNetAnalysisSDKTests;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-lc++";
+				PRODUCT_BUNDLE_IDENTIFIER = cn.ucloud.UNetAnalysisSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		AA7B63FD210825050043F515 /* Release */ = {
+		AA82FBC921FB17E5008996D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CFP9KY4MGC;
 				INFOPLIST_FILE = UNetAnalysisSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cn.ucloud.www.UCloudNetAnalysisSDKTests;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-lc++";
+				PRODUCT_BUNDLE_IDENTIFIER = cn.ucloud.UNetAnalysisSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -829,11 +836,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AA7B63FB210825050043F515 /* Build configuration list for PBXNativeTarget "UNetAnalysisSDKTests" */ = {
+		AA82FBC721FB17E5008996D6 /* Build configuration list for PBXNativeTarget "UNetAnalysisSDKTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AA7B63FC210825050043F515 /* Debug */,
-				AA7B63FD210825050043F515 /* Release */,
+				AA82FBC821FB17E5008996D6 /* Debug */,
+				AA82FBC921FB17E5008996D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

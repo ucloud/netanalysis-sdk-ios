@@ -103,4 +103,12 @@ typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullabl
  */
 - (void)uNetManualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
 
+
+/**
+ @brief 获取SDK的版本号
+
+ @return SDK版本号
+ */
+- (NSString * _Nonnull)uNetSdkVersion;
+
 @end

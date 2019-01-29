@@ -106,4 +106,9 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     [[UCNetClient shareInstance] manualDiagNetStatus:completeHandler];
 }
 
+- (NSString * _Nonnull)uNetSdkVersion
+{
+    return KSDKVERSION;
+}
+
 @end
