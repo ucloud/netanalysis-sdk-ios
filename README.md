@@ -74,6 +74,7 @@ In addition, you need to add `-lc++`,`-ObjC`,`$(inherited)` to the project's `Bu
 ### Other functions
 
 * Setting SDK log level
+* Get the SDK version
 
 
 ### Code example
@@ -91,7 +92,7 @@ We hope that you register as early as possible `SDK`, we recommend but not limit
     // Appkey and public token can be obtained from the ucloud console, or contact our technical support
     NSString *appKey = @""; //your AppKey
     NSString *appToken = @""; // your publick token
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken optReportField:nil completeHandler:^(UCError * _Nullable ucError) {
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
             return;
@@ -125,14 +126,6 @@ When the mobile phone network is not good, you can call the manual network diagn
 
 For more detailed introduction of each interface, please refer to the declaration of each interface in `SDK` or `SDK development documentation`.
 
-
-### Respect User Privacy
-
-When registering `SDK`, there is an `optField` parameter. If you don't need to report the field, you can pass `nil` directly; if you need to report a field to better troubleshoot the network problem, then you can directly pass the report field.
-
-We regard user privacy as a top priority, so please do not upload information with user privacy, including but not limited to: user name, mobile phone number, ID number and other user personal information as well as device 'device id', etc. Device unique id information. In addition to this, the report field has a content verification rule (1. The maximum length is 100; 2. The half-width comma and the equal sign cannot be included).
-
-We will check the fields you report from time to time. If you do not follow the rules to report user privacy data, we will immediately stop your network data analysis service and delete the user privacy data you reported.
 
 
 

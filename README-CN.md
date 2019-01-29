@@ -74,6 +74,7 @@ pod 'UNetAnalysisSDK'
 ### 其它辅助功能
 
 * 设置日志级别
+* 查询SDK版本号
 
 其主要操作类是`UCNetAnalysisManager.h`。
 
@@ -93,7 +94,7 @@ pod 'UNetAnalysisSDK'
     // Appkey and public token can be obtained from the ucloud console, or contact our technical support
     NSString *appKey = @""; //your AppKey
     NSString *appToken = @""; // your publick token
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken optReportField:nil completeHandler:^(UCError * _Nullable ucError) {
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
             return;
@@ -126,16 +127,6 @@ pod 'UNetAnalysisSDK'
 ```
 
 对于每个接口更详细的介绍，请参考`SDK`中各个接口的声明或者`SDK开发文档`。
-
-
-### 遵重用户隐私
-
-注册`SDK`时，有一个`optField`参数。如果你不需要上报字段，可以直接传`nil`；如果你需要上报一个字段来更好的排查网络问题，那么你可以直接把上报字段传入。
-
-我们把用户隐私看为重中之重，所以请务必不要上传带有用户隐私的信息，包括但不局限于：用户姓名，手机号，身份证号等用户个人信息以及设备的`device id`等设备唯一id信息。除此之外上报字段还有内容校验规则（1.长度最大为100；2.不能包含半角逗号和等号）。
-
-我们会不定期对额外上报的字段做检查，如果您不遵守规则上报了用户隐私数据，我们会立马停止您的网络数据分析服务，并删除您上报的用户隐私数据。
-
 
 
 ## 常见问题

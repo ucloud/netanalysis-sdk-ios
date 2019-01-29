@@ -65,18 +65,13 @@ typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullabl
 /**
  @brief 注册 `SDK`,如果`completeHandler`参数为空，则会抛出异常。
  @discussion 你应该在应用最初启动的地方调用此方法。 因为应用安装后第一次初始化应用程序时，应用将连接到 `UCloud` 服务器验证你的 `APP KEY` 。
- 
- 关于`optField`用户可选上报字段的规则：SDK把尊重用户隐私看为重中之重，所以请务必不要上传带有用户隐私的信息，包括但不局限于：用户姓名，手机号，
- 身份证号等用户个人信息以及设备的`device id`等设备唯一id信息。除此之外上报字段还有以下内容校验规则：1.长度最大为100； 2.不能包含半角逗号和等号。
 
  @param appkey 使用该网络数据分析SDK时`UCloud`会分配给你一个appkey
  @param publickToken 公钥，用于数据传输加密
- @param optField 用户可选择上报的字段(请特别注意该字段的命名规则)。如果没有，则设置为`nil`
  @param completeHandler 一个 `UCNetRegisterSdkCompleteHandler` 类型的 `block`，通过这个 `block` 来告知用户是否注册成功 `SDK`.  如果成功，则 `error` 为空。
  */
 - (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey
                     publicToken:(NSString * _Nonnull)publickToken
-                 optReportField:(NSString * _Nullable)optField
                 completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler;
 
 #pragma mark - public setting api

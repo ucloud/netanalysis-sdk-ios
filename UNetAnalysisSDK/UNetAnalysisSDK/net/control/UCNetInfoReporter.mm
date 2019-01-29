@@ -67,6 +67,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 {
     _appKey = appKey;
     _appSecret = publicToken;
+    field = nil;
     if (!field) {
         log4cplus_debug("UNetSDK", "user opt field is nil..\n");
         return;

@@ -78,13 +78,12 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey
                     publicToken:(NSString * _Nonnull)publickToken
-                 optReportField:(NSString * _Nullable)optField
                 completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
 {
-    if (![UCNetAnalysisManager validRegistParamsWithAppKey:appkey publicToken:publickToken optReportField:optField completeHandler:completeHandler]) {
+    if (![UCNetAnalysisManager validRegistParamsWithAppKey:appkey publicToken:publickToken optReportField:@"test" completeHandler:completeHandler]) {
         return;
     }
-    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey publicToken:publickToken optReportField:optField];
+    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey publicToken:publickToken optReportField:@"test"];
     if (res == 0) {
         completeHandler(nil);
     }
