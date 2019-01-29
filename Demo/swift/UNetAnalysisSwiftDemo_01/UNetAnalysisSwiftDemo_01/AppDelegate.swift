@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let appKey = "" //你的appKey
         let appToken = "" // 你的App公钥
         
-        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey:appKey, publicToken:appToken, optReportField: nil) { (ucError:UCError?) in
+        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey:appKey, publicToken:appToken) { (ucError:UCError?) in
             if (ucError != nil){
                 let error  = ucError!.error as NSError
                 print("regist UNetAnalysisSDK error , error info: %s",error.description)

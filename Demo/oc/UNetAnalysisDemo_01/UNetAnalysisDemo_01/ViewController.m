@@ -10,6 +10,7 @@
 #import <UNetAnalysisSDK/UNetAnalysisSDK.h>
 
 @interface ViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *resTV;
 
 @end
 
@@ -20,22 +21,24 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [self checkAppNetwork];
-}
 
-- (void)checkAppNetwork
-{
+
+- (IBAction)onpressedButtonCheckNet:(id)sender {
+    self.resTV.text = @"";
+    
     [[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes, UCError * _Nullable ucError) {
         if (ucError) {
-            if (ucError)
-                NSLog(@"Manual diagnosis error info: %@",ucError.error.description);
+            if (ucError){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.resTV.text = [NSString stringWithFormat:@"Manual diagnosis error info: %@",ucError.error.description];
+                });
+                
+            }
             return;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"netType:%@, pingInfo:%@ ",manualNetDiagRes.networkType,manualNetDiagRes.pingInfo);
+            self.resTV.text = [NSString stringWithFormat:@"NetType: %@, pingRes: %@",manualNetDiagRes.networkType,manualNetDiagRes.pingInfo];
         });
     }];
 }
