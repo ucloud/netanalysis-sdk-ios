@@ -41,7 +41,7 @@
 {
     NSString *appKey = @"";
     NSString *publicToken = @"";
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:publicToken optReportField:nil completeHandler:^(UCError * _Nullable ucError) {
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:publicToken completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist SDK error , error info:%@",ucError.error.description);
             return;
@@ -60,7 +60,7 @@
 {
     NSString *appKey = @"";
     NSString *publicToken = @"";
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:publicToken optReportField:nil completeHandler:^(UCError * _Nullable ucError) {
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:publicToken completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist SDK error , error info:%@",ucError.error.description);
             return;
