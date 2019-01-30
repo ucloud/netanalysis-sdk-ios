@@ -17,7 +17,7 @@
 #import "UNetTools.h"
 #include "log4cplus.h"
 #import "UNetAppInfo.h"
-#import "Reachability.h"
+#import "UCReachability.h"
 #import "UNetQueue.h"
 
 /*   define log level  */
@@ -32,7 +32,7 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 @property (nonatomic,copy) NSString *appName;
 @property (nonatomic,copy) NSArray *hostList;
 
-@property (nonatomic) Reachability *reachability;
+@property (nonatomic) UCReachability *reachability;
 
 @property (readonly) UCNetManualNetDiagCompleteHandler manualNetDiagHandler;
 @property (nonatomic,assign) BOOL  isManualNetDiag;
@@ -41,7 +41,7 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 @property (nonatomic,strong) UNetIpListBean *uIpListBean;
 
 @property (nonatomic,copy) NSArray *userIpList;
-@property (nonatomic,assign) NetworkStatus netStatus;
+@property (nonatomic,assign) UCNetworkStatus netStatus;
 @property (nonatomic,assign) BOOL  shouldDoUserIpPing;
 @property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
 
@@ -172,7 +172,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
         warnInfo = @"customer ip list is nil";
         res = NO;
     }
-    else if(self.netStatus == NotReachable){
+    else if(self.netStatus == Reachable_None){
         warnInfo = @"none network";
         res = NO;
     }
@@ -224,36 +224,36 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)registNetStateChangeNoti
 {
-    [UCNotification addObserver:self selector:@selector(networkChange:) name:kReachabilityChangedNotification object:nil];
-    self.reachability = [Reachability reachabilityForInternetConnection];
+    [UCNotification addObserver:self selector:@selector(networkChange:) name:kUCReachabilityChangedNotification object:nil];
+    self.reachability = [UCReachability reachabilityForInternetConnection];
     [self.reachability startNotifier];
     [self checkNetworkStatusWithReachability:self.reachability];
 }
 
 - (void)networkChange:(NSNotification *)noti
 {
-    Reachability *reachability = [noti object];
+    UCReachability *reachability = [noti object];
     [self checkNetworkStatusWithReachability:reachability];
 }
 
-- (void)checkNetworkStatusWithReachability:(Reachability *)reachability
+- (void)checkNetworkStatusWithReachability:(UCReachability *)reachability
 {
     self.devicePubIpInfo = nil;
     self.uIpListBean = nil;
     self.netStatus = [reachability currentReachabilityStatus];
     switch (self.netStatus) {
-        case NotReachable:
+        case Reachable_None:
         {
             log4cplus_info("UNetSDK", "none network...\n");
         }
             break;
-        case ReachableViaWiFi:
+        case Reachable_WiFi:
         {
             log4cplus_info("UNetSDK", "network type is WIFI...\n");
             [self doPingAndTracertUHosts];
         }
             break;
-        case ReachableViaWWAN:
+        case Reachable_WWAN:
         {
             log4cplus_info("UNetSDK", "network type is WWAN...\n");
             [self doPingAndTracertUHosts];

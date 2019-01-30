@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UNetAppInfo.h"
-#import "Reachability.h"
+#import "UCReachability.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <sys/utsname.h>
 
@@ -152,16 +152,16 @@ NSString * const U_4G           = @"4G";
 + (NSString*)uGetNetworkType
 {
     NSString *netType = @"";
-    Reachability *reachNet = [Reachability reachabilityWithHostName:@"www.apple.com"];
-    NetworkStatus net_status = [reachNet currentReachabilityStatus];
+    UCReachability *reachNet = [UCReachability reachabilityWithHostName:@"www.apple.com"];
+    UCNetworkStatus net_status = [reachNet currentReachabilityStatus];
     switch (net_status) {
-        case NotReachable:
+        case Reachable_None:
             netType = U_NO_NETWORK;
             break;
-        case ReachableViaWiFi:
+        case Reachable_WiFi:
             netType = U_WIFI;
             break;
-        case ReachableViaWWAN:
+        case Reachable_WWAN:
         {
             CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
             NSString *curreNetType = netInfo.currentRadioAccessTechnology;
