@@ -83,6 +83,15 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     return _urlSessionManager;
 }
 
+- (NSString *)deviceLocalTimeZone
+{
+    NSTimeZone *zone = [NSTimeZone localTimeZone];
+    if (zone.abbreviation) {
+        return zone.abbreviation;
+    }
+    return @"none";
+}
+
 #pragma mark- post http request
 - (void)doHttpRequest:(NSURLRequest *)request type:(UCNetOperateType)type handler:(UNetOperationGetInfoHandler _Nullable)handler
 {
@@ -223,7 +232,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     static int reportPingIndex = 0;
     NSString *paramJson = NULL;
     try {
-        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@,cus=%d",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION,type];
+        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION,type,[self deviceLocalTimeZone]];
         
         if (self.userOptField) {
             tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
@@ -280,7 +289,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     static int reportTracertIndex = 0;
     NSString *paramJson = NULL;
     try {
-        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@,cus=%d",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION,type];
+        NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION,type,[self deviceLocalTimeZone]];
         if (self.userOptField) {
             tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
         }
