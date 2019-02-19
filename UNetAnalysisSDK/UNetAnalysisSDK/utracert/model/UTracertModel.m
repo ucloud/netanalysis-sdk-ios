@@ -73,19 +73,37 @@
     return @{@"src_ip":self.src_ip,@"dst_ip":self.dst_ip,@"route_info":array};
 }
 
+//- (NSDictionary *)objConvertToReportDict
+//{
+//    NSMutableArray *array = [NSMutableArray array];
+//    for (int i = 0; i < self.routeReplyArray.count; i++) {
+//        URouteReplyModel *model = (URouteReplyModel*)self.routeReplyArray[i];
+//        @try {
+//            [array addObject:model.objConvertToDict];
+//        } @catch (NSException *exception) {
+//            NSLog(@"%s, %@",__func__,exception.description);
+//        }
+//
+//    }
+//    return @{@"route_info":array};
+//}
+
 - (NSDictionary *)objConvertToReportDict
 {
-    NSMutableArray *array = [NSMutableArray array];
+    NSMutableArray *array_delay = [NSMutableArray array];
+    NSMutableArray *array_loss = [NSMutableArray array];
+    NSMutableArray *array_route = [NSMutableArray array];
     for (int i = 0; i < self.routeReplyArray.count; i++) {
         URouteReplyModel *model = (URouteReplyModel*)self.routeReplyArray[i];
         @try {
-            [array addObject:model.objConvertToDict];
+            [array_route addObject:model.route_ip];
+            [array_delay addObject:[NSNumber numberWithInt:(int)(model.avgDelay)]];
+            [array_loss addObject:[NSNumber numberWithInt:model.loss]];
         } @catch (NSException *exception) {
             NSLog(@"%s, %@",__func__,exception.description);
         }
-        
     }
-    return @{@"route_info":array};
+    return @{@"route_list":array_route,@"delay_list":array_delay,@"loss_list":array_loss};
 }
 
 - (NSString *)description
