@@ -202,7 +202,10 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
     
     log4cplus_debug("UNetSDK", "ManualDiag , begin mannual diag network...\n");
-    self.isManualNetDiag = YES;
+//    self.isManualNetDiag = YES;
+    [UNetQueue unet_ping_sync:^{
+        self.isManualNetDiag = YES;
+    }];
     [self startPingHosts:self.userIpList];
     
     [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
@@ -356,14 +359,16 @@ static UCNetClient *ucloudNetClient_instance = nil;
 - (void)pingResultWithUCPingService:(UCPingService *)ucPingService pingResult:(UReportPingModel *)uReportPingModel
 {
 //    log4cplus_info("UNetPing", "%s\n",[uReportPingModel.description UTF8String]);
-    if (self.isManualNetDiag) {
-        UCIpPingResult *ipPingRes = [[UCIpPingResult alloc] initUIpPingResultWithIp:uReportPingModel.dst_ip loss:uReportPingModel.loss delay:uReportPingModel.delay];
-        __weak typeof(self) weakSelf = self;
-        [UNetQueue unet_ping_sync:^{
-            [weakSelf.manualPingRes addObject:ipPingRes];
-        }];
-        
-    }
+    
+    __weak typeof(self) weakSelf = self;
+    [UNetQueue unet_ping_sync:^{
+        if (weakSelf.isManualNetDiag) {
+            UCIpPingResult *ipPingRes = [[UCIpPingResult alloc] initUIpPingResultWithIp:uReportPingModel.dst_ip loss:uReportPingModel.loss delay:uReportPingModel.delay];
+            if ([weakSelf.userIpList containsObject:ipPingRes.ip]) {
+                [weakSelf.manualPingRes addObject:ipPingRes];
+            }
+        }
+    }];
     [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel destIpType:[self getDestIpType:uReportPingModel.dst_ip]];
 }
 
@@ -374,7 +379,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
     
     // 如果ucloud ip list 完成ping的时候，user ip list 已经成功设置
-    if (self.shouldDoUserIpPing) {
+    if (self.shouldDoUserIpPing && self.isManualNetDiag == NO) {
         [self startPingHosts:self.userIpList];
         self.shouldDoUserIpPing = NO;
     }
@@ -383,10 +388,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     if (self.isManualNetDiag) {
         __weak typeof(self) weakSelf = self;
         [UNetQueue unet_ping_sync:^{
-            if (weakSelf.manualPingRes.count < weakSelf.userIpList.count) {  // fix bug(temp): calc ping res use to much time,so finish ping triggered  in advance.
-                usleep(1000*1000);
-            }
-            UCManualNetDiagResult *diagRes = [UCManualNetDiagResult instanceWithPingRes:self.manualPingRes];
+            UCManualNetDiagResult *diagRes = [UCManualNetDiagResult instanceWithPingRes:weakSelf.manualPingRes];
             weakSelf.manualNetDiagHandler(diagRes,nil);
             weakSelf.isManualNetDiag = NO;
         }];
