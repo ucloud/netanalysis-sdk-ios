@@ -12,7 +12,6 @@
 
 @interface UCPingService()<UCPingDelegate>
 @property (nonatomic,strong) UCPing *uPing;
-@property (nonatomic,strong) dispatch_queue_t serialQueue;
 @property (nonatomic,strong) NSMutableDictionary *pingResDic;
 
 @end
@@ -36,15 +35,6 @@ static UCPingService *ucPingservice_instance = NULL;
         _pingResDic = [NSMutableDictionary dictionary];
     }
     return _pingResDic;
-}
-
-- (dispatch_queue_t)serialQueue
-{
-    if (!_serialQueue) {
-        _serialQueue = dispatch_queue_create("sq_pingres",
-                                             DISPATCH_QUEUE_SERIAL);
-    }
-    return _serialQueue;
 }
 
 + (instancetype)shareInstance
@@ -71,39 +61,34 @@ static UCPingService *ucPingservice_instance = NULL;
         return;
     }
     
-    dispatch_async(self.serialQueue, ^{
-        NSMutableArray *pingItems = [self.pingResDic objectForKey:host];
-        if (pingItems == NULL) {
-            pingItems = [NSMutableArray arrayWithArray:@[pingItem]];
-        }else{
+    NSMutableArray *pingItems = [self.pingResDic objectForKey:host];
+    if (pingItems == NULL) {
+        pingItems = [NSMutableArray arrayWithArray:@[pingItem]];
+    }else{
 
-            try {
-                [pingItems addObject:pingItem];
-            } catch (NSException *exception) {
-                log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
-            }
-        }
-        
         try {
-            [self.pingResDic setObject:pingItems forKey:host];
-            //        NSLog(@"%@",self.pingResDic);
+            [pingItems addObject:pingItem];
         } catch (NSException *exception) {
             log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
         }
-        
-        if (pingItem.status == UCPingStatus_Finish) {
-            NSArray *pingItems = [self.pingResDic objectForKey:host];
-            NSDictionary *dict = [UPingResModel pingResultWithPingItems:pingItems];
+    }
+    try {
+        [self.pingResDic setObject:pingItems forKey:host];
+        //        NSLog(@"%@",self.pingResDic);
+    } catch (NSException *exception) {
+        log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
+    }
+    
+    if (pingItem.status == UCPingStatus_Finish) {
+        NSArray *pingItems = [self.pingResDic objectForKey:host];
+        NSDictionary *dict = [UPingResModel pingResultWithPingItems:pingItems];
 //            NSLog(@"dict----res:%@, pingRes:%@",dict,self.pingResDic);
-            UReportPingModel *reportPingModel = [UReportPingModel uReporterPingmodelWithDict:dict];
-            
-            [self.delegate pingResultWithUCPingService:self pingResult:reportPingModel];
-//            NSLog(@"%@",reportPingModel);
-            
-            [self removePingResFromPingResContainerWithHostName:host];
-        }
+        UReportPingModel *reportPingModel = [UReportPingModel uReporterPingmodelWithDict:dict];
         
-    });
+        [self.delegate pingResultWithUCPingService:self pingResult:reportPingModel];
+//            NSLog(@"%@",reportPingModel);
+        [self removePingResFromPingResContainerWithHostName:host];
+    }
 }
 
 - (void)removePingResFromPingResContainerWithHostName:(NSString *)host
@@ -111,9 +96,7 @@ static UCPingService *ucPingservice_instance = NULL;
     if (host == NULL) {
         return;
     }
-    dispatch_async(self.serialQueue, ^{
-        [self.pingResDic removeObjectForKey:host];
-    });
+    [self.pingResDic removeObjectForKey:host];
 }
 
 - (void)startPingAddressList:(NSArray *)addressList

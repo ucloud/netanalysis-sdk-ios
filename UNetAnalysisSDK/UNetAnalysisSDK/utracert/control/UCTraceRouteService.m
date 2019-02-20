@@ -11,7 +11,6 @@
 @interface UCTraceRouteService()<UCTraceRouteDelegate>
 @property (nonatomic,strong) UCTraceRoute *ucTraceroute;
 @property (nonatomic,strong) NSMutableDictionary *tracerouteResDict;
-@property (nonatomic,strong) dispatch_queue_t serialQueue;
 @end
 
 @implementation UCTraceRouteService
@@ -33,15 +32,6 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
         _tracerouteResDict = [NSMutableDictionary dictionary];
     }
     return _tracerouteResDict;
-}
-
-- (dispatch_queue_t)serialQueue
-{
-    if (!_serialQueue) {
-        _serialQueue = dispatch_queue_create("tracertResBoxSq",
-                                             DISPATCH_QUEUE_SERIAL);
-    }
-    return _serialQueue;
 }
 
 + (instancetype)shareInstance
@@ -121,28 +111,22 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
         return;
     }
     
-    dispatch_async(self.serialQueue, ^{
-        NSMutableArray *tracertItems = [self.tracerouteResDict objectForKey:host];
-        if (tracertItems == NULL) {
-            tracertItems = [NSMutableArray arrayWithArray:@[tracertRes]];
-        }else{
-            [tracertItems addObject:tracertRes];
-        }
-        [self.tracerouteResDict setObject:tracertItems forKey:host];
+    NSMutableArray *tracertItems = [self.tracerouteResDict objectForKey:host];
+    if (tracertItems == NULL) {
+        tracertItems = [NSMutableArray arrayWithArray:@[tracertRes]];
+    }else{
+        [tracertItems addObject:tracertRes];
+    }
+    [self.tracerouteResDict setObject:tracertItems forKey:host];
 //        NSLog(@"%@",self.tracerouteResDict);
-        
-        if (tracertRes.status == UCTracertStatus_Finish) {
-            UReportTracertModel *reportTracertModel = [self constructTracertReportModelUseTracertRes:tracertRes andHost:host];
-            reportTracertModel.beginTime = tracertRes.beginTime;
-            [self.delegate tracerouteResultWithUCTraceRouteService:self tracerouteResult:reportTracertModel];
+    
+    if (tracertRes.status == UCTracertStatus_Finish) {
+        UReportTracertModel *reportTracertModel = [self constructTracertReportModelUseTracertRes:tracertRes andHost:host];
+        reportTracertModel.beginTime = tracertRes.beginTime;
+        [self.delegate tracerouteResultWithUCTraceRouteService:self tracerouteResult:reportTracertModel];
 //            NSLog(@"%@",reportTracertModel);
-            
-            [self removePingResFromPingResContainerWithHostName:host];
-            
-            
-        }
-        
-    });
+        [self removePingResFromPingResContainerWithHostName:host];
+    }
 }
 
 - (void)removePingResFromPingResContainerWithHostName:(NSString *)host
@@ -150,9 +134,7 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
     if (host == NULL) {
         return;
     }
-    dispatch_async(self.serialQueue, ^{
-        [self.tracerouteResDict removeObjectForKey:host];
-    });
+    [self.tracerouteResDict removeObjectForKey:host];
 }
 
 #pragma mark -UCTraceRouteDelegate
