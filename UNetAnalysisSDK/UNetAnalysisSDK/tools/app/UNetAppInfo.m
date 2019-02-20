@@ -12,16 +12,13 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <sys/utsname.h>
 
-NSString * const U_NO_NETWORK   = @"NO NETWORK";
-NSString * const U_WIFI         = @"WIFI";
-NSString * const U_GPRS         = @"GPRS";
+NSString * const U_UNKNOWN   = @"UNKNOWN";
+NSString * const U_NOT_REACHABLE = @"NOT_REACHABLE";
 NSString * const U_2G           = @"2G";
-NSString * const U_2_75G_EDGE   = @"2.75G EDGE";
 NSString * const U_3G           = @"3G";
-NSString * const U_3_5G_HSDPA   = @"3.5G HSDPA";
-NSString * const U_3_5G_HSUPA   = @"3.5G HSUPA";
-NSString * const U_HRPD         = @"HRPD";
 NSString * const U_4G           = @"4G";
+NSString * const U_WIFI         = @"WIFI";
+
 
 
 @implementation UNetAppInfo
@@ -151,12 +148,12 @@ NSString * const U_4G           = @"4G";
 
 + (NSString*)uGetNetworkType
 {
-    NSString *netType = @"";
+    NSString *netType = U_UNKNOWN;
     UCReachability *reachNet = [UCReachability reachabilityWithHostName:@"www.apple.com"];
     UCNetworkStatus net_status = [reachNet currentReachabilityStatus];
     switch (net_status) {
         case Reachable_None:
-            netType = U_NO_NETWORK;
+            netType = U_NOT_REACHABLE;
             break;
         case Reachable_WiFi:
             netType = U_WIFI;
@@ -165,23 +162,22 @@ NSString * const U_4G           = @"4G";
         {
             CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
             NSString *curreNetType = netInfo.currentRadioAccessTechnology;
-            if ([curreNetType isEqualToString:CTRadioAccessTechnologyGPRS]) {
-                netType = U_GPRS;
-            }else if([curreNetType isEqualToString:CTRadioAccessTechnologyEdge]){
-                netType = U_2_75G_EDGE;
+            if ([curreNetType isEqualToString:CTRadioAccessTechnologyGPRS] ||
+                [curreNetType isEqualToString:CTRadioAccessTechnologyEdge] ||
+                [curreNetType isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
+                netType = U_2G;
             }else if([curreNetType isEqualToString:CTRadioAccessTechnologyWCDMA] ||
                      [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORev0] ||
                      [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
-                     [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB]){
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB] ||
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyHSDPA] ||
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyHSUPA] ||
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyeHRPD]){
                 netType = U_3G;
-            }else if([curreNetType isEqualToString:CTRadioAccessTechnologyHSDPA]){
-                netType = U_3_5G_HSDPA;
-            }else if([curreNetType isEqualToString:CTRadioAccessTechnologyHSUPA]){
-                netType = U_3_5G_HSUPA;
-            }else if([curreNetType isEqualToString:CTRadioAccessTechnologyeHRPD]){
-                netType = U_HRPD;
             }else if([curreNetType isEqualToString:CTRadioAccessTechnologyLTE]){
                 netType = U_4G;
+            }else{
+                netType = U_UNKNOWN;
             }
         }
             break;
