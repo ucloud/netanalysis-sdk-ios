@@ -63,4 +63,22 @@
     return result;
 }
 
++ (NSString *)formartTimeZone:(NSString *)gmtTime
+{
+    NSString *tz = [gmtTime substringFromIndex:3];
+    int min = 0;
+    int hour = 0;
+    if ([tz containsString:@":"]) {
+        NSArray *tz_arr = [tz componentsSeparatedByString:@":"];
+        hour = [[tz_arr objectAtIndex:0] intValue];
+        min  = [[tz_arr objectAtIndex:1] intValue];
+    }else{
+        hour = [tz intValue];
+    }
+    if (hour >=0) {
+        return [NSString stringWithFormat:@"+%02d%02d",hour,min];
+    }
+    return [NSString stringWithFormat:@"%03d%02d",hour,min];
+}
+
 @end

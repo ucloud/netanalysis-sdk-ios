@@ -15,6 +15,7 @@
 #import "UNetAppInfo.h"
 #import "UCRSA.h"
 #import "UCModel.h"
+#import "UNetTools.h"
 
 
 /**
@@ -88,9 +89,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 {
     NSTimeZone *zone = [NSTimeZone localTimeZone];
     if (zone.abbreviation) {
-        return zone.abbreviation;
+        return [UNetTools formartTimeZone:zone.abbreviation];
     }
-    return @"none";
+    return @"";
 }
 
 #pragma mark- post http request

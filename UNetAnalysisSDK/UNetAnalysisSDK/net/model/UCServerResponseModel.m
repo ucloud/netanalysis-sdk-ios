@@ -139,24 +139,23 @@
 
 @end
 
-
 @implementation UIpInfoModel
 
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        _addr = dict[@"addr"];
-        _city_name = dict[@"city_name"];
-        _continent_code = dict[@"continent_code"];
-        _country_code = dict[@"country_code"];
-        _country_name = dict[@"country_name"];
-        _isp_domain = dict[@"isp_domain"];
-        _latitude = dict[@"latitude"];
-        _longitude = dict[@"longitude"];
-        _owner_domain = dict[@"owner_domain"];
-        _region_name = dict[@"region_name"];
-        _timezone = dict[@"timezone"];
-        _utc_offset = dict[@"utc_offset"];
+        _addr = dict[@"addr"] == NULL ? @"" : dict[@"addr"];
+        _city_name = dict[@"city_name"] == NULL ? @"" : dict[@"city_name"];
+        _continent_code = dict[@"continent_code"] == NULL ? @"" : dict[@"continent_code"];
+        _country_code = dict[@"country_code"] == NULL ? @"" : dict[@"country_code"];
+        _country_name = dict[@"country_name"] == NULL ? @"" : dict[@"country_name"];
+        _isp_domain = dict[@"isp_domain"] == NULL ? @"" : dict[@"isp_domain"];
+        _latitude = dict[@"latitude"] == NULL ? @"" : dict[@"latitude"];
+        _longitude = dict[@"longitude"] == NULL ? @"" : dict[@"longitude"];
+        _owner_domain = dict[@"owner_domain"] == NULL ? @"" : dict[@"owner_domain"];
+        _region_name = dict[@"region_name"] == NULL ? @"" : dict[@"region_name"];
+        _timezone = dict[@"timezone"] == NULL ? @"" : dict[@"timezone"];
+        _utc_offset = dict[@"utc_offset"] == NULL ? @"" : dict[@"utc_offset"];
     }
     return self;
 }
