@@ -55,6 +55,15 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES:校验通过； NO:校验失败
  */
 + (BOOL)validIPAddress:(NSString *)ip;
+
+
+/**
+ @brief 格式化时区  GMT+8 => +0800
+
+ @param gmtTime 时区
+ @return 格式化后的时区
+ */
++ (NSString *)formartTimeZone:(NSString *)gmtTime;
 @end
 
 NS_ASSUME_NONNULL_END
