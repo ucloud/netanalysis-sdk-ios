@@ -175,6 +175,10 @@ static UCNetClient *ucloudNetClient_instance = nil;
     else if(self.netStatus == Reachable_None){
         warnInfo = @"none network";
         res = NO;
+    }else if([[UCPingService shareInstance] uIsPing])
+    {
+        warnInfo = @"auto diagnosis is in progress, please try again later";
+        res = NO;
     }
     if (!res) {
         completeHandler(nil,[UCError sysErrorWithInvalidCondition:warnInfo]);
@@ -185,6 +189,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)manualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler
 {
+    if (self.isManualNetDiag) {
+        return;
+    }
     _manualPingRes = [NSMutableArray array];
     _manualNetDiagHandler = completeHandler;
     
@@ -202,10 +209,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
     
     log4cplus_debug("UNetSDK", "ManualDiag , begin mannual diag network...\n");
-//    self.isManualNetDiag = YES;
-    [UNetQueue unet_ping_sync:^{
-        self.isManualNetDiag = YES;
-    }];
+    self.isManualNetDiag = YES;
     [self startPingHosts:self.userIpList];
     
     [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
@@ -334,6 +338,18 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return [self.userIpList containsObject:dstIp];
     }
     return 0;
+}
+
+- (void)closePingAndTracert
+{
+    if([[UCTraceRouteService shareInstance] uIsTracert]){
+        [[UCTraceRouteService shareInstance] uStopTracert];
+    }
+    
+    if ([[UCPingService shareInstance] uIsPing]) {
+        [[UCPingService shareInstance] uStopPing];
+    }
+    log4cplus_warn("UNetSDK", "App resign activity , stop collection network data...\n");
 }
 
 - (BOOL)processingErrorWith:(UCError *)ucError
