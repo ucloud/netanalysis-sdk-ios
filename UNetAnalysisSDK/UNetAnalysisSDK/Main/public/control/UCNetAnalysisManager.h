@@ -100,6 +100,12 @@ typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullabl
 
 
 /**
+ @brief 停止网络数据收集
+ @discussion 当app进入非活跃状态时，可以通过调用此方法来停止数据收集。用这种方法可以解决部分 `signal pipe` 引起的APP闪退
+ */
+- (void)uNetStopDataCollectionWhenAppWillResignActive;
+
+/**
  @brief 获取SDK的版本号
 
  @return SDK版本号

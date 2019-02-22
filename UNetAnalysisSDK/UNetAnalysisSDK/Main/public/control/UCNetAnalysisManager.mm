@@ -105,6 +105,11 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     [[UCNetClient shareInstance] manualDiagNetStatus:completeHandler];
 }
 
+- (void)uNetStopDataCollectionWhenAppWillResignActive
+{
+    [[UCNetClient shareInstance] closePingAndTracert];
+}
+
 - (NSString * _Nonnull)uNetSdkVersion
 {
     return KSDKVERSION;

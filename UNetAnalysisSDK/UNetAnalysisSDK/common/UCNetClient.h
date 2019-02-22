@@ -19,4 +19,5 @@
 - (void)settingSDKLogLevel:(UCSDKLogLevel)logLevel;
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList;
 - (void)manualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
+- (void)closePingAndTracert;
 @end
