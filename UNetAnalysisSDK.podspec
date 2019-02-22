@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "UNetAnalysisSDK"
-  spec.version      = "1.0.2"
+  spec.version      = "1.0.5"
   spec.summary      = "UCloud net analysis SDK for iOS"
 
   # This description is used to generate tags and improve search results.
