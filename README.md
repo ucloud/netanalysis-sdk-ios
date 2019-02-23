@@ -95,12 +95,11 @@ We hope that you register as early as possible `SDK`, we recommend but not limit
     [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
-            return;
+        }else{
+        	NSLog(@"regist UNetAnalysisSDK success...");
+	        NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // Fill in your application's main service address here (only support ip address, which is used for manual network diagnostics)
+	        [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:customerIps];
         }
-        NSLog(@"regist UNetAnalysisSDK success...");
-        NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // Fill in your application's main service address here (only support ip address, which is used for manual network diagnostics)
-        [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:customerIps];
-        
     }];
     
     return YES;
@@ -126,7 +125,16 @@ When the mobile phone network is not good, you can call the manual network diagn
 
 For more detailed introduction of each interface, please refer to the declaration of each interface in `SDK` or `SDK development documentation`.
 
+#### Stop network data collection
 
+Stop network data collection when the application is about to move from active to inactive state. This is done in the `- (void)applicationWillResignActive:(UIApplication *)application` method in `AppDelegate`. 
+
+```
+- (void)applicationWillResignActive:(UIApplication *)application {
+    [[UCNetAnalysisManager shareInstance] uNetStopDataCollectionWhenAppWillResignActive];
+}
+
+```
 
 
 ## F&Q

@@ -97,12 +97,11 @@ pod 'UNetAnalysisSDK'
     [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
-            return;
+        }else{
+        	NSLog(@"regist UNetAnalysisSDK success...");
+	        NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // Fill in your application's main service address here (only support ip address, which is used for manual network diagnostics)
+	        [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:customerIps];
         }
-        NSLog(@"regist UNetAnalysisSDK success...");
-        NSArray *customerIps = @[@"220.181.112.244",@"221.230.143.58"]; // Fill in your application's main service address here (only support ip address, which is used for manual network diagnostics)
-        [[UCNetAnalysisManager shareInstance] uNetSettingCustomerIpList:customerIps];
-        
     }];
     
     return YES;
@@ -128,6 +127,16 @@ pod 'UNetAnalysisSDK'
 
 对于每个接口更详细的介绍，请参考`SDK`中各个接口的声明或者`SDK开发文档`。
 
+
+#### 停止网络数据收集
+
+当app即将从活动状态转为非活动状态时,停止网络数据收集。即在`AppDelegate`中的`- (void)applicationWillResignActive:(UIApplication *)application`方法中执行该操作。
+
+```
+- (void)applicationWillResignActive:(UIApplication *)application {
+    [[UCNetAnalysisManager shareInstance] uNetStopDataCollectionWhenAppWillResignActive];
+}
+```
 
 ## 常见问题
 
