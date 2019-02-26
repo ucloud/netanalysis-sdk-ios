@@ -32,6 +32,8 @@ typedef NS_ENUM(NSUInteger,UCNetOperateType)
     UCNetOperateType_DoReport
 };
 
+const NSTimeInterval uNetSDKTimeOut =  60.0;
+
 @interface UCNetInfoReporter()
 
 @property (nonatomic,strong) UIpInfoModel *ipInfoModel;
@@ -196,7 +198,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 #pragma mark- The device public ip info
 - (void)uGetDevicePublicIpInfoWithCompletionHandle:(UNetGetDevicePublicIpInfoHandler)handler
 {
-    [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"GET" urlstring:U_Get_Public_Ip_Url jsonParamStr:nil timeOut:10.0] type:UCNetOperateType_GetIpInfo handler:handler];
+    [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"GET" urlstring:U_Get_Public_Ip_Url jsonParamStr:nil timeOut:uNetSDKTimeOut] type:UCNetOperateType_GetIpInfo handler:handler];
 }
 
 - (UIpInfoModel *)ipInfoModel
@@ -218,7 +220,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         handler(nil,[UCError sysErrorWithInvalidElements:@"construct request param error"]);
     }
     if (paramStr) {
-        [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:U_Get_UCloud_iplist_URL jsonParamStr:paramStr timeOut:10.0] type:UCNetOperateType_GetIpList handler:handler];
+        [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:U_Get_UCloud_iplist_URL jsonParamStr:paramStr timeOut:uNetSDKTimeOut] type:UCNetOperateType_GetIpList handler:handler];
     }
     
 }
@@ -230,7 +232,6 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         log4cplus_warn("UNetSDK", "reportPing, the device public ip info is null..\n");
         return;
     }
-    static int reportPingIndex = 0;
     NSString *paramJson = NULL;
     try {
         NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION,type,[self deviceLocalTimeZone]];
@@ -259,24 +260,30 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
     }
     __weak typeof(self) weakSelf = self;
-    [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportPingIndex] jsonParamStr:paramJson timeOut:10.0] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
+    [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[0] jsonParamStr:paramJson timeOut:uNetSDKTimeOut] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
         if ([weakSelf processingErrorWith:ucError responseObj:obj reportBean:uReportPingModel module:@"ReportPing"]) {
-            reportPingIndex = 0;
-//            return;
+            return;
         }
-
-        if (weakSelf.reportServiceArray.count-1 > reportPingIndex) {
-            reportPingIndex++;
-            log4cplus_warn("UNetSDK", "ReportPing , %d time report failed , report the next service..\n",reportPingIndex);
-            [weakSelf doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportPingIndex] jsonParamStr:paramJson timeOut:10.0] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj,UCError * _Nullable ucError) {
+        if (weakSelf.reportServiceArray.count > 1 ) {
+            log4cplus_warn("UNetSDK", "ReportPing , 1 time report failed , report the next service..\n");
+            [weakSelf doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[1] jsonParamStr:paramJson timeOut:uNetSDKTimeOut] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
                 if ([weakSelf processingErrorWith:ucError responseObj:obj reportBean:uReportPingModel module:@"ReportPing"]) {
-                    reportPingIndex = 0;
                     return;
                 }
-                log4cplus_warn("UNetSDK", "ReportPing, http request error..\n");
-                reportPingIndex = 0;
+                
+                if (weakSelf.reportServiceArray.count > 2) {
+                    log4cplus_warn("UNetSDK", "ReportPing , 2 time report failed , report the next service..\n");
+                    [weakSelf doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[2] jsonParamStr:paramJson timeOut:uNetSDKTimeOut] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
+                        if ([weakSelf processingErrorWith:ucError responseObj:obj reportBean:uReportPingModel module:@"ReportPing"]) {
+                            return;
+                        }
+                         log4cplus_warn("UNetSDK", "ReportPing, http request error..\n");
+                    }];
+                }
+               
             }];
         }
+
     }];
 }
 
@@ -287,7 +294,6 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         log4cplus_warn("UNetSDK", "reportTracert, the device public ip info is null..\n");
         return;
     }
-    static int reportTracertIndex = 0;
     NSString *paramJson = NULL;
     try {
         NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION,type,[self deviceLocalTimeZone]];
@@ -316,22 +322,28 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
          log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
     }
     __weak typeof(self) weakSelf = self;
-    [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportTracertIndex] jsonParamStr:paramJson timeOut:10.0] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
+    [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[0] jsonParamStr:paramJson timeOut:uNetSDKTimeOut] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
         if ([weakSelf processingErrorWith:ucError responseObj:obj reportBean:uReportTracertModel  module:@"ReportTracert"]) {
-            reportTracertIndex = 0;
-//            return;
+            return;
         }
         
-        if (weakSelf.reportServiceArray.count-1 > reportTracertIndex) {
-            reportTracertIndex++;
-            log4cplus_warn("UNetSDK", "ReportTracert , %d time report failed , report the next service...\n",reportTracertIndex);
-            [weakSelf doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[reportTracertIndex] jsonParamStr:paramJson timeOut:10.0]  type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
+        if (weakSelf.reportServiceArray.count > 1) {
+            log4cplus_warn("UNetSDK", "ReportTracert , 1 time report failed , report the next service...\n");
+            [weakSelf doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[1] jsonParamStr:paramJson timeOut:uNetSDKTimeOut]  type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
                 if ([weakSelf processingErrorWith:ucError responseObj:obj reportBean:uReportTracertModel module:@"ReportTracert"]) {
-                    reportTracertIndex = 0;
                     return;
                 }
-                log4cplus_warn("UNetSDK", "ReportTracert, http request error..\n");
-                reportTracertIndex = 0;
+                
+                if (weakSelf.reportServiceArray.count > 2) {
+                    log4cplus_warn("UNetSDK", "ReportTracert , 2 time report failed , report the next service...\n");
+                    [weakSelf doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[2] jsonParamStr:paramJson timeOut:uNetSDKTimeOut]  type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
+                        if ([weakSelf processingErrorWith:ucError responseObj:obj reportBean:uReportTracertModel module:@"ReportTracert"]) {
+                            return;
+                        }
+                        log4cplus_warn("UNetSDK", "ReportTracert, http request error..\n");
+                    }];
+                }
+                
             }];
         }
         
@@ -345,7 +357,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
             log4cplus_warn("UNetSDK", "%s error , error info->%s \n",[module UTF8String],[ucError.error.description UTF8String]);
         else
             log4cplus_warn("UNetSDK", "%s error , error info->%s \n",[module UTF8String],[ucError.serverError.description UTF8String]);
-        return YES;
+        return NO;
     }
     
     if (respObj) {
