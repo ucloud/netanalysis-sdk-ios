@@ -29,6 +29,6 @@
 #define   KPingIcmpIdBeginNum     8000
 
 
-#define KSDKVERSION   @"1.0.5"
+#define KSDKVERSION   @"1.0.7"
 
 #endif /* UNetAnalysisConst_h */
