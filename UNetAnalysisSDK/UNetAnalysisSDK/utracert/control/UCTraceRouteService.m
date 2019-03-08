@@ -45,6 +45,9 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
 - (void)uStopTracert
 {
     [self.ucTraceroute stopTracert];
+    if (_ucTraceroute) {
+        _ucTraceroute = nil;
+    }
 }
 
 - (BOOL)uIsTracert

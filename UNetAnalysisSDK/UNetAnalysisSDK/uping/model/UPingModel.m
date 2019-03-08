@@ -64,7 +64,7 @@
     __block double    timeSum = 0;
     NSInteger beginTime = [(UPingResModel *)[pingItems objectAtIndex:0] beginTime];
     [pingItems enumerateObjectsUsingBlock:^(UPingResModel *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.status != UCPingStatus_Finish && obj.status != UCPingStatus_Error) {
+        if (obj.status != UCPingStatus_Finish && obj.status != UCPingStatus_Error && obj.timeMilliseconds < 1000) {
             allCount ++;
             if (obj.status == UCPingStatus_ReceivePacket) {
                 receivedCount ++;
