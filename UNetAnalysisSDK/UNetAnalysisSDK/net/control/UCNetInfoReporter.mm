@@ -219,6 +219,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     } catch (NSException *exception) {
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
         handler(nil,[UCError sysErrorWithInvalidElements:@"construct request param error"]);
+        return;
     }
     if (paramStr) {
         [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:U_Get_UCloud_iplist_URL jsonParamStr:paramStr timeOut:uNetSDKTimeOut] type:UCNetOperateType_GetIpList handler:handler];
@@ -254,6 +255,10 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
         NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
         NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
+        if ([UNetTools un_isEmpty:tagStr_rsa] || [UNetTools un_isEmpty:ip_info_rsa]) {
+            log4cplus_warn("UNetSDK", "ReportPing, tag data or ipinfo rsa error , remote this data...\n");
+            return;
+        }
         NSDictionary *dict_data = @{@"action":@"ping",
                                     @"app_key":self.appKey,
                                     @"ping_data":[uReportPingModel objConvertToReportDict],
@@ -270,6 +275,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         log4cplus_debug("UNetSDK", "ReportPing , param is : %s",[dataJson UTF8String]);
     } catch (NSException *exception) {
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
+        return;
     }
     __weak typeof(self) weakSelf = self;
     [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[0] jsonParamStr:paramJson timeOut:uNetSDKTimeOut] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
@@ -316,6 +322,10 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         
         NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
         NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
+        if ([UNetTools un_isEmpty:tagStr_rsa] || [UNetTools un_isEmpty:ip_info_rsa]) {
+            log4cplus_warn("UNetSDK", "ReportTracert, tag data or ipinfo rsa error , remote this data...\n");
+            return;
+        }
         NSDictionary *dict_data = @{@"action":@"traceroute",
                                     @"app_key":self.appKey,
                                     @"traceroute_data":[uReportTracertModel objConvertToReportDict],
@@ -331,7 +341,8 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         paramJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:param options:0 error:nil] encoding:NSUTF8StringEncoding];
 //        log4cplus_debug("UNetSDK", "ReportTracert , param is : %s",[paramJson UTF8String]);
     } catch (NSException *exception) {
-         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
+        log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
+        return;
     }
     __weak typeof(self) weakSelf = self;
     [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:self.reportServiceArray[0] jsonParamStr:paramJson timeOut:uNetSDKTimeOut] type:UCNetOperateType_DoReport handler:^(id  _Nullable obj, UCError * _Nullable ucError) {
