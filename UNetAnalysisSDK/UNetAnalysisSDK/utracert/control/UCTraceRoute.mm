@@ -243,6 +243,9 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
             if ([UCNetDiagnosisHelper isTimeoutPacket:buff len:(int)resultLen]) {
                 NSDate *startTime = [self getSendIcmpPacketDateFromContainerWithSeq:tracert_recev_route_index];
                 NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:startTime];
+                if (duration*1000 > kIcmpPacketTimeoutTime) {
+                    duration = kIcmpPacketTimeoutTime/1000;
+                }
                 
                 // Arriving at the intermediate routing node
                 record.durations[tracert_recev_route_index] = duration;
@@ -270,6 +273,9 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
                 // to dst server
                 NSDate *startTime = [self getSendIcmpPacketDateFromContainerWithSeq:tracert_recev_index];
                 NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:startTime];
+                if (duration*1000 > kIcmpPacketTimeoutTime) {
+                    duration = kIcmpPacketTimeoutTime/1000;
+                }
                 
                 record.durations[tracert_recev_index] = duration;
                 record.ip = remoteAddress;

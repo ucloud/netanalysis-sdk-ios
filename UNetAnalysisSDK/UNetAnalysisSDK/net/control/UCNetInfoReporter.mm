@@ -232,6 +232,17 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         log4cplus_warn("UNetSDK", "reportPing, the device public ip info is null..\n");
         return;
     }
+    
+    if (uReportPingModel.loss == 0 && uReportPingModel.delay == 0) {
+        log4cplus_warn("UNetSDK", "ReportPing, dst_ip:%s , the ping result illegal(thread hangs) ,remove this data...\n",[uReportPingModel.dst_ip UTF8String]);
+        return;
+    }
+    
+    if (uReportPingModel.delay >= 1000) {
+        log4cplus_warn("UNetSDK", "ReportPing, dst_ip:%s , the ping result illegal ,remove this data...\n",[uReportPingModel.dst_ip UTF8String]);
+        return;
+    }
+
     NSString *paramJson = NULL;
     try {
         NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION,type,[self deviceLocalTimeZone]];

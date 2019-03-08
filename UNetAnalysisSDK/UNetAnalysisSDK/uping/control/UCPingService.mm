@@ -48,6 +48,9 @@ static UCPingService *ucPingservice_instance = NULL;
 - (void)uStopPing
 {
     [self.uPing stopPing];
+    if (_uPing) {
+        _uPing = nil;
+    }
 }
 
 - (BOOL)uIsPing
