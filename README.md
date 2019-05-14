@@ -69,7 +69,6 @@ In addition, you need to add `-lc++`,`-ObjC`,`$(inherited)` to the project's `Bu
 
 * You can set the ip address of the app's server,which is used for network diagnosis
 * SDK will auto diagnose the network status and report it(Triggered when opening `APP` and network is switching[`WWAN`<=>`WIFI`])
-* You can manually diagnose network conditions
 
 ### Other functions
 
@@ -105,25 +104,6 @@ We hope that you register as early as possible `SDK`, we recommend but not limit
     return YES;
 }
 ```
-
-#### Manually diagnose network conditions
-
-When the mobile phone network is not good, you can call the manual network diagnostic interface of `SDK` in the network diagnosis of your application to get the current network status of your application, and the `SDK` will report the current network status.
-
-```
-[[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes, UCError * _Nullable ucError) {
-        if (ucError) {
-            if (ucError)
-                NSLog(@"Manual diagnosis error info: %@",ucError.error.description);
-            return;
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"netType:%@, pingInfo:%@ ",manualNetDiagRes.networkType,manualNetDiagRes.pingInfo);
-        });
-    }];
-```
-
-For more detailed introduction of each interface, please refer to the declaration of each interface in `SDK` or `SDK development documentation`.
 
 #### Stop network data collection
 

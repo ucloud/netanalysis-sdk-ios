@@ -69,7 +69,6 @@ pod 'UNetAnalysisSDK'
 
 * 支持设置`APP`主服务的`IP`(一个或多个)，用于做网络探测
 * 自动网络探测并上报(`APP`打开时和网络切换(`WWAN`<=>`WIFI`)时会触发)
-* 手动网络诊断
 
 ### 其它辅助功能
 
@@ -107,26 +106,6 @@ pod 'UNetAnalysisSDK'
     return YES;
 }
 ```
-
-#### 手动诊断网络状况
-
-当手机网络不好时，你可以在自己应用的网络诊断中调用`SDK`的手动网络诊断接口来获取当前你的应用的网络状况，同时`SDK`会上报当前网络状况。
-
-```
-[[UCNetAnalysisManager shareInstance] uNetManualDiagNetStatus:^(UCManualNetDiagResult * _Nullable manualNetDiagRes, UCError * _Nullable ucError) {
-        if (ucError) {
-            if (ucError)
-                NSLog(@"Manual diagnosis error info: %@",ucError.error.description);
-            return;
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"netType:%@, pingInfo:%@ ",manualNetDiagRes.networkType,manualNetDiagRes.pingInfo);
-        });
-    }];
-```
-
-对于每个接口更详细的介绍，请参考`SDK`中各个接口的声明或者`SDK开发文档`。
-
 
 #### 停止网络数据收集
 
