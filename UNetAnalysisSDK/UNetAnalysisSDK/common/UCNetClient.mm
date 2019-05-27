@@ -43,7 +43,7 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 @property (nonatomic,copy) NSArray *userIpList;
 @property (nonatomic,assign) UCNetworkStatus netStatus;
 @property (nonatomic,assign) BOOL  shouldDoUserIpPing;
-@property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
+//@property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
 
 @property (nonatomic,strong) NSMutableArray *manualPingRes;
 
@@ -213,7 +213,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     [self startPingHosts:self.userIpList];
     
     [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
-    self.shouldDoUserIpTracert = NO;
+//    self.shouldDoUserIpTracert = NO;
 }
 
 - (BOOL)isIpAddress:(NSString *)ipStr
@@ -274,7 +274,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)doPingAndTracertUHosts
 {
-    self.shouldDoUserIpTracert = YES;
+//    self.shouldDoUserIpTracert = YES;
     __weak typeof(self) weakSelf = self;
     [[UCNetInfoReporter shareInstance] uGetDevicePublicIpInfoWithCompletionHandle:^(UIpInfoModel * _Nullable ipInfoModel,UCError * _Nullable ucError) {
         if ([weakSelf processingErrorWith:ucError responseObject:ipInfoModel module:@"GetDevicePublicIp"]) {
@@ -306,7 +306,11 @@ static UCNetClient *ucloudNetClient_instance = nil;
             log4cplus_debug("UNetSDK", "success get the ucloud report services...\n");
             [weakSelf startPingHosts:weakSelf.hostList];
             weakSelf.shouldDoUserIpPing = YES;
-            [weakSelf startTracertWithHosts:weakSelf.hostList isUCloudHosts:YES];
+//            [weakSelf startTracertWithHosts:weakSelf.hostList isUCloudHosts:YES];
+            
+            if (self.userIpList) {
+                [weakSelf startTracertWithHosts:weakSelf.userIpList isUCloudHosts:NO];
+            }
            
         }];
         
@@ -424,14 +428,14 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)tracerouteFinishedWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService
 {
-    if (self.userIpList == NULL) {
-        return;
-    }
-    if (self.shouldDoUserIpTracert) {
-        [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
-        self.shouldDoUserIpTracert = NO;
-    }else{
-    }
+//    if (self.userIpList == NULL) {
+//        return;
+//    }
+//    if (self.shouldDoUserIpTracert) {
+//        [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
+//        self.shouldDoUserIpTracert = NO;
+//    }else{
+//    }
     
 }
 @end
