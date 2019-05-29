@@ -7,6 +7,7 @@
 //
 
 #import "UNetTools.h"
+#import "UCModel.h"
 
 @implementation UNetTools
 + (BOOL)un_isEmpty:(NSString *)str
@@ -14,14 +15,49 @@
      return [[str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""];
 }
 
-+ (NSString *)validOptReportField:(NSString *)optField
++ (NSString *)userDefinedFieldsConvertDictToJson:(NSDictionary *)fields
 {
-    if (![self un_isEmpty:optField]) {
-        if (optField.length > 100 || [optField containsString:@","]
-            || [optField containsString:@"，"] || [optField containsString:@"="]) {
-            return @"the opt report field is illegal,the maximum length is 100 and cannot contain half-width commas and equal signs";
+    NSMutableDictionary *mutaDict = [NSMutableDictionary dictionaryWithDictionary:fields];
+    for (NSString *key in mutaDict.allKeys) {
+        if ([self un_isEmpty:key]) {
+            [mutaDict removeObjectForKey:key];
+        }else if([self un_isEmpty:[mutaDict objectForKey:key]]){
+            [mutaDict setObject:@"" forKey:key];
         }
     }
+    
+    NSMutableArray *resArray = [NSMutableArray array];
+    NSArray *keyArray = [mutaDict allKeys];
+    for (int i = 0; i < keyArray.count; i++) {
+        NSString *key = keyArray[i];
+        NSDictionary *dict = @{@"key":key,@"val":[mutaDict objectForKey:key]};
+        [resArray addObject:dict];
+    }
+    NSString *jsonValue = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:resArray options:0 error:nil] encoding:NSUTF8StringEncoding];
+    return jsonValue;
+}
+
++ (NSString *)validOptReportField:(NSDictionary *)fields
+{
+    if (!fields) {
+        return nil;
+    }
+    @try {
+        NSString *json_str = [[self class] userDefinedFieldsConvertDictToJson:fields];
+        if (json_str.length >= 1000) {
+            return @"the user defined fields is illegal, the maximum length is 1000...";
+        }
+    } @catch (NSException *exception) {
+        return exception.description;
+    }
+    
+  
+//    if (![self un_isEmpty:optField]) {
+//        if (optField.length > 100 || [optField containsString:@","]
+//            || [optField containsString:@"，"] || [optField containsString:@"="]) {
+//            return @"the opt report field is illegal,the maximum length is 100 and cannot contain half-width commas and equal signs";
+//        }
+//    }
     return nil;
 }
 

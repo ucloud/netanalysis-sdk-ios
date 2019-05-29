@@ -22,12 +22,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ @brief 把用户自定义的上报字段转化为json格式
+
+ @param fields 用户自定义字段
+ @return json字符串
+ */
++ (NSString *)userDefinedFieldsConvertDictToJson:(NSDictionary *)fields;
+
+/**
  @brief 校验用户可选上报字段(内部使用)
 
- @param optField 用户要上报的字段
+ @param fields 用户要上报的字段集合
  @return 如果返回nil，则表示上报字段内容合法；如果不为空，则返回内容即是非法信息。
  */
-+ (NSString *)validOptReportField:(NSString *)optField;
++ (NSString *)validOptReportField:(NSDictionary *)fields;
 
 
 /**

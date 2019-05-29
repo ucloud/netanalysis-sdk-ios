@@ -41,7 +41,7 @@ const NSTimeInterval uNetSDKTimeOut =  60.0;
 @property (nonatomic,strong) UCURLSessionManager *urlSessionManager;
 @property (nonatomic,strong) NSString *appKey; // api-key
 @property (nonatomic,strong) NSString *appSecret; // rsa public secret key
-@property (nonatomic,strong) NSString *userOptField;  // user opt report field
+@property (nonatomic,strong) NSString *userDefinedJson;  // user opt report field
 
 @end
 
@@ -66,17 +66,24 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     return ucNetInfoReporter;
 }
 
-- (void)setAppKey:(NSString *)appKey publickToken:(NSString *)publicToken optReportField:(NSString * _Nullable)field
+- (void)setAppKey:(NSString *)appKey
+     publickToken:(NSString *)publicToken
+userDefinedFields:(NSDictionary * _Nullable)fields
 {
     _appKey = appKey;
     _appSecret = publicToken;
-    field = nil;
-    if (!field) {
-        log4cplus_debug("UNetSDK", "user opt field is nil..\n");
+    if (!fields) {
+        log4cplus_debug("UNetSDK", "user defined fields is nil..\n");
         return;
     }
-    self.userOptField = [NSString stringWithFormat:@"opt_key=%@",field];
-    log4cplus_debug("UNetSDK", "user opt field is: %s",[self.userOptField UTF8String]);
+    
+    try {
+        self.userDefinedJson = [UNetTools userDefinedFieldsConvertDictToJson:fields];
+        log4cplus_debug("UNetSDK", "user defined fields is: %s",[self.userDefinedJson UTF8String]);
+    } catch (NSException *exception) {
+        log4cplus_error("UNetSDK", "convert user defined fileds to json error, error info: %s",[exception.description UTF8String]);
+        return;
+    }
 }
 
 - (UCURLSessionManager *)urlSessionManager
@@ -248,9 +255,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     NSString *paramJson = NULL;
     try {
         NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,TTL=%d,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportPingModel.dst_ip,uReportPingModel.ttl,KSDKVERSION,type,[self deviceLocalTimeZone]];
-        
-        if (self.userOptField) {
-            tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
+        NSString *uDefinedJson_rsa = @"";
+        if (self.userDefinedJson) {
+            uDefinedJson_rsa = [UCRSA encryptString:self.userDefinedJson publicKey:self.appSecret];
         }
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
         NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
@@ -264,6 +271,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                     @"ping_data":[uReportPingModel objConvertToReportDict],
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
+                                    @"user_defined":uDefinedJson_rsa,
                                     @"timestamp":[NSNumber numberWithInteger:uReportPingModel.beginTime]
                                     };
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
@@ -315,8 +323,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     NSString *paramJson = NULL;
     try {
         NSString *tagStr = [NSString stringWithFormat:@"app_id=%@,platform=1,dst_ip=%@,s_ver=ios/%@,cus=%d,tz=%@",[UNetAppInfo uGetAppBundleId],uReportTracertModel.dst_ip,KSDKVERSION,type,[self deviceLocalTimeZone]];
-        if (self.userOptField) {
-            tagStr = [NSString stringWithFormat:@"%@,%@",tagStr,self.userOptField];
+        NSString *uDefinedJson_rsa = @"";
+        if (self.userDefinedJson) {
+            uDefinedJson_rsa = [UCRSA encryptString:self.userDefinedJson publicKey:self.appSecret];
         }
         NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
         
@@ -331,6 +340,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                     @"traceroute_data":[uReportTracertModel objConvertToReportDict],
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
+                                    @"user_defined":uDefinedJson_rsa,
                                     @"timestamp":[NSNumber numberWithInteger:uReportTracertModel.beginTime]};
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
         log4cplus_debug("UNetSDK", "ReportTracert, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);

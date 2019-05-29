@@ -44,7 +44,7 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 + (BOOL)validRegistParamsWithAppKey:(NSString *)appkey
                         publicToken:(NSString * _Nonnull)publickToken
-                     optReportField:(NSString * _Nullable)optField
+                  userDefinedFields:(NSDictionary * _Nullable)fields
             completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
 {
     if (!completeHandler) {
@@ -64,8 +64,8 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     }else if(![UNetTools validRSAPublicKey:publickToken]){
         errorInfo = @"PUBLICK TOKEN error";
     }
-    else if([UNetTools validOptReportField:optField]){
-        errorInfo = [UNetTools validOptReportField:optField];
+    else if([UNetTools validOptReportField:fields]){
+        errorInfo = [UNetTools validOptReportField:fields];
     }
     if (errorInfo) {
         log4cplus_warn("UNetSDK", "regist sdk error , error info->%s",[errorInfo UTF8String]);
@@ -78,12 +78,13 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey
                     publicToken:(NSString * _Nonnull)publickToken
+              userDefinedFields:(NSDictionary * _Nullable)fields
                 completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
 {
-    if (![UCNetAnalysisManager validRegistParamsWithAppKey:appkey publicToken:publickToken optReportField:@"test" completeHandler:completeHandler]) {
+    if (![UCNetAnalysisManager validRegistParamsWithAppKey:appkey publicToken:publickToken userDefinedFields:fields completeHandler:completeHandler]) {
         return;
     }
-    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey publicToken:publickToken optReportField:@"test"];
+    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey publicToken:publickToken userDefinedFields:fields];
     if (res == 0) {
         completeHandler(nil);
     }

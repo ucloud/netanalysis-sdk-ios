@@ -112,10 +112,12 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
 }
 
-- (int)registSdkWithAppKey:(NSString *)appkey publicToken:(NSString *)publicToken optReportField:(NSString * _Nullable)field
+- (int)registSdkWithAppKey:(NSString *)appkey
+               publicToken:(NSString *)publicToken
+            userDefinedFields:(NSDictionary * _Nullable)fields
 {
     self.isManualNetDiag = NO;
-    [[UCNetInfoReporter shareInstance] setAppKey:appkey publickToken:publicToken optReportField:field];
+    [[UCNetInfoReporter shareInstance] setAppKey:appkey publickToken:publicToken userDefinedFields:fields];
     log4cplus_info("UNetSDK", "regist UCNetAnalysis success...\n");
     [UCPingService shareInstance].delegate = self;
     [UCTraceRouteService shareInstance].delegate = self;

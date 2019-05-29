@@ -68,10 +68,12 @@ typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullabl
 
  @param appkey 使用该网络数据分析SDK时`UCloud`会分配给你一个appkey
  @param publickToken 公钥，用于数据传输加密
+ @param fields 用户自定义参数。 如果没有直接传nil。该字段有长度限制，最后转化为字符串的总长度不能超过1000
  @param completeHandler 一个 `UCNetRegisterSdkCompleteHandler` 类型的 `block`，通过这个 `block` 来告知用户是否注册成功 `SDK`.  如果成功，则 `error` 为空。
  */
 - (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey
                     publicToken:(NSString * _Nonnull)publickToken
+              userDefinedFields:(NSDictionary * _Nullable)fields
                 completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler;
 
 #pragma mark - public setting api

@@ -20,7 +20,11 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
 @interface UCNetInfoReporter : NSObject
 
 + (instancetype _Nonnull )shareInstance;
-- (void)setAppKey:(NSString * _Nonnull)appKey publickToken:(NSString * _Nonnull)publicToken optReportField:(NSString * _Nullable)field;
+
+- (void)setAppKey:(NSString * _Nonnull)appKey
+     publickToken:(NSString * _Nonnull)publicToken
+userDefinedFields:(NSDictionary * _Nullable)fields;
+
 - (void)uGetDevicePublicIpInfoWithCompletionHandle:(UNetGetDevicePublicIpInfoHandler _Nonnull)handler;
 - (UIpInfoModel * _Nonnull)ipInfoModel;
 
