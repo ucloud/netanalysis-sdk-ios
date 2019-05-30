@@ -11,6 +11,7 @@
 #import "UTracertModel.h"
 #import "UCModel.h"
 #import "UCServerResponseModel.h"
+#import "UNetAnalysisConst.h"
 
 
 typedef void (^UNetOperationGetInfoHandler)(id _Nullable obj,UCError * _Nullable ucError);
@@ -20,6 +21,7 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
 @interface UCNetInfoReporter : NSObject
 
 + (instancetype _Nonnull )shareInstance;
+- (void)setPingStatus:(UCCDNPingStatus)pingStatus;
 
 - (void)setAppKey:(NSString * _Nonnull)appKey
      publickToken:(NSString * _Nonnull)publicToken

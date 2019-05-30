@@ -42,6 +42,7 @@ const NSTimeInterval uNetSDKTimeOut =  60.0;
 @property (nonatomic,strong) NSString *appKey; // api-key
 @property (nonatomic,strong) NSString *appSecret; // rsa public secret key
 @property (nonatomic,strong) NSString *userDefinedJson;  // user opt report field
+@property (nonatomic,assign) UCCDNPingStatus pingStatus;
 
 @end
 
@@ -54,6 +55,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 {
     self = [super init];
     if (self) {
+        _pingStatus = CDNPingStatus_ICMP_None;
     }
     return self;
 }
@@ -64,6 +66,12 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         ucNetInfoReporter = [[UCNetInfoReporter alloc] init];
     }
     return ucNetInfoReporter;
+}
+
+
+- (void)setPingStatus:(UCCDNPingStatus)pingStatus
+{
+    _pingStatus = pingStatus;
 }
 
 - (void)setAppKey:(NSString *)appKey
@@ -251,6 +259,11 @@ userDefinedFields:(NSDictionary * _Nullable)fields
         log4cplus_warn("UNetSDK", "ReportPing, dst_ip:%s , the ping result illegal ,remove this data...\n",[uReportPingModel.dst_ip UTF8String]);
         return;
     }
+    
+    UCCDNPingStatus ping_status = CDNPingStatus_ICMP_On;
+    if (uReportPingModel.loss == 100) {
+        ping_status = self.pingStatus;
+    }
 
     NSString *paramJson = NULL;
     try {
@@ -269,6 +282,7 @@ userDefinedFields:(NSDictionary * _Nullable)fields
         NSDictionary *dict_data = @{@"action":@"ping",
                                     @"app_key":self.appKey,
                                     @"ping_data":[uReportPingModel objConvertToReportDict],
+                                    @"ping_status":[NSNumber numberWithInteger:ping_status],
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
                                     @"user_defined":uDefinedJson_rsa,

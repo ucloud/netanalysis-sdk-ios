@@ -29,6 +29,13 @@
 #define   KPingIcmpIdBeginNum     8000
 
 
+typedef enum UCCDNPingStatus
+{
+    CDNPingStatus_ICMP_On = 0,
+    CDNPingStatus_ICMP_Off = 1,
+    CDNPingStatus_ICMP_None = 2
+}UCCDNPingStatus;
+
 #define KSDKVERSION   @"1.0.11"
 
 #endif /* UNetAnalysisConst_h */

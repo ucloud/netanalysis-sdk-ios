@@ -46,7 +46,8 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 //@property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
 
 @property (nonatomic,strong) NSMutableArray *manualPingRes;
-
+@property (nonatomic,assign) UCCDNPingStatus ping_status;
+@property (nonatomic,assign) BOOL isDoneCDNPing;
 
 @end
 
@@ -250,6 +251,8 @@ static UCNetClient *ucloudNetClient_instance = nil;
     self.devicePubIpInfo = nil;
     self.uIpListBean = nil;
     self.netStatus = [reachability currentReachabilityStatus];
+    self.ping_status = CDNPingStatus_ICMP_None;
+    self.isDoneCDNPing = NO;
     switch (self.netStatus) {
         case Reachable_None:
         {
@@ -306,7 +309,11 @@ static UCNetClient *ucloudNetClient_instance = nil;
                 return;
             }
             log4cplus_debug("UNetSDK", "success get the ucloud report services...\n");
-            [weakSelf startPingHosts:weakSelf.hostList];
+            
+            NSMutableArray *mutaArray = [NSMutableArray arrayWithArray:@[@"www.apsjdfljoijljdfjdjfsfkple.com"]];
+            [mutaArray addObjectsFromArray:weakSelf.hostList];
+            
+            [weakSelf startPingHosts:mutaArray];
             weakSelf.shouldDoUserIpPing = YES;
 //            [weakSelf startTracertWithHosts:weakSelf.hostList isUCloudHosts:YES];
             
@@ -381,6 +388,13 @@ static UCNetClient *ucloudNetClient_instance = nil;
 - (void)pingResultWithUCPingService:(UCPingService *)ucPingService pingResult:(UReportPingModel *)uReportPingModel
 {
 //    log4cplus_info("UNetPing", "%s\n",[uReportPingModel.description UTF8String]);
+    
+    if (!self.isDoneCDNPing && ![self.hostList containsObject:uReportPingModel.dst_ip] && ![self.userIpList containsObject:uReportPingModel.dst_ip]) {
+        self.isDoneCDNPing = YES;
+        self.ping_status = uReportPingModel.loss == 100 ? CDNPingStatus_ICMP_Off : CDNPingStatus_ICMP_On;
+        [[UCNetInfoReporter shareInstance] setPingStatus:self.ping_status];
+        return;
+    }
     
     __weak typeof(self) weakSelf = self;
     [UNetQueue unet_ping_sync:^{
