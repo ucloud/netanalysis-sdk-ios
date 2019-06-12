@@ -72,6 +72,14 @@ NS_ASSUME_NONNULL_BEGIN
  @return 格式化后的时区
  */
 + (NSString *)formartTimeZone:(NSString *)gmtTime;
+
+
+/**
+ @brief 获取uuid
+
+ @return uuid
+ */
++ (NSString *)uuidStr;
 @end
 
 NS_ASSUME_NONNULL_END

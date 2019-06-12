@@ -286,6 +286,7 @@ userDefinedFields:(NSDictionary * _Nullable)fields
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
                                     @"user_defined":uDefinedJson_rsa,
+                                    @"uuid":[UNetTools uuidStr],
                                     @"timestamp":[NSNumber numberWithInteger:uReportPingModel.beginTime]
                                     };
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
@@ -355,6 +356,7 @@ userDefinedFields:(NSDictionary * _Nullable)fields
                                     @"ip_info":ip_info_rsa,
                                     @"tag":tagStr_rsa,
                                     @"user_defined":uDefinedJson_rsa,
+                                    @"uuid":[UNetTools uuidStr],
                                     @"timestamp":[NSNumber numberWithInteger:uReportTracertModel.beginTime]};
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
         log4cplus_debug("UNetSDK", "ReportTracert, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);

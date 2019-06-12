@@ -9,6 +9,8 @@
 #import "UNetTools.h"
 #import "UCModel.h"
 
+#define KUUID  @"ios_uuid"
+
 @implementation UNetTools
 + (BOOL)un_isEmpty:(NSString *)str
 {
@@ -115,6 +117,22 @@
         return [NSString stringWithFormat:@"+%02d%02d",hour,min];
     }
     return [NSString stringWithFormat:@"%03d%02d",hour,min];
+}
+
++ (NSString *)uuidStr
+{
+    NSString *strUUID = [[NSUserDefaults standardUserDefaults] objectForKey:KUUID];
+    if (strUUID) {
+        return strUUID;
+    }
+    CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef strRef = CFUUIDCreateString(kCFAllocatorDefault , uuidRef);
+    NSString *uuidString = (__bridge NSString *)strRef;
+    CFRelease(strRef);
+    CFRelease(uuidRef);
+    [[NSUserDefaults standardUserDefaults] setObject:uuidString forKey:KUUID];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    return uuidString;
 }
 
 @end
