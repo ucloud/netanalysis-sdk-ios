@@ -20,6 +20,14 @@
 #import "UCReachability.h"
 #import "UNetQueue.h"
 
+
+typedef  enum UIPType {
+    UIPType_Default = -1,
+    UIPType_UCloud = 0,
+    UIPType_Customer
+}UIPType;
+
+
 /*   define log level  */
 int UCLOUD_IOS_FLAG_FATAL = 0x10;
 int UCLOUD_IOS_FLAG_ERROR = 0x08;
@@ -42,6 +50,10 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 
 @property (nonatomic,copy) NSArray *userIpList;
 @property (nonatomic,assign) UCNetworkStatus netStatus;
+// define ip type , fix bug: ip repeat in hostIpList and userIpList
+@property (nonatomic,assign) UIPType pingIpType;
+@property (nonatomic,assign) UIPType tracertIpType;
+
 @property (nonatomic,assign) BOOL  shouldDoUserIpPing;
 //@property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
 
@@ -213,8 +225,10 @@ static UCNetClient *ucloudNetClient_instance = nil;
     
     log4cplus_debug("UNetSDK", "ManualDiag , begin mannual diag network...\n");
     self.isManualNetDiag = YES;
+    self.pingIpType = UIPType_Customer;
     [self startPingHosts:self.userIpList];
     
+    self.tracertIpType = UIPType_Customer;
     [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
 //    self.shouldDoUserIpTracert = NO;
 }
@@ -310,15 +324,17 @@ static UCNetClient *ucloudNetClient_instance = nil;
             }
             log4cplus_debug("UNetSDK", "success get the ucloud report services...\n");
             
-            NSMutableArray *mutaArray = [NSMutableArray arrayWithArray:@[@"www.apsjdfljoijljdfjdjfsfkple.com"]];
+            NSMutableArray *mutaArray = [NSMutableArray arrayWithArray:@[@"www.apple.com"]];
             [mutaArray addObjectsFromArray:weakSelf.hostList];
             
             [weakSelf startPingHosts:mutaArray];
+            self.pingIpType = UIPType_UCloud;
             weakSelf.shouldDoUserIpPing = YES;
 //            [weakSelf startTracertWithHosts:weakSelf.hostList isUCloudHosts:YES];
             
             if (self.userIpList) {
                 [weakSelf startTracertWithHosts:weakSelf.userIpList isUCloudHosts:NO];
+                self.tracertIpType = UIPType_Customer;
             }
            
         }];
@@ -343,14 +359,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
     NSArray *tracertHosts =  isUHosts ? self.hostList : self.userIpList;
     [ucTracertService uStartTracerouteAddressList:tracertHosts];
-}
-
-- (int)getDestIpType:(NSString *)dstIp
-{
-    if (self.userIpList && self.userIpList.count > 0) {
-        return [self.userIpList containsObject:dstIp];
-    }
-    return 0;
 }
 
 - (void)closePingAndTracert
@@ -405,7 +413,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
             }
         }
     }];
-    [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel destIpType:[self getDestIpType:uReportPingModel.dst_ip]];
+    [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel destIpType:(int)self.pingIpType];
 }
 
 - (void)pingFinishedWithUCPingService:(UCPingService *)ucPingService
@@ -416,6 +424,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     
     // 如果ucloud ip list 完成ping的时候，user ip list 已经成功设置
     if (self.shouldDoUserIpPing && self.isManualNetDiag == NO) {
+        self.pingIpType = UIPType_Customer;
         [self startPingHosts:self.userIpList];
         self.shouldDoUserIpPing = NO;
     }
@@ -439,7 +448,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return;
     }
     
-    [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel destIpType:[self getDestIpType:uReportTracertModel.dst_ip]];
+    [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel destIpType:(int)self.tracertIpType];
 }
 
 - (void)tracerouteFinishedWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService
