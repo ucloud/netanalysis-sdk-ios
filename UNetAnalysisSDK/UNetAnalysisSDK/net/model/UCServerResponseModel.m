@@ -56,6 +56,7 @@
         }
         self.info = ipArray;
         self.url = [dict objectForKey:@"url"];
+        self.domain = [dict objectForKey:@"domain"];
     }
     return self;
 }
@@ -74,6 +75,17 @@
     return uhosts;
 }
 
+- (NSMutableArray *)uGetTracertHosts
+{
+    NSMutableArray *tracertList = [NSMutableArray array];
+    for (UNetIpBean *ipBean in self.info) {
+        if (ipBean.type == 1) {
+            [tracertList addObject:ipBean.ip];
+        }
+    }
+    return tracertList;
+}
+
 - (NSString *)description
 {
     NSMutableString *info = [NSMutableString stringWithString:@"{"];
@@ -87,6 +99,10 @@
         [info appendString:eleURL];
         [info appendString:@"\n"];
     }
+    if (self.domain) {
+        [info appendString:[NSString stringWithFormat:@"domain:%@",self.domain]];
+    }
+    
     [info appendString:@"},\n"];
     return info;
 }
@@ -100,6 +116,7 @@
     if (self = [super init]) {
         self.location = [dict objectForKey:@"location"];
         self.ip = [dict objectForKey:@"ip"];
+        self.type = [[dict objectForKey:@"type"] integerValue];
     }
     return self;
 }
@@ -111,7 +128,7 @@
 
 - (NSString *)description
 {
-    return  [NSString stringWithFormat:@"location:%@ , ip:%@",self.location,self.ip];
+    return  [NSString stringWithFormat:@"location:%@ , ip:%@ , type:%ld",self.location,self.ip,(long)self.type];
 }
 @end
 

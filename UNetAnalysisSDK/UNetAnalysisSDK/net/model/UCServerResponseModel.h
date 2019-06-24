@@ -22,14 +22,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UNetDataBean : NSObject
 @property (nonatomic,copy) NSArray *info;
 @property (nonatomic,copy) NSArray *url;
+@property (nonatomic,copy) NSString *domain;
 
 - (NSArray *)uGetUHosts;
+- (NSMutableArray *)uGetTracertHosts;
 + (instancetype)dataBeanWithDict:(NSDictionary *)dict;
 @end
 
 @interface UNetIpBean : NSObject
 @property (nonatomic,copy) NSString *location;
 @property (nonatomic,copy) NSString *ip;
+@property (nonatomic,assign) NSInteger type;
 
 + (instancetype)ipBeanWithDict:(NSDictionary *)dict;
 @end

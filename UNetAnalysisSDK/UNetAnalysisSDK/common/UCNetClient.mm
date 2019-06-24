@@ -55,7 +55,6 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 @property (nonatomic,assign) UIPType tracertIpType;
 
 @property (nonatomic,assign) BOOL  shouldDoUserIpPing;
-//@property (nonatomic,assign) BOOL  shouldDoUserIpTracert;
 
 @property (nonatomic,strong) NSMutableArray *manualPingRes;
 @property (nonatomic,assign) UCCDNPingStatus ping_status;
@@ -230,7 +229,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
     
     self.tracertIpType = UIPType_Customer;
     [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
-//    self.shouldDoUserIpTracert = NO;
 }
 
 - (BOOL)isIpAddress:(NSString *)ipStr
@@ -293,7 +291,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)doPingAndTracertUHosts
 {
-//    self.shouldDoUserIpTracert = YES;
     __weak typeof(self) weakSelf = self;
     [[UCNetInfoReporter shareInstance] uGetDevicePublicIpInfoWithCompletionHandle:^(UIpInfoModel * _Nullable ipInfoModel,UCError * _Nullable ucError) {
         if ([weakSelf processingErrorWith:ucError responseObject:ipInfoModel module:@"GetDevicePublicIp"]) {
@@ -324,19 +321,27 @@ static UCNetClient *ucloudNetClient_instance = nil;
             }
             log4cplus_debug("UNetSDK", "success get the ucloud report services...\n");
             
-            NSMutableArray *mutaArray = [NSMutableArray arrayWithArray:@[@"www.apple.com"]];
+            NSMutableArray *mutaArray = [NSMutableArray array];
+            NSString *domain = ipListBean.data.domain;
+            if (domain) {
+                [mutaArray addObject:domain];
+            }
             [mutaArray addObjectsFromArray:weakSelf.hostList];
             
             [weakSelf startPingHosts:mutaArray];
             self.pingIpType = UIPType_UCloud;
             weakSelf.shouldDoUserIpPing = YES;
-//            [weakSelf startTracertWithHosts:weakSelf.hostList isUCloudHosts:YES];
             
-            if (self.userIpList) {
+            NSMutableArray *tracertList = [weakSelf.uIpListBean.data uGetTracertHosts];
+            if (tracertList.count > 0) {
+                log4cplus_debug("UNetSDK","do tracert for ucloud ips");
+                weakSelf.tracertIpType = UIPType_UCloud;
+                [weakSelf startTracertWithHosts:tracertList isUCloudHosts:YES];
+            }else if(self.userIpList){
+                log4cplus_debug("UNetSDK","There is no ucloud ips do tracert, do tracert for customer ips");
+                weakSelf.tracertIpType = UIPType_Customer;
                 [weakSelf startTracertWithHosts:weakSelf.userIpList isUCloudHosts:NO];
-                self.tracertIpType = UIPType_Customer;
             }
-           
         }];
         
     }];
@@ -453,14 +458,16 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)tracerouteFinishedWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService
 {
-//    if (self.userIpList == NULL) {
-//        return;
-//    }
-//    if (self.shouldDoUserIpTracert) {
-//        [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
-//        self.shouldDoUserIpTracert = NO;
-//    }else{
-//    }
+    if (self.tracertIpType == UIPType_Customer) {
+        return;
+    }
+    
+    // have ucloud ips do tracert
+    if (self.userIpList == NULL || self.userIpList.count == 0) {
+        return;
+    }
+    [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
+    self.tracertIpType = UIPType_Customer;
     
 }
 @end
