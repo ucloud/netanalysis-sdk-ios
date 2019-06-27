@@ -12,8 +12,6 @@
 #import "UNetTools.h"
 #import "log4cplus.h"
 
-
-
 @implementation UCNetAnalysisManager
 
 static UCNetAnalysisManager *sdkManager_instance = nil;
@@ -44,7 +42,7 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 + (BOOL)validRegistParamsWithAppKey:(NSString *)appkey
                         publicToken:(NSString * _Nonnull)publickToken
-                  userDefinedFields:(NSDictionary * _Nullable)fields
+                  userDefinedFields:(NSDictionary<NSString*,NSString*> * _Nullable)fields
             completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
 {
     if (!completeHandler) {

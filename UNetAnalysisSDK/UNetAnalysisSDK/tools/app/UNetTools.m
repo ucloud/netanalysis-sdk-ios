@@ -46,8 +46,8 @@
     }
     @try {
         NSString *json_str = [[self class] userDefinedFieldsConvertDictToJson:fields];
-        if (json_str.length >= 1000) {
-            return @"the user defined fields is illegal, the maximum length is 1000...";
+        if (json_str.length > 1024) {
+            return @"the user defined fields is illegal, the maximum length is 1024...";
         }
     } @catch (NSException *exception) {
         return exception.description;

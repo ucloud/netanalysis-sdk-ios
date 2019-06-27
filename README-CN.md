@@ -93,7 +93,8 @@ pod 'UNetAnalysisSDK'
     // Appkey and public token can be obtained from the ucloud console, or contact our technical support
     NSString *appKey = @""; //your AppKey
     NSString *appToken = @""; // your publick token
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
+    NSDictionary *userDefins = @{@"key1":@"value1",@"key2":@"value2"}; // 用户自定义字段，是一个字典格式，其长度有限制(下面有详细说明)
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken userDefinedFields:userDefins completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
         }else{
@@ -106,6 +107,28 @@ pod 'UNetAnalysisSDK'
     return YES;
 }
 ```
+
+##### 用户自定义字段
+
+在注册SDK的方法中，自定义字段是一个可选字段。如果要设置的话，需要满足以下规则。 
+
+* NSDictionary的键值对为NSString-NSString的形式
+* 整个自定义字段会转化为JSON字符串(如下所示)，转换后的字符串长度不能超过1024Byte,如果长度等限制不满足将会抛出异常。
+
+  ```
+  [
+  	{
+  		"key":"",
+  		"val":""
+  	},
+  	{
+  		"key":"",
+  		"val":""
+  	},
+  	....
+  ]
+  ```
+
 
 #### 停止网络数据收集
 

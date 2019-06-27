@@ -91,7 +91,8 @@ We hope that you register as early as possible `SDK`, we recommend but not limit
     // Appkey and public token can be obtained from the ucloud console, or contact our technical support
     NSString *appKey = @""; //your AppKey
     NSString *appToken = @""; // your publick token
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
+    NSDictionary *userDefins = @{@"key1":@"value1",@"key2":@"value2"}; // User-defined field, which is a dictionary format with a limited length (detailed below)
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken userDefinedFields:userDefins completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
         }else{
@@ -103,6 +104,27 @@ We hope that you register as early as possible `SDK`, we recommend but not limit
     
     return YES;
 }
+```
+
+##### User-defined field
+
+In the method of registering the SDK, the user-defined field is an optional field. If you want to set it, you need to meet the following rules.
+
+* The NSDictionary key-value pair is in the form of NSString-NSString
+* The entire custom field will be converted to a JSON string (as shown below). The length of the converted string cannot exceed 1024 Bytes. If the length limit is not met, an exception will be thrown.
+
+```
+  [
+   {
+   "key":"",
+   "val":""
+   },
+   {
+   "key":"",
+   "val":""
+   },
+   ....
+  ]
 ```
 
 #### Stop network data collection
