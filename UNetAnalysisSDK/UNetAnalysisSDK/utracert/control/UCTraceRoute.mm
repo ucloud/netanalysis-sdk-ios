@@ -143,6 +143,7 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
     
     int ttl = 1;
     int continuousLossPacketRoute = 0;
+    self.lastRecTracertIcmpType = UCTracertIcmpType_None;
     UCTracertIcmpType rec = UCTracertIcmpType_NoReply;
     log4cplus_info("UNetTracert", "begin tracert ip: %s",[self.hostList[self.hostArrayIndex] UTF8String]);
     do {
@@ -168,28 +169,32 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
         }
         rec = [self receiverRemoteIpTracertRes:ttl];
         if (self.lastRecTracertIcmpType == UCTracertIcmpType_None) {
-            self.lastRecTracertIcmpType = rec;
-        }
-        
-        if (rec == UCTracertIcmpType_NoReply){
-            continuousLossPacketRoute++;
+            if (rec == UCTracertIcmpType_NoReply) {
+                 continuousLossPacketRoute = 1;
+            }
+        }else if (rec == UCTracertIcmpType_NoReply){
             if (self.lastRecTracertIcmpType == UCTracertIcmpType_NoReply) {
-                if (continuousLossPacketRoute == kTracertRouteCount_noRes) {
-                    log4cplus_info("UNetTracert", "%d consecutive routes are not responding ,and end the tracert ip: %s\n",kTracertRouteCount_noRes,[self.hostList[self.hostArrayIndex] UTF8String]);
-                    rec = UCTracertIcmpType_Dest;
-                    self.lastRecTracertIcmpType = UCTracertIcmpType_None;
-                    
-                    UCTracerRouteResModel *record = [[UCTracerRouteResModel alloc] init:ttl+1 count:kTracertSendIcmpPacketTimes];
-                    record.beginTime = [UCDateTool currentTimestamp];
-                    record.dstIp = self.hostList[self.hostArrayIndex];
-                    record.status = UCTracertStatus_Finish;
-                    [self.delegate tracerouteWithUCTraceRoute:self tracertResult:record];
-                }
+                continuousLossPacketRoute++;
+            }else{
+                continuousLossPacketRoute = 1;
             }
         }else{
             continuousLossPacketRoute = 0;
         }
+        
         self.lastRecTracertIcmpType = rec;
+        
+        if (continuousLossPacketRoute == kTracertRouteCount_noRes) {
+            log4cplus_info("UNetTracert", "%d consecutive routes are not responding ,and end the tracert ip: %s\n",kTracertRouteCount_noRes,[self.hostList[self.hostArrayIndex] UTF8String]);
+            rec = UCTracertIcmpType_Dest;
+            self.lastRecTracertIcmpType = UCTracertIcmpType_None;
+            
+            UCTracerRouteResModel *record = [[UCTracerRouteResModel alloc] init:ttl+1 count:kTracertSendIcmpPacketTimes];
+            record.beginTime = [UCDateTool currentTimestamp];
+            record.dstIp = self.hostList[self.hostArrayIndex];
+            record.status = UCTracertStatus_Finish;
+            [self.delegate tracerouteWithUCTraceRoute:self tracertResult:record];
+        }
         free(packet);
         usleep(500);
         
@@ -240,7 +245,8 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
             remoteAddress = [NSString stringWithUTF8String:ip];
             
             // [remoteAddress isEqualToString:self.hostList[self.hostArrayIndex]]
-            if ([UCNetDiagnosisHelper isTimeoutPacket:buff len:(int)resultLen]) {
+            // traceroute: when route ip is the destination ip , the dst ip will not replay icmp packet of type 11 , and it will replay icmp packet of type 0
+            if ([UCNetDiagnosisHelper isTimeoutPacket:buff len:(int)resultLen] && ![remoteAddress isEqualToString:self.hostList[self.hostArrayIndex]]) {
                 NSDate *startTime = [self getSendIcmpPacketDateFromContainerWithSeq:tracert_recev_route_index];
                 NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:startTime];
                 if (duration*1000 > kIcmpPacketTimeoutTime) {
@@ -279,13 +285,13 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
                 
                 record.durations[tracert_recev_index] = duration;
                 record.ip = remoteAddress;
-                record.status = UCTracertStatus_Finish;
+                
 //                log4cplus_info("UNetTracert", "tracert %s , duration:%f",[remoteAddress UTF8String],duration*1000);
                 tracert_recev_index++;
                 if (tracert_recev_index == kTracertSendIcmpPacketTimes) {
                     close(socket_client);
                     res = UCTracertIcmpType_Dest;
-                    
+                    record.status = UCTracertStatus_Finish;
                     break;
                 }
             } else {
