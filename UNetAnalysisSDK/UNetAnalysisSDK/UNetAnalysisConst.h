@@ -36,6 +36,6 @@ typedef enum UCCDNPingStatus
     CDNPingStatus_ICMP_None = 2
 }UCCDNPingStatus;
 
-#define KSDKVERSION   @"1.0.11"
+#define KSDKVERSION   @"1.0.12"
 
 #endif /* UNetAnalysisConst_h */
