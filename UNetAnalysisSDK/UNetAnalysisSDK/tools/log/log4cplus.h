@@ -20,11 +20,6 @@
     extern int UCLOUD_IOS_FLAG_WARN;
     extern int UCLOUD_IOS_FLAG_INFO;
     extern int UCLOUD_IOS_FLAG_DEBUG;
-class UCloudLog{
-public:
-        static void Init(void * configuration = NULL){}
-	static void Destroy(){}
-};
 
 #define log4cplus_fatal(category, logFmt, ...) \
 do { \
@@ -56,13 +51,6 @@ do { \
         syslog(LOG_WARNING, "%s:" logFmt, #category,##__VA_ARGS__); \
 }while(0)
 
-inline void log4cplus_init(const char* configuration = NULL){
-    openlog("TVUTransporterT", LOG_NDELAY|LOG_PID|LOG_CONS, LOG_USER);
-}
-
-inline void log4cplus_destroy(){
-    closelog();
-}
 
 
 #endif
