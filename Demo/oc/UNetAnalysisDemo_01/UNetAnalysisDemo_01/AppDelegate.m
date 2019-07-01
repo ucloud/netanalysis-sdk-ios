@@ -24,7 +24,11 @@
     // appkey和rsa公钥需要从ucloud控制台获取，或者联系技术支持获取
     NSString *appKey = @""; //你的appKey
     NSString *appToken = @""; // 你的App公钥
-    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey publicToken:appToken completeHandler:^(UCError * _Nullable ucError) {
+    NSDictionary *userDefins = @{@"key1":@"value1",@"key2":@"value2"}; // 用户自定义字段，是一个字典格式，其长度有限制
+    [[UCNetAnalysisManager shareInstance] uNetRegistSdkWithAppKey:appKey
+                                                      publicToken:appToken
+                                                userDefinedFields:userDefins
+                                                  completeHandler:^(UCError * _Nullable ucError) {
         if (ucError) {
             NSLog(@"regist UNetAnalysisSDK error , error info: %@",ucError.error.description);
         }else{

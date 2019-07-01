@@ -22,8 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // appkey和rsa公钥需要从ucloud控制台获取，或者联系技术支持获取
         let appKey = "" //你的appKey
         let appToken = "" // 你的App公钥
-        
-        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey:appKey, publicToken:appToken) { (ucError:UCError?) in
+        let userDefins:Dictionary<String,String> = ["key1":"value1","key2":"value2"]; // 用户自定义字段，是一个字典格式，其长度有限制
+        UCNetAnalysisManager.shareInstance().uNetRegistSdk(withAppKey: appKey, publicToken: appToken, userDefinedFields: userDefins) { (ucError:UCError?) in
             if (ucError != nil){
                 let error  = ucError!.error as NSError
                 print("regist UNetAnalysisSDK error , error info: %s",error.description)
