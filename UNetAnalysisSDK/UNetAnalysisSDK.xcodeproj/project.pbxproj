@@ -58,7 +58,7 @@
 		AAA1F9B1211B01FB0088217E /* UCTraceRouteService.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F9AD211B01FB0088217E /* UCTraceRouteService.h */; };
 		AAA1F9B2211B01FB0088217E /* UCTraceRoute.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9AE211B01FB0088217E /* UCTraceRoute.mm */; };
 		AAA1F9B3211B01FB0088217E /* UCTraceRoute.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F9AF211B01FB0088217E /* UCTraceRoute.h */; };
-		AAA1F9B4211B01FB0088217E /* UCTraceRouteService.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9B0211B01FB0088217E /* UCTraceRouteService.m */; };
+		AAA1F9B4211B01FB0088217E /* UCTraceRouteService.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F9B0211B01FB0088217E /* UCTraceRouteService.mm */; };
 		AAA4414E2121957700141D7B /* UCNetInfoReporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA4414A2121957700141D7B /* UCNetInfoReporter.mm */; };
 		AAA4414F2121957700141D7B /* UCNetInfoReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA4414B2121957700141D7B /* UCNetInfoReporter.h */; };
 		AAB55D25210969A100F9A561 /* UCReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = AAB55D23210969A100F9A561 /* UCReachability.h */; };
@@ -117,7 +117,7 @@
 		AAA1F9AD211B01FB0088217E /* UCTraceRouteService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCTraceRouteService.h; sourceTree = "<group>"; };
 		AAA1F9AE211B01FB0088217E /* UCTraceRoute.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCTraceRoute.mm; sourceTree = "<group>"; };
 		AAA1F9AF211B01FB0088217E /* UCTraceRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCTraceRoute.h; sourceTree = "<group>"; };
-		AAA1F9B0211B01FB0088217E /* UCTraceRouteService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UCTraceRouteService.m; sourceTree = "<group>"; };
+		AAA1F9B0211B01FB0088217E /* UCTraceRouteService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCTraceRouteService.mm; sourceTree = "<group>"; };
 		AAA4414A2121957700141D7B /* UCNetInfoReporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCNetInfoReporter.mm; sourceTree = "<group>"; };
 		AAA4414B2121957700141D7B /* UCNetInfoReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCNetInfoReporter.h; sourceTree = "<group>"; };
 		AAB55D23210969A100F9A561 /* UCReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCReachability.h; sourceTree = "<group>"; };
@@ -291,7 +291,7 @@
 				AAA1F9AF211B01FB0088217E /* UCTraceRoute.h */,
 				AAA1F9AE211B01FB0088217E /* UCTraceRoute.mm */,
 				AAA1F9AD211B01FB0088217E /* UCTraceRouteService.h */,
-				AAA1F9B0211B01FB0088217E /* UCTraceRouteService.m */,
+				AAA1F9B0211B01FB0088217E /* UCTraceRouteService.mm */,
 			);
 			path = control;
 			sourceTree = "<group>";
@@ -539,7 +539,7 @@
 				AA8660EA2124140500393544 /* UCDateTool.m in Sources */,
 				AA4964EE21C77A6300A48AD8 /* UCModel.m in Sources */,
 				AA8D378A21F6AF8F0060BBC6 /* UNetQueue.m in Sources */,
-				AAA1F9B4211B01FB0088217E /* UCTraceRouteService.m in Sources */,
+				AAA1F9B4211B01FB0088217E /* UCTraceRouteService.mm in Sources */,
 				AA4964F621C7928600A48AD8 /* UPingModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -152,15 +152,22 @@
             self.hostArrayIndex++;
             if (self.hostArrayIndex == self.hostList.count) {
                 log4cplus_info("UNetPing", "ping complete..\n");
-                /*
-                 int shutdown(int s, int how); // s is socket descriptor
-                 int how can be:
-                 SHUT_RD or 0 Further receives are disallowed
-                 SHUT_WR or 1 Further sends are disallowed
-                 SHUT_RDWR or 2 Further sends and receives are disallowed
-                 */
-                shutdown(socket_client, SHUT_RDWR); //
-                self.isStopPingThread = YES;
+                
+                try {
+                    /*
+                     int shutdown(int s, int how); // s is socket descriptor
+                     int how can be:
+                     SHUT_RD or 0 Further receives are disallowed
+                     SHUT_WR or 1 Further sends are disallowed
+                     SHUT_RDWR or 2 Further sends and receives are disallowed
+                     */
+                    shutdown(socket_client, SHUT_RDWR);
+                    close(socket_client);
+                    self.isStopPingThread = YES;
+                } catch (NSException *exception) {
+                    log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
+                }
+                
                 [self.delegate pingFinishedWithUCPing:self];
                 break;
             }
@@ -224,6 +231,7 @@
             ping_timeout_index++;
             if (ping_timeout_index == 5) {
                 res = YES;
+                close(socket_client);
                 log4cplus_info("UNetPing", "done ping , ip:%s \n",[self.hostList[self.hostArrayIndex] UTF8String]);
                 [self reporterPingResWithSorceIp:self.hostList[self.hostArrayIndex] destinationIp:devicePublicIp ttl:0 timeMillSecond:0 seq:ping_timeout_index icmpId:0 dataSize:0 pingStatus:UCPingStatus_Finish];
                 break;

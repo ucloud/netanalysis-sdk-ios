@@ -64,34 +64,28 @@ static UCPingService *ucPingservice_instance = NULL;
         return;
     }
     
-    NSMutableArray *pingItems = [self.pingResDic objectForKey:host];
-    if (pingItems == NULL) {
-        pingItems = [NSMutableArray arrayWithArray:@[pingItem]];
-    }else{
-
-        try {
+    @try {
+        NSMutableArray *pingItems = [self.pingResDic objectForKey:host];
+        if (pingItems == NULL) {
+            pingItems = [NSMutableArray arrayWithArray:@[pingItem]];
+        }else{
             [pingItems addObject:pingItem];
-        } catch (NSException *exception) {
-            log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
         }
-    }
-    try {
         [self.pingResDic setObject:pingItems forKey:host];
-        //        NSLog(@"%@",self.pingResDic);
-    } catch (NSException *exception) {
+        if (pingItem.status == UCPingStatus_Finish) {
+            NSArray *pingItems = [self.pingResDic objectForKey:host];
+            NSDictionary *dict = [UPingResModel pingResultWithPingItems:pingItems];
+            //            NSLog(@"dict----res:%@, pingRes:%@",dict,self.pingResDic);
+            UReportPingModel *reportPingModel = [UReportPingModel uReporterPingmodelWithDict:dict];
+            
+            [self.delegate pingResultWithUCPingService:self pingResult:reportPingModel];
+            //            NSLog(@"%@",reportPingModel);
+            [self removePingResFromPingResContainerWithHostName:host];
+        }
+    } @catch (NSException *exception) {
         log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
     }
     
-    if (pingItem.status == UCPingStatus_Finish) {
-        NSArray *pingItems = [self.pingResDic objectForKey:host];
-        NSDictionary *dict = [UPingResModel pingResultWithPingItems:pingItems];
-//            NSLog(@"dict----res:%@, pingRes:%@",dict,self.pingResDic);
-        UReportPingModel *reportPingModel = [UReportPingModel uReporterPingmodelWithDict:dict];
-        
-        [self.delegate pingResultWithUCPingService:self pingResult:reportPingModel];
-//            NSLog(@"%@",reportPingModel);
-        [self removePingResFromPingResContainerWithHostName:host];
-    }
 }
 
 - (void)removePingResFromPingResContainerWithHostName:(NSString *)host
@@ -124,11 +118,7 @@ static UCPingService *ucPingservice_instance = NULL;
 
 - (void)pingResultWithUCPing:(UCPing *)ucPing pingResult:(UPingResModel *)pingRes pingStatus:(UCPingStatus)status
 {
-    @try {
-        [self addPingResToPingResContainer:pingRes andHost:pingRes.IPAddress];
-    } @catch (NSException *exception) {
-         log4cplus_error("UNetPing", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
-    }
+    [self addPingResToPingResContainer:pingRes andHost:pingRes.IPAddress];
 }
 
 

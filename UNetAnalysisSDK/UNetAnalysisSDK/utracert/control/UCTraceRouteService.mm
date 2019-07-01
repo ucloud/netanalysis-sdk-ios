@@ -7,6 +7,8 @@
 //
 
 #import "UCTraceRouteService.h"
+#import "UNetAnalysisConst.h"
+#include "log4cplus.h"
 
 @interface UCTraceRouteService()<UCTraceRouteDelegate>
 @property (nonatomic,strong) UCTraceRoute *ucTraceroute;
@@ -114,22 +116,28 @@ static UCTraceRouteService *ucTraceRouteService_instance = NULL;
         return;
     }
     
-    NSMutableArray *tracertItems = [self.tracerouteResDict objectForKey:host];
-    if (tracertItems == NULL) {
-        tracertItems = [NSMutableArray arrayWithArray:@[tracertRes]];
-    }else{
-        [tracertItems addObject:tracertRes];
+    @try {
+        NSMutableArray *tracertItems = [self.tracerouteResDict objectForKey:host];
+        if (tracertItems == NULL) {
+            tracertItems = [NSMutableArray arrayWithArray:@[tracertRes]];
+        }else{
+            [tracertItems addObject:tracertRes];
+        }
+        [self.tracerouteResDict setObject:tracertItems forKey:host];
+        //        NSLog(@"%@",self.tracerouteResDict);
+        
+        if (tracertRes.status == UCTracertStatus_Finish) {
+            UReportTracertModel *reportTracertModel = [self constructTracertReportModelUseTracertRes:tracertRes andHost:host];
+            reportTracertModel.beginTime = tracertRes.beginTime;
+            [self.delegate tracerouteResultWithUCTraceRouteService:self tracerouteResult:reportTracertModel];
+            //            NSLog(@"%@",reportTracertModel);
+            [self removePingResFromPingResContainerWithHostName:host];
+        }
+    } @catch (NSException *exception) {
+        log4cplus_error("UNetTracert", "func: %s, exception info: %s , line: %d",__func__,[exception.description UTF8String],__LINE__);
+
     }
-    [self.tracerouteResDict setObject:tracertItems forKey:host];
-//        NSLog(@"%@",self.tracerouteResDict);
     
-    if (tracertRes.status == UCTracertStatus_Finish) {
-        UReportTracertModel *reportTracertModel = [self constructTracertReportModelUseTracertRes:tracertRes andHost:host];
-        reportTracertModel.beginTime = tracertRes.beginTime;
-        [self.delegate tracerouteResultWithUCTraceRouteService:self tracerouteResult:reportTracertModel];
-//            NSLog(@"%@",reportTracertModel);
-        [self removePingResFromPingResContainerWithHostName:host];
-    }
 }
 
 - (void)removePingResFromPingResContainerWithHostName:(NSString *)host

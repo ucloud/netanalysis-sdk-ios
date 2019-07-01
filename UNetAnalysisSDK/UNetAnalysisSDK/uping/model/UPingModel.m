@@ -89,13 +89,7 @@
         address = @"null";
     }
     
-    NSDictionary *dict = NULL;
-    @try {
-        dict = @{@"src_ip":address,@"dst_ip":dst, @"loss":[NSNumber numberWithFloat:lossPercent],@"delay":[NSNumber  numberWithDouble:avgTime],@"ttl":[NSNumber numberWithLong:avgTTL],@"beginTime":[NSNumber numberWithInteger:beginTime]};
-    } @catch (NSException *exception) {
-        NSLog(@"%s, %@",__func__,exception.description);
-    }
-    
+    NSDictionary *dict = @{@"src_ip":address,@"dst_ip":dst, @"loss":[NSNumber numberWithFloat:lossPercent],@"delay":[NSNumber  numberWithDouble:avgTime],@"ttl":[NSNumber numberWithLong:avgTTL],@"beginTime":[NSNumber numberWithInteger:beginTime]};
     return dict;
 }
 @end
