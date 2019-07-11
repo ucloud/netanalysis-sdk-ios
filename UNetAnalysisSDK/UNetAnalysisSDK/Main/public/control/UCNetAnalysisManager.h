@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger,UCSDKLogLevel)
 typedef void(^UCNetRegisterSdkCompleteHandler)(UCError *_Nullable ucError);
 
 /**
- @brief 手动诊断网络状况的block
+ @brief 手动诊断网络状况的block(该方法目前失效)
  @discussion 该block用于告知用户网络诊断的结果，包含设备信息，网络信息，应用信息等。详见 `UCManualNetDiagResult`
  */
 typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullable manualNetDiagRes,UCError *_Nullable ucError);
@@ -51,7 +51,6 @@ typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullabl
 * 设置SDK的日志级别
 * 注册SDK
 * 设置你的应用服务地址列表
-* 手动诊断网络状况
  
  */
 @interface UCNetAnalysisManager : NSObject
@@ -87,19 +86,9 @@ typedef void(^UCNetManualNetDiagCompleteHandler)(UCManualNetDiagResult *_Nullabl
 /**
  @brief 设置用户的服务IP地址列表
  @discussion 这个方法用来设置你想探测的服务的地址，它最好是你应用中的服务地址，当然也可以是其它对你有用的IP地址。
- 这些ip地址不仅仅被用于网络分析，`SDK`中的手动诊断功能，诊断的就是这些IP地址。
  @param customerIpList 应用服务IP列表
  */
 - (void)uNetSettingCustomerIpList:(NSArray *_Nullable)customerIpList;
-
-
-/**
- @brief 手动诊断网络状况功能，如果`completeHandler`参数为空，则会抛出异常。
- @discussion 当手机网络不好时，使用此功能可以获取你设置的服务IP列表的网络情况(ping结果)，还有其它相关信息等。详情请查阅 `UCManualNetDiagResult`
- @param completeHandler 一个 `UCNetManualNetDiagCompleteHandler`类型的block，该block用于接收网络诊断结果。
- */
-- (void)uNetManualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
-
 
 /**
  @brief 停止网络数据收集
