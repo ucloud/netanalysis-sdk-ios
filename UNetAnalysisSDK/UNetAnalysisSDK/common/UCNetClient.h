@@ -9,15 +9,21 @@
 #import <Foundation/Foundation.h>
 #import "UCNetAnalysisManager.h"
 
+typedef NS_ENUM(NSUInteger,UCTriggerDetectType)
+{
+    UCTriggerDetectType_Auto,
+    UCTriggerDetectType_Manual
+};
+
 
 @interface UCNetClient : NSObject
 
 + (instancetype _Nonnull)shareInstance;
 - (int)registSdkWithAppKey:(NSString * _Nonnull)appkey
-               publicToken:(NSString * _Nonnull)publicToken
-         userDefinedFields:(NSDictionary * _Nullable)fields;
-- (void)settingSDKLogLevel:(UCSDKLogLevel)logLevel;
+               publicToken:(NSString * _Nonnull)publicToken;
+- (void)startDetect;
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList;
-- (void)manualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler;
+- (void)settingUserDefineFields:(NSDictionary * _Nullable)fields;
 - (void)closePingAndTracert;
+- (void)closeAutoDetech;
 @end

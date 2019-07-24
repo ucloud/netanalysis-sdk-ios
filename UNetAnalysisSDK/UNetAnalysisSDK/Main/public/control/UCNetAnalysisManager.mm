@@ -11,6 +11,7 @@
 #import "UCNetClient.h"
 #import "UNetTools.h"
 #import "log4cplus.h"
+#import "UCNetLog.h"
 
 @implementation UCNetAnalysisManager
 
@@ -37,13 +38,12 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 - (void)uNetSettingSDKLogLevel:(UCSDKLogLevel)logLevel
 {
-    [[UCNetClient shareInstance] settingSDKLogLevel:logLevel];
+    [UCNetLog settingSDKLogLevel:logLevel];
 }
 
 + (BOOL)validRegistParamsWithAppKey:(NSString *)appkey
-                        publicToken:(NSString * _Nonnull)publickToken
-                  userDefinedFields:(NSDictionary<NSString*,NSString*> * _Nullable)fields
-            completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
+                        appSecret:(NSString * _Nonnull)appSecret
+                    completeHandler:(UCNetErrorHandler _Nonnull)completeHandler
 {
     if (!completeHandler) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException
@@ -57,13 +57,10 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     }else if(![UNetTools validAppkey:appkey]){
         errorInfo = @"APPKEY error";
     }
-    else if ([UNetTools un_isEmpty:publickToken]) {
-        errorInfo = @"no PUBLIC TOKEN";
-    }else if(![UNetTools validRSAPublicKey:publickToken]){
-        errorInfo = @"PUBLICK TOKEN error";
-    }
-    else if([UNetTools validOptReportField:fields]){
-        errorInfo = [UNetTools validOptReportField:fields];
+    else if ([UNetTools un_isEmpty:appSecret]) {
+        errorInfo = @"no APPSECRET";
+    }else if(![UNetTools validRSAPublicKey:appSecret]){
+        errorInfo = @"APPSECRET error";
     }
     if (errorInfo) {
         log4cplus_warn("UNetSDK", "regist sdk error , error info->%s",[errorInfo UTF8String]);
@@ -71,21 +68,44 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
         return NO;
     }
     return YES;
-    
 }
 
 - (void)uNetRegistSdkWithAppKey:(NSString * _Nonnull)appkey
-                    publicToken:(NSString * _Nonnull)publickToken
-              userDefinedFields:(NSDictionary * _Nullable)fields
-                completeHandler:(UCNetRegisterSdkCompleteHandler _Nonnull)completeHandler
+                    appSecret:(NSString * _Nonnull)appSecret
+                completeHandler:(UCNetErrorHandler _Nonnull)completeHandler
 {
-    if (![UCNetAnalysisManager validRegistParamsWithAppKey:appkey publicToken:publickToken userDefinedFields:fields completeHandler:completeHandler]) {
+    
+    if (![[self class] validRegistParamsWithAppKey:appkey appSecret:appSecret completeHandler:completeHandler]) {
         return;
     }
-    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey publicToken:publickToken userDefinedFields:fields];
+    int res = [[UCNetClient shareInstance] registSdkWithAppKey:appkey
+                                                   publicToken:appSecret];
     if (res == 0) {
         completeHandler(nil);
     }
+}
+
+- (void)uNetSettingUserDefineFields:(NSDictionary<NSString*,NSString*> * _Nullable)fields
+                            handler:(UCNetErrorHandler _Nonnull)handler
+{
+    if (!handler) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:@"no UCNetParamSettingHandler"
+                                     userInfo:nil];
+        return;
+    }
+    NSString *errorInfo = [UNetTools validOptReportField:fields];
+    if(errorInfo){
+        log4cplus_warn("UNetSDK", "setting user defined fields , error info->%s",[errorInfo UTF8String]);
+        handler([UCError sysErrorWithInvalidArgument:errorInfo]);
+        return;
+    }
+    [[UCNetClient shareInstance] settingUserDefineFields:fields];
+}
+
+- (void)uNetCloseAutoDetectNet
+{
+    [[UCNetClient shareInstance] closeAutoDetech];
 }
 
 - (void)uNetSettingCustomerIpList:(NSArray *_Nullable)customerIpList
@@ -93,15 +113,9 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
     [[UCNetClient shareInstance] settingCustomerIpList:customerIpList];
 }
 
-- (void)uNetManualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler
+- (void)uNetStartDetect
 {
-    if (completeHandler == nil) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:@"no UCNetManualNetDiagCompleteHandler"
-                                     userInfo:nil];
-        return;
-    }
-    [[UCNetClient shareInstance] manualDiagNetStatus:completeHandler];
+    [[UCNetClient shareInstance] startDetect];
 }
 
 - (void)uNetStopDataCollectionWhenAppWillResignActive

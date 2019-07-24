@@ -24,8 +24,9 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
 - (void)setPingStatus:(UCCDNPingStatus)pingStatus;
 
 - (void)setAppKey:(NSString * _Nonnull)appKey
-     publickToken:(NSString * _Nonnull)publicToken
-userDefinedFields:(NSDictionary * _Nullable)fields;
+     publickToken:(NSString * _Nonnull)publicToken;
+
+- (void)setUserDefinedFields:(NSDictionary * _Nullable)fields;
 
 - (void)uGetDevicePublicIpInfoWithCompletionHandle:(UNetGetDevicePublicIpInfoHandler _Nonnull)handler;
 - (UIpInfoModel * _Nonnull)ipInfoModel;

@@ -28,21 +28,11 @@ typedef  enum UIPType {
 }UIPType;
 
 
-/*   define log level  */
-int UCLOUD_IOS_FLAG_FATAL = 0x10;
-int UCLOUD_IOS_FLAG_ERROR = 0x08;
-int UCLOUD_IOS_FLAG_WARN = 0x04;
-int UCLOUD_IOS_FLAG_INFO = 0x02;
-int UCLOUD_IOS_FLAG_DEBUG = 0x01;
-int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_IOS_FLAG_ERROR;
-
 @interface UCNetClient()<UCPingServiceDelegate,UCTraceRouteServiceDelegate>
 @property (nonatomic,copy) NSString *appName;
 @property (nonatomic,copy) NSArray *hostList;
 
 @property (nonatomic) UCReachability *reachability;
-
-@property (readonly) UCNetManualNetDiagCompleteHandler manualNetDiagHandler;
 @property (nonatomic,assign) BOOL  isManualNetDiag;
 
 @property (nonatomic,strong) UIpInfoModel *devicePubIpInfo;
@@ -56,11 +46,14 @@ int UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_I
 
 @property (nonatomic,assign) BOOL  shouldDoUserIpPing;
 
-@property (nonatomic,strong) NSMutableArray *manualPingRes;
 @property (nonatomic,assign) UCCDNPingStatus ping_status;
 @property (nonatomic,assign) BOOL isDoneCDNPing;
 
+@property (nonatomic,copy)   NSString *cdnDomain;
+@property (nonatomic,assign) UCTriggerDetectType detectType;
+
 @end
+
 
 @implementation UCNetClient
 
@@ -85,56 +78,26 @@ static UCNetClient *ucloudNetClient_instance = nil;
     return [UCNetClient shareInstance];
 }
 
-- (void)settingSDKLogLevel:(UCSDKLogLevel)logLevel
+- (void)closeAutoDetech
 {
-    switch (logLevel) {
-        case UCSDKLogLevel_FATAL:
-        {
-            UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL;
-            log4cplus_fatal("UNetSDK", "setting UCSDK log level ,UCLOUD_IOS_FLAG_FATAL...\n");
-        }
-            break;
-        case UCSDKLogLevel_ERROR:
-        {
-            UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_IOS_FLAG_ERROR;
-            log4cplus_error("UNetSDK", "setting UCSDK log level ,UCLOUD_IOS_FLAG_ERROR...\n");
-        }
-            break;
-        case UCSDKLogLevel_WARN:
-        {
-            UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_IOS_FLAG_ERROR|UCLOUD_IOS_FLAG_WARN;
-            log4cplus_warn("UNetSDK", "setting UCSDK log level ,UCLOUD_IOS_FLAG_WARN...\n");
-        }
-            break;
-        case UCSDKLogLevel_INFO:
-        {
-            UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_IOS_FLAG_ERROR|UCLOUD_IOS_FLAG_WARN|UCLOUD_IOS_FLAG_INFO;
-            log4cplus_info("UNetSDK", "setting UCSDK log level ,UCLOUD_IOS_FLAG_INFO...\n");
-        }
-            break;
-        case UCSDKLogLevel_DEBUG:
-        {
-            UCLOUD_IOS_LOG_LEVEL = UCLOUD_IOS_FLAG_FATAL|UCLOUD_IOS_FLAG_ERROR|UCLOUD_IOS_FLAG_WARN|UCLOUD_IOS_FLAG_INFO|UCLOUD_IOS_FLAG_DEBUG;
-            log4cplus_debug("UNetSDK", "setting UCSDK log level ,UCNetAnalysisSDKLogLevel_DEBUG...\n");
-        }
-            break;
-            
-        default:
-            break;
-    }
+    _detectType = UCTriggerDetectType_Manual;
 }
 
 - (int)registSdkWithAppKey:(NSString *)appkey
                publicToken:(NSString *)publicToken
-            userDefinedFields:(NSDictionary * _Nullable)fields
 {
     self.isManualNetDiag = NO;
-    [[UCNetInfoReporter shareInstance] setAppKey:appkey publickToken:publicToken userDefinedFields:fields];
+    [[UCNetInfoReporter shareInstance] setAppKey:appkey publickToken:publicToken];
     log4cplus_info("UNetSDK", "regist UCNetAnalysis success...\n");
     [UCPingService shareInstance].delegate = self;
     [UCTraceRouteService shareInstance].delegate = self;
     [self registNetStateChangeNoti];
     return 0;
+}
+
+- (void)settingUserDefineFields:(NSDictionary * _Nullable)fields
+{
+    [[UCNetInfoReporter shareInstance] setUserDefinedFields:fields];
 }
 
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList
@@ -166,7 +129,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
 }
 
-- (BOOL)canStartNetDetection:(UCNetManualNetDiagCompleteHandler)completeHandler
+- (BOOL)canStartNetDetection
 {
     NSString *warnInfo = @"";
     BOOL res = YES;
@@ -189,29 +152,33 @@ static UCNetClient *ucloudNetClient_instance = nil;
     else if(self.netStatus == Reachable_None){
         warnInfo = @"none network";
         res = NO;
-    }else if([[UCPingService shareInstance] uIsPing])
-    {
-        warnInfo = @"auto diagnosis is in progress, please try again later";
-        res = NO;
     }
     if (!res) {
-        completeHandler(nil,[UCError sysErrorWithInvalidCondition:warnInfo]);
         log4cplus_warn("UNetSDK", "%s...\n",[warnInfo UTF8String]);
     }
     return res;
 }
 
-- (void)manualDiagNetStatus:(UCNetManualNetDiagCompleteHandler _Nonnull)completeHandler
+- (void)startDetect
 {
+    if (![self canStartNetDetection]) {
+        return;
+    }
+    if (self.detectType == UCTriggerDetectType_Manual) {
+        [self startAutoDetect];
+        return;
+    }
     if (self.isManualNetDiag) {
+        log4cplus_debug("UNetSDK", "manual detect is in progess, please try again later");
         return;
     }
-    _manualPingRes = [NSMutableArray array];
-    _manualNetDiagHandler = completeHandler;
     
-    if (![self canStartNetDetection:_manualNetDiagHandler]) {
+    if ([[UCPingService shareInstance] uIsPing]) {
+        log4cplus_debug("UNetSDK", "auto detect is in progress, please try again later");
         return;
     }
+    
+   
     UCPingService *pingService = [UCPingService shareInstance];
     if ([pingService uIsPing]) {
         [pingService uStopPing];
@@ -229,6 +196,34 @@ static UCNetClient *ucloudNetClient_instance = nil;
     
     self.tracertIpType = UIPType_Customer;
     [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
+    
+}
+
+/**
+ @brief 当用户没有关闭了自动检测时，手动触发检测的方式
+ */
+- (void)startAutoDetect
+{
+    NSMutableArray *mutaArray = [NSMutableArray array];
+    if (self.cdnDomain) {
+        [mutaArray addObject:self.cdnDomain];
+    }
+    [mutaArray addObjectsFromArray:self.hostList];
+    
+    [self startPingHosts:mutaArray];
+    self.pingIpType = UIPType_UCloud;
+    self.shouldDoUserIpPing = YES;
+    
+    NSMutableArray *tracertList = [self.uIpListBean.data uGetTracertHosts];
+    if (tracertList.count > 0) {
+        log4cplus_debug("UNetSDK","do tracert for ucloud ips");
+        self.tracertIpType = UIPType_UCloud;
+        [self startTracertWithHosts:tracertList isUCloudHosts:YES];
+    }else if(self.userIpList){
+        log4cplus_debug("UNetSDK","There is no ucloud ips do tracert, do tracert for customer ips");
+        self.tracertIpType = UIPType_Customer;
+        [self startTracertWithHosts:self.userIpList isUCloudHosts:NO];
+    }
 }
 
 - (BOOL)isIpAddress:(NSString *)ipStr
@@ -262,8 +257,10 @@ static UCNetClient *ucloudNetClient_instance = nil;
 {
     self.devicePubIpInfo = nil;
     self.uIpListBean = nil;
+    self.hostList = nil;
     self.netStatus = [reachability currentReachabilityStatus];
     self.ping_status = CDNPingStatus_ICMP_None;
+    self.cdnDomain = nil;
     self.isDoneCDNPing = NO;
     switch (self.netStatus) {
         case Reachable_None:
@@ -274,13 +271,13 @@ static UCNetClient *ucloudNetClient_instance = nil;
         case Reachable_WiFi:
         {
             log4cplus_info("UNetSDK", "network type is WIFI...\n");
-            [self doPingAndTracertUHosts];
+            [self updateEnvironments];
         }
             break;
         case Reachable_WWAN:
         {
             log4cplus_info("UNetSDK", "network type is WWAN...\n");
-            [self doPingAndTracertUHosts];
+            [self updateEnvironments];
         }
             break;
             
@@ -289,7 +286,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     }
 }
 
-- (void)doPingAndTracertUHosts
+- (void)updateEnvironments
 {
     __weak typeof(self) weakSelf = self;
     [[UCNetInfoReporter shareInstance] uGetDevicePublicIpInfoWithCompletionHandle:^(UIpInfoModel * _Nullable ipInfoModel,UCError * _Nullable ucError) {
@@ -320,28 +317,13 @@ static UCNetClient *ucloudNetClient_instance = nil;
                 return;
             }
             log4cplus_debug("UNetSDK", "success get the ucloud report services...\n");
-            
-            NSMutableArray *mutaArray = [NSMutableArray array];
-            NSString *domain = ipListBean.data.domain;
-            if (domain) {
-                [mutaArray addObject:domain];
+        
+            if (weakSelf.detectType == UCTriggerDetectType_Manual) { // 如果当前自动网络检测关闭，则不执行自动诊断
+                log4cplus_debug("UNetSDK", "SDK automatic collection net data function is closed...\n");
+                return;
             }
-            [mutaArray addObjectsFromArray:weakSelf.hostList];
-            
-            [weakSelf startPingHosts:mutaArray];
-            self.pingIpType = UIPType_UCloud;
-            weakSelf.shouldDoUserIpPing = YES;
-            
-            NSMutableArray *tracertList = [weakSelf.uIpListBean.data uGetTracertHosts];
-            if (tracertList.count > 0) {
-                log4cplus_debug("UNetSDK","do tracert for ucloud ips");
-                weakSelf.tracertIpType = UIPType_UCloud;
-                [weakSelf startTracertWithHosts:tracertList isUCloudHosts:YES];
-            }else if(self.userIpList){
-                log4cplus_debug("UNetSDK","There is no ucloud ips do tracert, do tracert for customer ips");
-                weakSelf.tracertIpType = UIPType_Customer;
-                [weakSelf startTracertWithHosts:weakSelf.userIpList isUCloudHosts:NO];
-            }
+            weakSelf.cdnDomain = ipListBean.data.domain;
+            [weakSelf startAutoDetect];
         }];
         
     }];
@@ -408,16 +390,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCNetInfoReporter shareInstance] setPingStatus:self.ping_status];
         return;
     }
-    
-    __weak typeof(self) weakSelf = self;
-    [UNetQueue unet_ping_sync:^{
-        if (weakSelf.isManualNetDiag) {
-            UCIpPingResult *ipPingRes = [[UCIpPingResult alloc] initUIpPingResultWithIp:uReportPingModel.dst_ip loss:uReportPingModel.loss delay:uReportPingModel.delay];
-            if ([weakSelf.userIpList containsObject:ipPingRes.ip]) {
-                [weakSelf.manualPingRes addObject:ipPingRes];
-            }
-        }
-    }];
     [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel destIpType:(int)self.pingIpType];
 }
 
@@ -436,12 +408,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
     
     // 如果在进行手动诊断
     if (self.isManualNetDiag) {
-        __weak typeof(self) weakSelf = self;
-        [UNetQueue unet_ping_sync:^{
-            UCManualNetDiagResult *diagRes = [UCManualNetDiagResult instanceWithPingRes:weakSelf.manualPingRes];
-            weakSelf.manualNetDiagHandler(diagRes,nil);
-            weakSelf.isManualNetDiag = NO;
-        }];
+        self.isManualNetDiag = NO;
     }
 }
 

@@ -76,15 +76,18 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 
 - (void)setAppKey:(NSString *)appKey
      publickToken:(NSString *)publicToken
-userDefinedFields:(NSDictionary * _Nullable)fields
 {
     _appKey = appKey;
     _appSecret = publicToken;
+   
+}
+
+- (void)setUserDefinedFields:(NSDictionary * _Nullable)fields
+{
     if (!fields) {
         log4cplus_debug("UNetSDK", "user defined fields is nil..\n");
         return;
     }
-    
     try {
         self.userDefinedJson = [UNetTools userDefinedFieldsConvertDictToJson:fields];
         log4cplus_debug("UNetSDK", "user defined fields is: %s",[self.userDefinedJson UTF8String]);
