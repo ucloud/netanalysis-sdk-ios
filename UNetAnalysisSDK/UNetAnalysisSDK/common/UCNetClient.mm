@@ -21,13 +21,6 @@
 #import "UNetQueue.h"
 
 
-typedef  enum UIPType {
-    UIPType_Default = -1,
-    UIPType_UCloud = 0,
-    UIPType_Customer
-}UIPType;
-
-
 @interface UCNetClient()<UCPingServiceDelegate,UCTraceRouteServiceDelegate>
 @property (nonatomic,copy) NSString *appName;
 @property (nonatomic,copy) NSArray *hostList;
@@ -51,6 +44,7 @@ typedef  enum UIPType {
 
 @property (nonatomic,copy)   NSString *cdnDomain;
 @property (nonatomic,assign) UCTriggerDetectType detectType;
+@property (nonatomic,assign) UCDataType sourceDataType;  // 表示数据源属于哪一种诊断触发的
 
 @end
 
@@ -165,6 +159,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return;
     }
     if (self.detectType == UCTriggerDetectType_Manual) {
+        self.sourceDataType = UCDataType_Manual;
         [self startAutoDetect];
         return;
     }
@@ -178,8 +173,8 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return;
     }
     
-   
     UCPingService *pingService = [UCPingService shareInstance];
+    self.sourceDataType = UCDataType_Manual;
     if ([pingService uIsPing]) {
         [pingService uStopPing];
     }
@@ -322,6 +317,8 @@ static UCNetClient *ucloudNetClient_instance = nil;
                 log4cplus_debug("UNetSDK", "SDK automatic collection net data function is closed...\n");
                 return;
             }
+            
+            weakSelf.sourceDataType = UCDataType_Auto; // 更新数据源类型为Auto
             weakSelf.cdnDomain = ipListBean.data.domain;
             [weakSelf startAutoDetect];
         }];
@@ -390,7 +387,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCNetInfoReporter shareInstance] setPingStatus:self.ping_status];
         return;
     }
-    [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel destIpType:(int)self.pingIpType];
+    [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel
+                                                                  destIpType:(int)self.pingIpType
+                                                              dataSourceType:(int)self.sourceDataType];
 }
 
 - (void)pingFinishedWithUCPingService:(UCPingService *)ucPingService
@@ -420,7 +419,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return;
     }
     
-    [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel destIpType:(int)self.tracertIpType];
+    [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel
+                                                                        destIpType:(int)self.tracertIpType
+                                                                    dataSourceType:(int)self.sourceDataType];
 }
 
 - (void)tracerouteFinishedWithUCTraceRouteService:(UCTraceRouteService *)ucTraceRouteService

@@ -246,7 +246,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 }
 
 #pragma mark- report ping results
-- (void)uReportPingResultWithUReportPingModel:(UReportPingModel * _Nonnull)uReportPingModel destIpType:(int)type
+- (void)uReportPingResultWithUReportPingModel:(UReportPingModel * _Nonnull)uReportPingModel
+                                   destIpType:(int)type
+                               dataSourceType:(int)dsType
 {
     if (self.ipInfoModel == NULL) {
         log4cplus_warn("UNetSDK", "reportPing, the device public ip info is null..\n");
@@ -290,6 +292,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                     @"tag":tagStr_rsa,
                                     @"user_defined":uDefinedJson_rsa,
                                     @"uuid":[UNetTools uuidStr],
+                                    @"trigger_type":[NSString stringWithFormat:@"%d",dsType],
                                     @"timestamp":[NSNumber numberWithInteger:uReportPingModel.beginTime]
                                     };
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
@@ -332,7 +335,9 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 }
 
 #pragma mark- report tracert results
-- (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel destIpType:(int)type
+- (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel
+                                         destIpType:(int)type
+                                     dataSourceType:(int)dsType
 {
     if (self.ipInfoModel == NULL) {
         log4cplus_warn("UNetSDK", "reportTracert, the device public ip info is null..\n");
@@ -360,6 +365,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                     @"tag":tagStr_rsa,
                                     @"user_defined":uDefinedJson_rsa,
                                     @"uuid":[UNetTools uuidStr],
+                                    @"trigger_type":[NSString stringWithFormat:@"%d",dsType],
                                     @"timestamp":[NSNumber numberWithInteger:uReportTracertModel.beginTime]};
         NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
         log4cplus_debug("UNetSDK", "ReportTracert, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);

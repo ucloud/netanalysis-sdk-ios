@@ -33,7 +33,11 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
 
 - (void)uGetUHostListWithIpInfoModel:(UIpInfoModel * _Nonnull)ipInfoModel completionHandler:(UNetGetUHostListHandler _Nonnull)handler;
 
-- (void)uReportPingResultWithUReportPingModel:(UReportPingModel * _Nonnull)uReportPingModel destIpType:(int)type;
-- (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel destIpType:(int)type;
+- (void)uReportPingResultWithUReportPingModel:(UReportPingModel * _Nonnull)uReportPingModel
+                                   destIpType:(int)type
+                               dataSourceType:(int)dsType;
+- (void)uReportTracertResultWithUReportTracertModel:(UReportTracertModel *)uReportTracertModel
+                                         destIpType:(int)type
+                                     dataSourceType:(int)dsType;
 
 @end

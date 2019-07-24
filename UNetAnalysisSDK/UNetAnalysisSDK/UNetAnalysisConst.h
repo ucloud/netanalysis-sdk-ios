@@ -36,6 +36,25 @@ typedef enum UCCDNPingStatus
     CDNPingStatus_ICMP_None = 2
 }UCCDNPingStatus;
 
+typedef  enum UIPType {
+    UIPType_Default = -1,
+    UIPType_UCloud = 0,
+    UIPType_Customer
+}UIPType;
+
+
+/**
+ @brief 诊断数据的来源类型
+
+ - UCTriggerType_Auto: 由自动诊断触发
+ - UCTriggerType_Manual: 由手动诊断触发
+ */
+typedef NS_ENUM(NSUInteger,UCDataType)
+{
+    UCDataType_Auto,
+    UCDataType_Manual
+};
+
 #define KSDKVERSION   @"1.0.13"
 
 #endif /* UNetAnalysisConst_h */
