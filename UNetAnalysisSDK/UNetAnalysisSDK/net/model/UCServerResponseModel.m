@@ -240,3 +240,45 @@
     return [[self alloc] initWithDict:dict];
 }
 @end
+
+
+@implementation UNetSDKStatusData
+
+- (instancetype)initWithDict:(NSDictionary *)dict
+{
+    if (self = [super init]) {
+        self.enabled = [[dict objectForKey:@"enabled"] unsignedIntegerValue];
+    }
+    return self;
+}
+
++ (instancetype)sdkStatusDataWithDict:(NSDictionary *)dict
+{
+    return [[self alloc] initWithDict:dict];
+}
+
+@end
+
+@implementation UNetSDKStatus
+
+- (instancetype)initWithDict:(NSDictionary *)dict
+{
+    if (self = [super init]) {
+        if ([[dict objectForKey:@"meta"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *metaDict =  [dict objectForKey:@"meta"];
+            self.meta = [UNetMetaBean metaBeanWithDict:metaDict];
+        }
+        if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dataDict = [dict objectForKey:@"data"];
+            self.data = [UNetSDKStatusData sdkStatusDataWithDict:dataDict];
+        }
+    }
+    return self;
+}
+
++ (instancetype)sdkStatusWithDict:(NSDictionary *)dict
+{
+    return [[self alloc] initWithDict:dict];
+}
+
+@end

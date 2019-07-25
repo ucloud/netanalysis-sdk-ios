@@ -45,6 +45,7 @@
 @property (nonatomic,copy)   NSString *cdnDomain;
 @property (nonatomic,assign) UCTriggerDetectType detectType;
 @property (nonatomic,assign) UCDataType sourceDataType;  // 表示数据源属于哪一种诊断触发的
+@property (nonatomic,assign) UNetSDKSwitch sdkSwitch;
 
 @end
 
@@ -83,9 +84,24 @@ static UCNetClient *ucloudNetClient_instance = nil;
     self.isManualNetDiag = NO;
     [[UCNetInfoReporter shareInstance] setAppKey:appkey publickToken:publicToken];
     log4cplus_info("UNetSDK", "regist UCNetAnalysis success...\n");
-    [UCPingService shareInstance].delegate = self;
-    [UCTraceRouteService shareInstance].delegate = self;
-    [self registNetStateChangeNoti];
+    
+    __weak typeof(self) weakSelf = self;
+    [[UCNetInfoReporter shareInstance] uGetSDKStatusWithCompletionHandler:^(UNetSDKStatus * _Nullable sdkStatus, UCError * _Nullable ucError) {
+        if (ucError) {
+            log4cplus_error("UNetSDK", "Get SDK status error, stop data collection...\n");
+            return;
+        }
+        self.sdkSwitch = (UNetSDKSwitch)sdkStatus.data.enabled;
+        log4cplus_debug("UNetSDK", "SDK status: %ld",sdkStatus.data.enabled);
+        
+        if (self.sdkSwitch != UNetSDKSwitch_ON) {
+            log4cplus_debug("UNetSDK", "SDK does not open...\n");
+            return;
+        }
+        [UCPingService shareInstance].delegate = weakSelf;
+        [UCTraceRouteService shareInstance].delegate = weakSelf;
+        [weakSelf registNetStateChangeNoti];
+    }];
     return 0;
 }
 
@@ -155,6 +171,10 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)startDetect
 {
+    if (self.sdkSwitch != UNetSDKSwitch_ON) {
+        log4cplus_debug("UNetSDK", "SDK does not open...\n");
+        return;
+    }
     if (![self canStartNetDetection]) {
         return;
     }

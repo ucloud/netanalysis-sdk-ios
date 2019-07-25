@@ -27,6 +27,7 @@
  */
 typedef NS_ENUM(NSUInteger,UCNetOperateType)
 {
+    UCNetOperateType_SDKStatus,
     UCNetOperateType_GetIpInfo,
     UCNetOperateType_GetIpList,
     UCNetOperateType_DoReport
@@ -79,7 +80,6 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 {
     _appKey = appKey;
     _appSecret = publicToken;
-   
 }
 
 - (void)setUserDefinedFields:(NSDictionary * _Nullable)fields
@@ -148,6 +148,14 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                 return;
             }
             
+        }else if(type == UCNetOperateType_SDKStatus){
+            UNetSDKStatus *sdkStatusBean = [UNetSDKStatus sdkStatusWithDict:dict];
+            if (sdkStatusBean.meta.code != 200) {
+                UCServerError *serverError = [UCServerError instanceWithCode:sdkStatusBean.meta.code errMsg:sdkStatusBean.meta.error];
+                handler(nil,[UCError httpErrorWithServerError:serverError]);
+                 return;
+            }
+           
         }else{
             UNetIpListBean *uResponsBean = [UNetIpListBean ipListBeanWithDict:dict];
             if (uResponsBean.meta.code != 200) {
@@ -159,6 +167,12 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 
         try {
             switch (type) {
+                case UCNetOperateType_SDKStatus:
+                {
+                    UNetSDKStatus *sdkStatusBean = [UNetSDKStatus sdkStatusWithDict:dict];
+                    handler(sdkStatusBean,nil);
+                }
+                    break;
                 case UCNetOperateType_GetIpInfo:
                 {
                     if (dict[@"data"] == nil) {
@@ -212,6 +226,23 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     request.HTTPBody = [paramJsonStr dataUsingEncoding:NSUTF8StringEncoding];
     return request;
+}
+
+#pragma mark- Get SDK status
+- (void)uGetSDKStatusWithCompletionHandler:(UNetSDKStatusHandler)handler
+{
+    NSString *paramStr = nil;
+    @try {
+        NSDictionary *requestParam = @{@"app_key":self.appKey};
+        paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:requestParam options:0 error:nil] encoding:NSUTF8StringEncoding];
+    } @catch (NSException *exception) {
+        log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
+        handler(nil,[UCError sysErrorWithInvalidElements:@"construct request param error"]);
+        return;
+    }
+    if (paramStr) {
+        [self doHttpRequest:[[self class] constructRequestWithHttpMethod:@"POST" urlstring:U_Get_SDK_status jsonParamStr:paramStr timeOut:uNetSDKTimeOut] type:UCNetOperateType_SDKStatus handler:handler];
+    }
 }
 
 #pragma mark- The device public ip info

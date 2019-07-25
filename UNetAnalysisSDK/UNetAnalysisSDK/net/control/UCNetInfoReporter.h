@@ -13,7 +13,7 @@
 #import "UCServerResponseModel.h"
 #import "UNetAnalysisConst.h"
 
-
+typedef void (^UNetSDKStatusHandler)(UNetSDKStatus *_Nullable sdkStatus,UCError *_Nullable ucError);
 typedef void (^UNetOperationGetInfoHandler)(id _Nullable obj,UCError * _Nullable ucError);
 typedef  void(^UNetGetDevicePublicIpInfoHandler) (UIpInfoModel *_Nullable ipInfoModel,UCError *_Nullable ucError);
 typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCError * _Nullable ucError);
@@ -27,6 +27,8 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
      publickToken:(NSString * _Nonnull)publicToken;
 
 - (void)setUserDefinedFields:(NSDictionary * _Nullable)fields;
+
+- (void)uGetSDKStatusWithCompletionHandler:(UNetSDKStatusHandler _Nonnull)handler;
 
 - (void)uGetDevicePublicIpInfoWithCompletionHandle:(UNetGetDevicePublicIpInfoHandler _Nonnull)handler;
 - (UIpInfoModel * _Nonnull)ipInfoModel;

@@ -83,4 +83,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithDict:(NSDictionary *)dict;
 + (instancetype)reportResponseWithDict:(NSDictionary *)dict;
 @end
+
+
+
+/* 获取SDK开关相关的model */
+
+@interface UNetSDKStatusData:NSObject
+@property (nonatomic,assign) NSUInteger enabled;
+@end
+
+
+@interface UNetSDKStatus:NSObject
+
+@property (nonatomic,strong) UNetMetaBean *meta;
+@property (nonatomic,strong) UNetSDKStatusData *data;
+
++ (instancetype)sdkStatusWithDict:(NSDictionary *)dict;
+@end
 NS_ASSUME_NONNULL_END

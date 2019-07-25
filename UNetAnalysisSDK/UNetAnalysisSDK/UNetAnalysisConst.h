@@ -17,7 +17,8 @@
 
 
 /***********  About http Interface   ***********/
-#define     U_Get_Public_Ip_Url   @"https://net-trace.ucloud.cn:8098/v1/ipip"   //get public ip info interface
+#define     U_Get_SDK_status          @"http://192.168.153.218:3000/api/iplist/getsdkstatus/"
+#define     U_Get_Public_Ip_Url       @"https://net-trace.ucloud.cn:8098/v1/ipip"   //get public ip info interface
 #define     U_Get_UCloud_iplist_URL   @"https://net-trace.ucloud.cn:8000/api/iplist/getpinglist/"  // get ucloud ip list interface
 
 
@@ -42,6 +43,13 @@ typedef  enum UIPType {
     UIPType_Customer
 }UIPType;
 
+
+
+typedef NS_ENUM(NSUInteger,UNetSDKSwitch)
+{
+    UNetSDKSwitch_OFF,
+    UNetSDKSwitch_ON
+};
 
 /**
  @brief 诊断数据的来源类型
