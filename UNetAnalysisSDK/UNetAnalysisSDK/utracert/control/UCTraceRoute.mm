@@ -46,7 +46,7 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
 
 - (instancetype)init
 {
-    if ([super init]) {
+    if (self = [super init]) {
         self.hostArrayIndex = 0;
         
         _isStopTracert = NO;
@@ -154,7 +154,6 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
     try {
         log4cplus_info("UNetTracert", "begin tracert ip: %s",[self.hostList[self.hostArrayIndex] UTF8String]);
         do {
-            rec = UCTracertIcmpType_NoReply;
             int setTtlRes = setsockopt(socketClient,
                                        IPPROTO_IP,
                                        IP_TTL,

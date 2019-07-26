@@ -93,7 +93,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
         }
         self.sdkSwitch = (UNetSDKSwitch)sdkStatus.data.enabled;
         log4cplus_debug("UNetSDK", "SDK status: %ld",sdkStatus.data.enabled);
-        
+
         if (self.sdkSwitch != UNetSDKSwitch_ON) {
             log4cplus_debug("UNetSDK", "SDK does not open...\n");
             return;
@@ -374,6 +374,8 @@ static UCNetClient *ucloudNetClient_instance = nil;
     if ([[UCPingService shareInstance] uIsPing]) {
         [[UCPingService shareInstance] uStopPing];
     }
+    self.isManualNetDiag = NO;
+    
     log4cplus_warn("UNetSDK", "App resign activity , stop collection network data...\n");
 }
 

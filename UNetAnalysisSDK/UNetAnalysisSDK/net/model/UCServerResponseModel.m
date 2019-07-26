@@ -12,8 +12,8 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        self.code = [[dict objectForKey:@"code"] integerValue];
-        self.error = [dict objectForKey:@"error"];
+        _code = [[dict objectForKey:@"code"] integerValue];
+        _error = [dict objectForKey:@"error"];
     }
     return self;
 }
@@ -37,7 +37,6 @@
         if (dict == NULL) {
             return self;
         }
-        
         NSArray *infoArray = nil;
         if ([[dict objectForKey:@"info"] isKindOfClass:[NSArray class]]) {
             infoArray = [dict objectForKey:@"info"];
@@ -54,9 +53,9 @@
             }
             
         }
-        self.info = ipArray;
-        self.url = [dict objectForKey:@"url"];
-        self.domain = [dict objectForKey:@"domain"];
+        _info = ipArray;
+        _url = [dict objectForKey:@"url"];
+        _domain = [dict objectForKey:@"domain"];
     }
     return self;
 }
@@ -114,9 +113,9 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        self.location = [dict objectForKey:@"location"];
-        self.ip = [dict objectForKey:@"ip"];
-        self.type = [[dict objectForKey:@"type"] integerValue];
+        _location = [dict objectForKey:@"location"];
+        _ip = [dict objectForKey:@"ip"];
+        _type = [[dict objectForKey:@"type"] integerValue];
     }
     return self;
 }
@@ -139,11 +138,11 @@
     if (self = [super init]) {
         if ([[dict objectForKey:@"meta"] isKindOfClass:[NSDictionary class]]) {
              NSDictionary *metaDict = [dict objectForKey:@"meta"];
-            self.meta = [UNetMetaBean metaBeanWithDict:metaDict];
+            _meta = [UNetMetaBean metaBeanWithDict:metaDict];
         }
         if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dataDict = [dict objectForKey:@"data"];
-            self.data = [UNetDataBean dataBeanWithDict:dataDict];
+            _data = [UNetDataBean dataBeanWithDict:dataDict];
         }
     }
     return self;
@@ -206,7 +205,7 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        self.message = [dict objectForKey:@"message"];
+        _message = [dict objectForKey:@"message"];
     }
     return self;
 }
@@ -225,11 +224,11 @@
         
         if ([[dict objectForKey:@"meta"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *metaDict = [dict objectForKey:@"meta"];
-            self.meta = [UNetMetaBean metaBeanWithDict:metaDict];
+            _meta = [UNetMetaBean metaBeanWithDict:metaDict];
         }
         if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dataDict = [dict objectForKey:@"data"];
-            self.data = [UNetReportResponseDataBean reportResponseDataWithDict:dataDict];
+            _data = [UNetReportResponseDataBean reportResponseDataWithDict:dataDict];
         }
     }
     return self;
@@ -247,7 +246,7 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        self.enabled = [[dict objectForKey:@"enabled"] unsignedIntegerValue];
+        _enabled = [[dict objectForKey:@"enabled"] unsignedIntegerValue];
     }
     return self;
 }
@@ -266,11 +265,11 @@
     if (self = [super init]) {
         if ([[dict objectForKey:@"meta"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *metaDict =  [dict objectForKey:@"meta"];
-            self.meta = [UNetMetaBean metaBeanWithDict:metaDict];
+            _meta = [UNetMetaBean metaBeanWithDict:metaDict];
         }
         if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dataDict = [dict objectForKey:@"data"];
-            self.data = [UNetSDKStatusData sdkStatusDataWithDict:dataDict];
+            _data = [UNetSDKStatusData sdkStatusDataWithDict:dataDict];
         }
     }
     return self;

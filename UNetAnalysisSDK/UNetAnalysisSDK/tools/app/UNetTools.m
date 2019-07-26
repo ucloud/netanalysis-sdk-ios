@@ -128,10 +128,10 @@
     CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef strRef = CFUUIDCreateString(kCFAllocatorDefault , uuidRef);
     NSString *uuidString = (__bridge NSString *)strRef;
-    CFRelease(strRef);
-    CFRelease(uuidRef);
     [[NSUserDefaults standardUserDefaults] setObject:uuidString forKey:KUUID];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    CFRelease(strRef);
+    CFRelease(uuidRef);
     return uuidString;
 }
 

@@ -31,7 +31,7 @@
 
 - (instancetype)init
 {
-    if ([super init]) {
+    if (self = [super init]) {
         self.hostArrayIndex = 0;
         
         _isStopPingThread = NO;
@@ -276,6 +276,7 @@
         }
         usleep(500);
     }
+    free(buffer);
     return res;
 }
 

@@ -13,12 +13,12 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        self.loss  = [dict[@"loss"] intValue];
-        self.delay = [dict[@"delay"] floatValue];
-        self.ttl   = [dict[@"ttl"] intValue];
-        self.src_ip = dict[@"src_ip"];
-        self.dst_ip = dict[@"dst_ip"];
-        self.beginTime = [dict[@"beginTime"] integerValue];
+        _loss  = [dict[@"loss"] intValue];
+        _delay = [dict[@"delay"] floatValue];
+        _ttl   = [dict[@"ttl"] intValue];
+        _src_ip = dict[@"src_ip"];
+        _dst_ip = dict[@"dst_ip"];
+        _beginTime = [dict[@"beginTime"] integerValue];
     }
     return self;
 }

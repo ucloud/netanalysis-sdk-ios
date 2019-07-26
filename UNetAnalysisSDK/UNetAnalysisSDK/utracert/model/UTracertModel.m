@@ -45,9 +45,9 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        self.src_ip = dict[@"src_ip"];
-        self.dst_ip = dict[@"dst_ip"];
-        self.routeReplyArray = dict[@"routeReplyArray"];
+        _src_ip = dict[@"src_ip"];
+        _dst_ip = dict[@"dst_ip"];
+        _routeReplyArray = dict[@"routeReplyArray"];
     }
     return self;
 }
@@ -126,9 +126,9 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     if (self = [super  init]) {
-        self.route_ip = dict[@"route_ip"];
-        self.avgDelay = [dict[@"avgDelay"] floatValue];
-        self.loss = [dict[@"loss"] intValue];
+        _route_ip = dict[@"route_ip"];
+        _avgDelay = [dict[@"avgDelay"] floatValue];
+        _loss = [dict[@"loss"] intValue];
     }
     return self;
 }

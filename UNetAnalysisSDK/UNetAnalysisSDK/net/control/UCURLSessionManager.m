@@ -138,16 +138,17 @@ typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
 
 -(instancetype)init
 {
-    self.operationQueue = [[NSOperationQueue alloc] init];
-    self.operationQueue.maxConcurrentOperationCount = 1;
-    
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    config.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-    _defaultSession = [NSURLSession sessionWithConfiguration:config
-                                                    delegate:self
-                                               delegateQueue:self.operationQueue];
-    
-    self.mutableTaskDelegatesKeyedByTaskIdentifier = [[NSMutableDictionary alloc] init];
+    if (self = [super init]) {
+        self.operationQueue = [[NSOperationQueue alloc] init];
+        self.operationQueue.maxConcurrentOperationCount = 1;
+        
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        config.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        _defaultSession = [NSURLSession sessionWithConfiguration:config
+                                                        delegate:self
+                                                   delegateQueue:self.operationQueue];
+        self.mutableTaskDelegatesKeyedByTaskIdentifier = [[NSMutableDictionary alloc] init];
+    }
     return self;
 }
 
