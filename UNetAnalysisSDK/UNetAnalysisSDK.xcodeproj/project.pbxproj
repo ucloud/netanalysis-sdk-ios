@@ -50,8 +50,8 @@
 		AA8661A421266A5B00393544 /* log4cplus.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8661A221266A5B00393544 /* log4cplus.h */; };
 		AA8D378921F6AF8F0060BBC6 /* UNetQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8D378721F6AF8F0060BBC6 /* UNetQueue.h */; };
 		AA8D378A21F6AF8F0060BBC6 /* UNetQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8D378821F6AF8F0060BBC6 /* UNetQueue.m */; };
-		AA8D379121F9BBC60060BBC6 /* UCNetAnalysisManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA8D378F21F9BBC60060BBC6 /* UCNetAnalysisManager.mm */; };
-		AA8D379221F9BBC60060BBC6 /* UCNetAnalysisManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8D379021F9BBC60060BBC6 /* UCNetAnalysisManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AA8D379121F9BBC60060BBC6 /* UMQAClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA8D378F21F9BBC60060BBC6 /* UMQAClient.mm */; };
+		AA8D379221F9BBC60060BBC6 /* UMQAClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8D379021F9BBC60060BBC6 /* UMQAClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AAA1F98321193E0D0088217E /* UCPingService.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F97F21193E0D0088217E /* UCPingService.h */; };
 		AAA1F98421193E0D0088217E /* UCPingService.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAA1F98021193E0D0088217E /* UCPingService.mm */; };
 		AAA1F9A0211B000E0088217E /* UCNetDiagnosisHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = AAA1F99E211B000E0088217E /* UCNetDiagnosisHelper.h */; };
@@ -112,8 +112,8 @@
 		AA8661A221266A5B00393544 /* log4cplus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log4cplus.h; sourceTree = "<group>"; };
 		AA8D378721F6AF8F0060BBC6 /* UNetQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UNetQueue.h; sourceTree = "<group>"; };
 		AA8D378821F6AF8F0060BBC6 /* UNetQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UNetQueue.m; sourceTree = "<group>"; };
-		AA8D378F21F9BBC60060BBC6 /* UCNetAnalysisManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCNetAnalysisManager.mm; sourceTree = "<group>"; };
-		AA8D379021F9BBC60060BBC6 /* UCNetAnalysisManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCNetAnalysisManager.h; sourceTree = "<group>"; };
+		AA8D378F21F9BBC60060BBC6 /* UMQAClient.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UMQAClient.mm; sourceTree = "<group>"; };
+		AA8D379021F9BBC60060BBC6 /* UMQAClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMQAClient.h; sourceTree = "<group>"; };
 		AAA1F97F21193E0D0088217E /* UCPingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCPingService.h; sourceTree = "<group>"; };
 		AAA1F98021193E0D0088217E /* UCPingService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UCPingService.mm; sourceTree = "<group>"; };
 		AAA1F99E211B000E0088217E /* UCNetDiagnosisHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCNetDiagnosisHelper.h; sourceTree = "<group>"; };
@@ -362,8 +362,8 @@
 		AAAA0E41215242E700D7C95A /* control */ = {
 			isa = PBXGroup;
 			children = (
-				AA8D379021F9BBC60060BBC6 /* UCNetAnalysisManager.h */,
-				AA8D378F21F9BBC60060BBC6 /* UCNetAnalysisManager.mm */,
+				AA8D379021F9BBC60060BBC6 /* UMQAClient.h */,
+				AA8D378F21F9BBC60060BBC6 /* UMQAClient.mm */,
 				AA1D3BDD22E6E2A300FAC58E /* UCNetSDKDef.h */,
 			);
 			path = control;
@@ -390,7 +390,7 @@
 				AA4964F521C7928600A48AD8 /* UPingModel.h in Headers */,
 				AA0C458A21D1D642002983CC /* UCRSA.h in Headers */,
 				AA1D3BDE22E6E2A300FAC58E /* UCNetSDKDef.h in Headers */,
-				AA8D379221F9BBC60060BBC6 /* UCNetAnalysisManager.h in Headers */,
+				AA8D379221F9BBC60060BBC6 /* UMQAClient.h in Headers */,
 				AA4964ED21C77A6300A48AD8 /* UCModel.h in Headers */,
 				AA6605E82146493400C75504 /* UNetAppInfo.h in Headers */,
 				AAA1F9A4211B00690088217E /* UCPing.h in Headers */,
@@ -538,7 +538,7 @@
 				AA4964FA21C794EF00A48AD8 /* UTracertModel.m in Sources */,
 				AA1D3BDC22E6E1E600FAC58E /* UCNetLog.mm in Sources */,
 				AA0C458B21D1D642002983CC /* UCRSA.m in Sources */,
-				AA8D379121F9BBC60060BBC6 /* UCNetAnalysisManager.mm in Sources */,
+				AA8D379121F9BBC60060BBC6 /* UMQAClient.mm in Sources */,
 				AA4FFD702181A33B00DC686F /* UCNetClient.mm in Sources */,
 				AA0C458F21D3533B002983CC /* UCServerResponseModel.m in Sources */,
 				AA832B2321DDB841008641D9 /* UNetTools.m in Sources */,

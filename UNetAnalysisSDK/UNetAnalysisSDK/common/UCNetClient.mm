@@ -47,6 +47,8 @@
 @property (nonatomic,assign) UCDataType sourceDataType;  // 表示数据源属于哪一种诊断触发的
 @property (nonatomic,assign) UNetSDKSwitch sdkSwitch;
 
+@property (nonatomic,assign) BOOL isResignActive;
+
 @end
 
 
@@ -171,6 +173,8 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)startDetect
 {
+    self.isResignActive = NO;
+    
     if (self.sdkSwitch != UNetSDKSwitch_ON) {
         log4cplus_debug("UNetSDK", "SDK does not open...\n");
         return;
@@ -270,6 +274,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)checkNetworkStatusWithReachability:(UCReachability *)reachability
 {
+    self.isResignActive = NO;
     self.devicePubIpInfo = nil;
     self.uIpListBean = nil;
     self.hostList = nil;
@@ -375,6 +380,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCPingService shareInstance] uStopPing];
     }
     self.isManualNetDiag = NO;
+    self.isResignActive = YES;
     
     log4cplus_warn("UNetSDK", "App resign activity , stop collection network data...\n");
 }
@@ -409,6 +415,11 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCNetInfoReporter shareInstance] setPingStatus:self.ping_status];
         return;
     }
+    
+    if (self.isResignActive) {
+        return;
+    }
+    
     [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel
                                                                   destIpType:(int)self.pingIpType
                                                               dataSourceType:(int)self.sourceDataType];
@@ -441,6 +452,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
         return;
     }
     
+    if (self.isResignActive) {
+        return;
+    }
     [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel
                                                                         destIpType:(int)self.tracertIpType
                                                                     dataSourceType:(int)self.sourceDataType];

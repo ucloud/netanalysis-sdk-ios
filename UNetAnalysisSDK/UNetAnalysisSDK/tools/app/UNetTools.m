@@ -41,9 +41,6 @@
 
 + (NSString *)validOptReportField:(NSDictionary *)fields
 {
-    if (!fields) {
-        return nil;
-    }
     @try {
         NSString *json_str = [[self class] userDefinedFieldsConvertDictToJson:fields];
         if (json_str.length > 1024) {

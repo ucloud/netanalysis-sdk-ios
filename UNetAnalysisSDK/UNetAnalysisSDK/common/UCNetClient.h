@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UCNetAnalysisManager.h"
 
 typedef NS_ENUM(NSUInteger,UCTriggerDetectType)
 {

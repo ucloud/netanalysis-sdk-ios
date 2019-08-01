@@ -1,5 +1,5 @@
 //
-//  UCNetAnalysisManager.h
+//  UMQAClient.h
 //  UNetAnalysisSDK
 //
 //  Created by ethan on 2018/10/9.
@@ -20,11 +20,11 @@
 * 设置你的应用服务地址列表
  
  */
-@interface UCNetAnalysisManager : NSObject
+@interface UMQAClient : NSObject
 
 
 /**
- @brief 创建一个`UCNetAnalysisManager`单例对象
+ @brief 创建一个`UMQAClient`单例对象
 
  @return <#return value description#>
  */

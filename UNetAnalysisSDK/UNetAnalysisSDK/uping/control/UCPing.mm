@@ -212,8 +212,7 @@
     socklen_t addrLen = sizeof(ret_addr);
     void *buffer = malloc(65535);
     NSString *devicePublicIp = [[UCNetInfoReporter shareInstance] ipInfoModel].addr;
-    while (true) {
-        
+    while (YES) {
         size_t bytesRead = recvfrom(socket_client, buffer, 65535, 0, (struct sockaddr *)&ret_addr, &addrLen);
         
         if ((int)bytesRead < 0) {

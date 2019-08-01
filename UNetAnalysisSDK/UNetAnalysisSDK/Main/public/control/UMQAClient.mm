@@ -1,21 +1,21 @@
 //
-//  UCNetAnalysisManager.m
+//  UMQAClient.m
 //  UNetAnalysisSDK
 //
 //  Created by ethan on 2018/10/9.
 //  Copyright © 2018 ucloud. All rights reserved.
 //
 
-#import "UCNetAnalysisManager.h"
+#import "UMQAClient.h"
 #import "UNetAnalysisConst.h"
 #import "UCNetClient.h"
 #import "UNetTools.h"
 #import "log4cplus.h"
 #import "UCNetLog.h"
 
-@implementation UCNetAnalysisManager
+@implementation UMQAClient
 
-static UCNetAnalysisManager *sdkManager_instance = nil;
+static UMQAClient *sdkManager_instance = nil;
 
 + (instancetype)shareInstance
 {
@@ -28,12 +28,12 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
 
 +(id)allocWithZone:(struct _NSZone *)zone
 {
-    return [UCNetAnalysisManager shareInstance];
+    return [UMQAClient shareInstance];
 }
 
 - (id)copyWithZone:(struct _NSZone *)zone
 {
-    return [UCNetAnalysisManager shareInstance];
+    return [UMQAClient shareInstance];
 }
 
 - (void)uNetSettingSDKLogLevel:(UCSDKLogLevel)logLevel
@@ -94,11 +94,16 @@ static UCNetAnalysisManager *sdkManager_instance = nil;
                                      userInfo:nil];
         return;
     }
-    NSString *errorInfo = [UNetTools validOptReportField:fields];
-    if(errorInfo){
-        log4cplus_warn("UNetSDK", "setting user defined fields , error info->%s",[errorInfo UTF8String]);
-        handler([UCError sysErrorWithInvalidArgument:errorInfo]);
-        return;
+    
+    if (fields && fields.count > 0) {
+        NSString *errorInfo = [UNetTools validOptReportField:fields];
+        if(errorInfo){
+            log4cplus_warn("UNetSDK", "setting user defined fields , error info->%s",[errorInfo UTF8String]);
+            handler([UCError sysErrorWithInvalidArgument:errorInfo]);
+            return;
+        }
+    }else if(!fields || fields.count == 0){
+        fields = nil;
     }
     [[UCNetClient shareInstance] settingUserDefineFields:fields];
 }
