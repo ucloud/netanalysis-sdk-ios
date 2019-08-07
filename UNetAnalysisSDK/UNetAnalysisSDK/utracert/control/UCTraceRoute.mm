@@ -244,7 +244,7 @@ typedef NS_ENUM(NSUInteger,UCTracertIcmpType)
     int tracert_recev_index = 0;
     int tracert_recev_route_index = 0;
     int reacert_recev_route_timeout_index = 0;
-    while (YES) {
+    while (!self.isStopTracert) {
         size_t resultLen = recvfrom(socket_client, buff, sizeof(buff), 0, (struct sockaddr*)&remote_addr, &addrLen);
         if ((int)resultLen < 0) {
             reacert_recev_route_timeout_index++;
