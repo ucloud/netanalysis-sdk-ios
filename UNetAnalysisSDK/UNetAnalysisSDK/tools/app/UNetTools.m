@@ -35,12 +35,29 @@
         NSDictionary *dict = @{@"key":key,@"val":[mutaDict objectForKey:key]};
         [resArray addObject:dict];
     }
-    NSString *jsonValue = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:resArray options:0 error:nil] encoding:NSUTF8StringEncoding];
+    NSError *error;
+    NSString *jsonValue = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:resArray options:0 error:&error] encoding:NSUTF8StringEncoding];
+    if (error != nil) {
+        NSLog(@"user defined fields convert to json str error %@",error);
+        return nil;
+    }
     return jsonValue;
 }
 
 + (NSString *)validOptReportField:(NSDictionary *)fields
 {
+    for (id key in fields.allKeys) {
+        if (![key isKindOfClass:[NSString class]]) {
+            return @"the key for user defined fields dict is not NSString type";
+        }
+    }
+    
+    for (id value in fields.allValues) {
+        if (![value isKindOfClass:[NSString class]]) {
+            return @"the value for user defined fileds dict is not NSString type";
+        }
+    }
+    
     @try {
         NSString *json_str = [[self class] userDefinedFieldsConvertDictToJson:fields];
         if (json_str.length > 1024) {

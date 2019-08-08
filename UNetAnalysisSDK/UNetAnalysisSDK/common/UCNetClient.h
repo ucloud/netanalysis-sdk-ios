@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger,UCTriggerDetectType)
                publicToken:(NSString * _Nonnull)publicToken;
 - (void)startDetect;
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList;
-- (void)settingUserDefineFields:(NSDictionary * _Nullable)fields;
+- (void)settingUserDefineJsonFields:(NSString * _Nullable)fields;
 - (void)closePingAndTracert;
 - (void)closeAutoDetech;
 @end

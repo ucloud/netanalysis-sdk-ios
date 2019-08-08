@@ -82,19 +82,14 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     _appSecret = publicToken;
 }
 
-- (void)setUserDefinedFields:(NSDictionary * _Nullable)fields
+- (void)setUserDefineJsonFields:(NSString * _Nullable)fields
 {
     if (!fields) {
         log4cplus_debug("UNetSDK", "user defined fields is nil..\n");
         return;
     }
-    try {
-        self.userDefinedJson = [UNetTools userDefinedFieldsConvertDictToJson:fields];
-        log4cplus_debug("UNetSDK", "user defined fields is: %s",[self.userDefinedJson UTF8String]);
-    } catch (NSException *exception) {
-        log4cplus_error("UNetSDK", "convert user defined fileds to json error, error info: %s",[exception.description UTF8String]);
-        return;
-    }
+    self.userDefinedJson = fields;
+    log4cplus_debug("UNetSDK", "user defined fields is: %s",[self.userDefinedJson UTF8String]);
 }
 
 - (UCURLSessionManager *)urlSessionManager
@@ -231,10 +226,10 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
 #pragma mark- Get SDK status
 - (void)uGetSDKStatusWithCompletionHandler:(UNetSDKStatusHandler)handler
 {
+    NSDictionary *requestParam = @{@"app_key":self.appKey};
     NSString *paramStr = nil;
     @try {
-        NSDictionary *requestParam = @{@"app_key":self.appKey};
-        paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:requestParam options:0 error:nil] encoding:NSUTF8StringEncoding];
+        paramStr = [[self class] dictToJsonStr:requestParam];
     } @catch (NSException *exception) {
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
         handler(nil,[UCError sysErrorWithInvalidElements:@"construct request param error"]);
@@ -264,7 +259,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         NSString *lat = ipInfoModel.latitude == nil ? @"" : ipInfoModel.latitude;
         NSString *lon = ipInfoModel.longitude == nil ? @"" : ipInfoModel.longitude;
         NSDictionary *requestParam = @{@"app_key":self.appKey,@"latitude":lat,@"longitude":lon};
-        paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:requestParam options:0 error:nil] encoding:NSUTF8StringEncoding];
+        paramStr = [[self class] dictToJsonStr:requestParam];
     } catch (NSException *exception) {
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
         handler(nil,[UCError sysErrorWithInvalidElements:@"construct request param error"]);
@@ -328,18 +323,17 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                         @"trigger_type":[NSNumber numberWithInt:dsType],
                                         @"timestamp":[NSNumber numberWithInteger:uReportPingModel.beginTime]
                                         };
-            NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
+            NSString *dataJson = [[self class] dictToJsonStr:dict_data];
             NSData *data = [dataJson dataUsingEncoding:NSUTF8StringEncoding];
             NSString *strBase64 = [data base64EncodedStringWithOptions:0];
             NSDictionary *param = @{@"data":strBase64};
-            if ([NSJSONSerialization isValidJSONObject:param]) {
-                paramJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:param options:0 error:nil] encoding:NSUTF8StringEncoding];
-                log4cplus_debug("UNetSDK", "ReportPing, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);
-                log4cplus_debug("UNetSDK", "ReportPing , param is : %s",[dataJson UTF8String]);
-            }else{
+            paramJson = [[self class] dictToJsonStr:param];
+            if (!paramJson) {
                 log4cplus_warn("UNetSDK", "func: %s,  line: %d , JSONSerialization failed...\n",__func__,__LINE__);
                 return;
             }
+            log4cplus_debug("UNetSDK", "ReportPing, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);
+            log4cplus_debug("UNetSDK", "ReportPing , param is : %s",[dataJson UTF8String]);
         }
     } catch (NSException *exception) {
         log4cplus_warn("UNetSDK", "func: %s, exception info:%s,  line: %d",__func__,[exception.description UTF8String],__LINE__);
@@ -407,17 +401,14 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                                         @"uuid":[UNetTools uuidStr],
                                         @"trigger_type":[NSNumber numberWithInt:dsType],
                                         @"timestamp":[NSNumber numberWithInteger:uReportTracertModel.beginTime]};
-            NSString *dataJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict_data options:0 error:nil] encoding:NSUTF8StringEncoding];
+            NSString *dataJson = [[self class] dictToJsonStr:dict_data];
             log4cplus_debug("UNetSDK", "ReportTracert, tag: %s | ip_info: %s",[tagStr UTF8String],[report_ip_info UTF8String]);
             log4cplus_debug("UNetSDK", "ReportTracert , paramJson is : %s",[dataJson UTF8String]);
             NSData *data = [dataJson dataUsingEncoding:NSUTF8StringEncoding];
             NSString *strBase64 = [data base64EncodedStringWithOptions:0];
             NSDictionary *param = @{@"data":strBase64};
-            if ([NSJSONSerialization isValidJSONObject:param]) {
-                paramJson = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:param options:0 error:nil] encoding:NSUTF8StringEncoding];
-                //        log4cplus_debug("UNetSDK", "ReportTracert , param is : %s",[paramJson UTF8String]);
-            }else{
-                log4cplus_warn("UNetSDK", "func: %s,  line: %d , JSONSerialization failed...\n",__func__,__LINE__);
+            paramJson = [[self class] dictToJsonStr:param];
+            if (!paramJson) {
                 return;
             }
         }
@@ -480,6 +471,23 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
     }
     
     return NO;
+}
+
+
+#pragma mark -public tools(contains general methods)
++ (NSString *)dictToJsonStr:(NSDictionary *)dict
+{
+    NSString *jsonStr = nil;
+    if ([NSJSONSerialization isValidJSONObject:dict]) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+        if (error)
+            log4cplus_warn("UNetSDK", "dict convert to jsonData error...\n");
+        else
+            jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+    }
+    return jsonStr;
 }
 
 @end

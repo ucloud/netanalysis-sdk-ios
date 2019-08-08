@@ -107,9 +107,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
     return 0;
 }
 
-- (void)settingUserDefineFields:(NSDictionary * _Nullable)fields
+- (void)settingUserDefineJsonFields:(NSString * _Nullable)fields
 {
-    [[UCNetInfoReporter shareInstance] setUserDefinedFields:fields];
+    [[UCNetInfoReporter shareInstance] setUserDefineJsonFields:fields];
 }
 
 - (void)settingCustomerIpList:(NSArray *_Nullable)customerIpList

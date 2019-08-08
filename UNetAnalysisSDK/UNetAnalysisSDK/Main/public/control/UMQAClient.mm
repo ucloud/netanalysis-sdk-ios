@@ -94,18 +94,18 @@ static UMQAClient *sdkManager_instance = nil;
                                      userInfo:nil];
         return;
     }
-    
-    if (fields && fields.count > 0) {
+    NSString *jsonFields = nil;
+    if ([fields isKindOfClass:[NSDictionary class]] && fields.count > 0) {
         NSString *errorInfo = [UNetTools validOptReportField:fields];
         if(errorInfo){
             log4cplus_warn("UNetSDK", "setting user defined fields , error info->%s",[errorInfo UTF8String]);
             handler([UCError sysErrorWithInvalidArgument:errorInfo]);
             return;
         }
-    }else if(!fields || fields.count == 0){
-        fields = nil;
+        
+        jsonFields = [UNetTools userDefinedFieldsConvertDictToJson:fields];
+        [[UCNetClient shareInstance] settingUserDefineJsonFields:jsonFields];
     }
-    [[UCNetClient shareInstance] settingUserDefineFields:fields];
 }
 
 - (void)uNetCloseAutoDetectNet

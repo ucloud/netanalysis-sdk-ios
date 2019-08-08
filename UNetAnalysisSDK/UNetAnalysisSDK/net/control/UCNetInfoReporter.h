@@ -26,7 +26,7 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
 - (void)setAppKey:(NSString * _Nonnull)appKey
      publickToken:(NSString * _Nonnull)publicToken;
 
-- (void)setUserDefinedFields:(NSDictionary * _Nullable)fields;
+- (void)setUserDefineJsonFields:(NSString * _Nullable)fields;
 
 - (void)uGetSDKStatusWithCompletionHandler:(UNetSDKStatusHandler _Nonnull)handler;
 
