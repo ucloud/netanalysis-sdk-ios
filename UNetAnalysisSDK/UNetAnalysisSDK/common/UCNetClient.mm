@@ -94,8 +94,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
             return;
         }
         self.sdkSwitch = (UNetSDKSwitch)sdkStatus.data.enabled;
-        log4cplus_debug("UNetSDK", "SDK status: %ld",sdkStatus.data.enabled);
-
         if (self.sdkSwitch != UNetSDKSwitch_ON) {
             log4cplus_debug("UNetSDK", "SDK does not open...\n");
             return;
@@ -121,9 +119,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
     
     try {
         NSMutableArray *array = [NSMutableArray array];
-        for (int i = 0 ; i < customerIpList.count; i++) {
-            if ([self isIpAddress:customerIpList[i]]) {
-                [array addObject:customerIpList[i]];
+        for (id ele in customerIpList) {
+            if ([ele isKindOfClass:[NSString class]] && [self isIpAddress:ele]) {
+                [array addObject:ele];
             }
         }
         
