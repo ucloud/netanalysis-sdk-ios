@@ -1,5 +1,6 @@
 # UNetAnalysisSDK release history 
 
+## v1.0
 
 ###  v-1.0.1(2019.01.29)
 
@@ -40,3 +41,17 @@
 ### v-1.0.13(2019.07.11)
 
 * 移除手动诊断接口
+
+
+## v2.0
+
+### v2.0.1(2019.08.13)
+
+* 新增功能： 
+	* 支持关闭自动检测网络逻辑，可以自己手动触发网络检测
+	* 为上报的网络数据增加数据来源类型(自动检测触发、手动检测触发)
+	* SDK内部增加线上开关
+* bug修复：
+	* 在ios12上`URLSession data request is cancelled as soon as app is not in foreground with error code 53`导致cpu占用过高
+	* 修复了部分内存泄漏问题
+	* 修复了其它一些bug
