@@ -206,6 +206,19 @@ pod 'UNetAnalysisSDK'
 }
 ```
 
+### 适配ios12(非必须)
+
+在ios12中(ios12以下的版本没有发现问题)，如果正在执行诊断的过程中按锁屏键然后再次进入app，会导致app一瞬间cpu占用过高，引起该问题的原因是`NSURLSession`在ios12的问题，详细信息可查看 [AFNetWorking---NSPOSIXErrorDomain Code=53: Software caused connection abort](https://github.com/AFNetworking/AFNetworking/issues/4279) 以及[Firebase Dynamic Links sometimes got error NSPOSIXErrorDomain Code=53 "Software caused connection abort](https://github.com/firebase/firebase-ios-sdk/issues/2303)都是类似的问题。
+
+由于我们SDK内部也使用了`NSURLSession`，所以我们增加了方法`uNetAppDidEnterBackground`用于处理这种问题。该方法内部的实现逻辑是延迟进入挂起状态，如果你的app有后台模式或者有延迟挂起逻辑，那么可以忽略该方法。
+
+```
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[UMQAClient shareInstance] uNetAppDidEnterBackground];
+}
+```
+
+
 ## 常见问题
 
 * `iOS 9+`强制使用`HTTPS`,使用`XCode`创建的项目默认不支持`HTTP`，所以需要在`project build info` 添加`NSAppTransportSecurity`,在`NSAppTransportSecurity`下添加`NSAllowsArbitraryLoads`值设为`YES`,如下图。 
