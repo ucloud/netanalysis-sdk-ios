@@ -18,21 +18,81 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="应用刚启动时和网络发生切换时会自动触发网络检测" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ymZ-sM-Euz">
-                                <rect key="frame" x="20" y="373" width="374" height="150"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t8O-YY-bGT">
+                                <rect key="frame" x="5" y="89" width="404" height="152"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="没有关闭自动检测逻辑时：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QCv-f3-glc">
+                                        <rect key="frame" x="0.0" y="0.0" width="237" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="YKr-B0-gCw"/>
+                                            <constraint firstAttribute="width" constant="237" id="dde-vo-90s"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" red="1" green="0.35381277350000001" blue="0.21162383479999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="在应用刚启动时和网络切换时会自动触发网络检测" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Do3-Hr-HdU">
+                                        <rect key="frame" x="0.0" y="37" width="404" height="68"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="68" id="ZiA-Mp-OoD"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="0S8-XQ-0aG"/>
+                                    <constraint firstAttribute="trailing" secondItem="Do3-Hr-HdU" secondAttribute="trailing" id="0SI-aD-Po6"/>
+                                    <constraint firstItem="QCv-f3-glc" firstAttribute="top" secondItem="t8O-YY-bGT" secondAttribute="top" id="9nf-gV-Or8"/>
+                                    <constraint firstAttribute="height" constant="152" id="Hpr-Qg-Z9f"/>
+                                    <constraint firstItem="Do3-Hr-HdU" firstAttribute="leading" secondItem="t8O-YY-bGT" secondAttribute="leading" id="O3v-ZI-HPC"/>
+                                    <constraint firstItem="QCv-f3-glc" firstAttribute="leading" secondItem="t8O-YY-bGT" secondAttribute="leading" id="h0J-Wq-TCj"/>
+                                    <constraint firstItem="Do3-Hr-HdU" firstAttribute="top" secondItem="QCv-f3-glc" secondAttribute="bottom" constant="1" id="sdk-Qk-IRd"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nda-1h-7x0">
+                                <rect key="frame" x="5" y="261" width="404" height="152"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="关闭自动检测逻辑时：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eO4-JW-c2N">
+                                        <rect key="frame" x="0.0" y="0.0" width="237" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="DXb-YN-6HF"/>
+                                            <constraint firstAttribute="width" constant="237" id="dPn-u2-egH"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" red="1" green="0.35381277350000001" blue="0.21162383479999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="你需要自己调用触发网络检测的方法" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uzg-zs-L67">
+                                        <rect key="frame" x="0.0" y="37" width="404" height="68"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="68" id="ejU-tX-Ofh"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="uzg-zs-L67" secondAttribute="trailing" id="196-8W-3of"/>
+                                    <constraint firstItem="eO4-JW-c2N" firstAttribute="top" secondItem="nda-1h-7x0" secondAttribute="top" id="2q5-fW-e0t"/>
+                                    <constraint firstAttribute="height" constant="152" id="6o3-ib-NFp"/>
+                                    <constraint firstItem="uzg-zs-L67" firstAttribute="leading" secondItem="nda-1h-7x0" secondAttribute="leading" id="Lpx-vE-zmX"/>
+                                    <constraint firstItem="eO4-JW-c2N" firstAttribute="leading" secondItem="nda-1h-7x0" secondAttribute="leading" id="U5g-Fc-OAS"/>
+                                    <constraint firstItem="uzg-zs-L67" firstAttribute="top" secondItem="eO4-JW-c2N" secondAttribute="bottom" constant="1" id="rlX-0e-nJ8"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="ymZ-sM-Euz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6qO-uW-58f"/>
-                            <constraint firstItem="ymZ-sM-Euz" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PX9-eu-KSu"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ymZ-sM-Euz" secondAttribute="trailing" constant="20" id="wgQ-i5-tN7"/>
+                            <constraint firstItem="t8O-YY-bGT" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="45" id="2HW-ej-nRx"/>
+                            <constraint firstItem="t8O-YY-bGT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="6NI-x0-P94"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="t8O-YY-bGT" secondAttribute="trailing" constant="5" id="9uD-Gu-M9h"/>
+                            <constraint firstItem="nda-1h-7x0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="DdX-70-dHc"/>
+                            <constraint firstItem="nda-1h-7x0" firstAttribute="top" secondItem="t8O-YY-bGT" secondAttribute="bottom" constant="20" id="ThS-kQ-A1g"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nda-1h-7x0" secondAttribute="trailing" constant="5" id="cpW-pk-XPF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
