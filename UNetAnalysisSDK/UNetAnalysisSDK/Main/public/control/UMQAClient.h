@@ -90,6 +90,13 @@
 - (void)uNetStopDataCollectionWhenAppWillResignActive;
 
 
+/**
+ @brief 在app进入后台的时候调用该方法(可选)
+ @discussion 在ios12中(ios12以下的版本没有发现问题)，如果正在执行诊断的过程中按锁屏键然后再次进入app，会导致app一瞬间cpu占用过高，引起该问题的原因是`NSURLSession`在ios12的问题，具体可参考https://github.com/AFNetworking/AFNetworking/issues/4279 ， 所以我们添加了该方法用于处理这种问题。该方法内部的实现逻辑是延迟进入挂起状态，如果你的app有后台模式，那么可以忽略该方法。
+ */
+- (void)uNetAppDidEnterBackground;
+
+
 #pragma mark - get sdk info api
 
 /**

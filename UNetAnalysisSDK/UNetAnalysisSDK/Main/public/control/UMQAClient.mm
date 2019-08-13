@@ -128,14 +128,16 @@ static UMQAClient *sdkManager_instance = nil;
 - (void)uNetStopDataCollectionWhenAppWillResignActive
 {
     [[UCNetClient shareInstance] closePingAndTracert];
-    
+}
+
+- (void)uNetAppDidEnterBackground
+{
     if ([UNetAppInfo uIosVersion].intValue == 12) {
         __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithName:@"UNetSDK_BK_Task" expirationHandler:^{
             [[UIApplication sharedApplication] endBackgroundTask:bgTask];
             bgTask = UIBackgroundTaskInvalid;
         }];
     }
-    
 }
 
 - (NSString * _Nonnull)uNetSdkVersion
