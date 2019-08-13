@@ -20,6 +20,8 @@ typedef  void(^UNetGetUHostListHandler)(UNetIpListBean *_Nullable ipListBean,UCE
 
 @interface UCNetInfoReporter : NSObject
 
+@property (nonatomic,assign) UCNetworkStatus uNetType;
+
 + (instancetype _Nonnull )shareInstance;
 - (void)setPingStatus:(UCCDNPingStatus)pingStatus;
 

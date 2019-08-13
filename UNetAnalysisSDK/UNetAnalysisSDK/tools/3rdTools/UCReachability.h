@@ -9,13 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
-
-
-typedef enum : NSInteger {
-	Reachable_None = 0,
-	Reachable_WiFi,
-	Reachable_WWAN
-} UCNetworkStatus;
+#import "UNetAnalysisConst.h"
 
 #pragma mark IPv6 Support
 //Reachability fully support IPv6.  For full details, see ReadMe.md.

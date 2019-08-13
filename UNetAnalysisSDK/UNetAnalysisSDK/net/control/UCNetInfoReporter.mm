@@ -33,6 +33,13 @@ typedef NS_ENUM(NSUInteger,UCNetOperateType)
     UCNetOperateType_DoReport
 };
 
+NSString * const U_UNKNOWN   = @"UNKNOWN";
+NSString * const U_NOT_REACHABLE = @"NOT_REACHABLE";
+NSString * const U_2G           = @"2G";
+NSString * const U_3G           = @"3G";
+NSString * const U_4G           = @"4G";
+NSString * const U_WIFI         = @"WIFI";
+
 const NSTimeInterval uNetSDKTimeOut =  60.0;
 
 @interface UCNetInfoReporter()
@@ -107,6 +114,28 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
         return [UNetTools formartTimeZone:zone.abbreviation];
     }
     return @"";
+}
+
+- (NSString *)deviceNetworkType
+{
+    NSString *res = U_UNKNOWN;
+    switch (self.uNetType) {
+        case UCNetworkStatus_WiFi:
+            res = U_WIFI;
+            break;
+        case UCNetworkStatus_WWAN2G:
+            res = U_2G;
+            break;
+        case UCNetworkStatus_WWAN3G:
+            res = U_3G;
+            break;
+        case UCNetworkStatus_WWAN4G:
+            res = U_4G;
+            break;
+        default:
+            break;
+    }
+    return res;
 }
 
 #pragma mark- post http request
@@ -306,7 +335,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
                 uDefinedJson_rsa = [UCRSA encryptString:self.userDefinedJson publicKey:self.appSecret];
             }
             NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
-            NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
+            NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[self deviceNetworkType]];
             NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
             if ([UNetTools un_isEmpty:tagStr_rsa] || [UNetTools un_isEmpty:ip_info_rsa]) {
                 log4cplus_warn("UNetSDK", "ReportPing, tag data or ipinfo rsa error , remote this data...\n");
@@ -386,7 +415,7 @@ static UCNetInfoReporter *ucNetInfoReporter  = NULL;
             }
             NSString *tagStr_rsa = [UCRSA encryptString:tagStr publicKey:self.appSecret];
             
-            NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[UNetAppInfo uGetNetworkType]];
+            NSString *report_ip_info = [NSString stringWithFormat:@"%@,net_type=%@",[self.ipInfoModel objConvertToReportStr],[self deviceNetworkType]];
             NSString *ip_info_rsa = [UCRSA encryptString:report_ip_info publicKey:self.appSecret];
             if ([UNetTools un_isEmpty:tagStr_rsa] || [UNetTools un_isEmpty:ip_info_rsa]) {
                 log4cplus_warn("UNetSDK", "ReportTracert, tag data or ipinfo rsa error , remote this data...\n");

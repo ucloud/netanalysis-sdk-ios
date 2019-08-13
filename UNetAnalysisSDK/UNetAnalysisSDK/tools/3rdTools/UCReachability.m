@@ -11,6 +11,8 @@
 #import <netdb.h>
 #import <sys/socket.h>
 #import <netinet/in.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <UIKit/UIKit.h>
 
 #import <CoreFoundation/CoreFoundation.h>
 
@@ -169,17 +171,17 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
 	{
 		// The target host is not reachable.
-		return Reachable_None;
+		return UCNetworkStatus_None;
 	}
 
-    UCNetworkStatus returnValue = Reachable_None;
+    UCNetworkStatus returnValue = UCNetworkStatus_None;
 
 	if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
 	{
 		/*
          If the target host is reachable and no connection is required then we'll assume (for now) that you're on Wi-Fi...
          */
-		returnValue = Reachable_WiFi;
+		returnValue = UCNetworkStatus_WiFi;
 	}
 
 	if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
@@ -194,7 +196,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
             /*
              ... and no [user] intervention is needed...
              */
-            returnValue = Reachable_WiFi;
+            returnValue = UCNetworkStatus_WiFi;
         }
     }
 
@@ -203,7 +205,37 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 		/*
          ... but WWAN connections are OK if the calling application is using the CFNetwork APIs.
          */
-		returnValue = Reachable_WWAN;
+//        returnValue = Reachable_WWAN;
+        
+        NSArray *typeStrings2G = @[CTRadioAccessTechnologyEdge,
+                                   CTRadioAccessTechnologyGPRS,
+                                   CTRadioAccessTechnologyCDMA1x];
+        
+        NSArray *typeStrings3G = @[CTRadioAccessTechnologyHSDPA,
+                                   CTRadioAccessTechnologyWCDMA,
+                                   CTRadioAccessTechnologyHSUPA,
+                                   CTRadioAccessTechnologyCDMAEVDORev0,
+                                   CTRadioAccessTechnologyCDMAEVDORevA,
+                                   CTRadioAccessTechnologyCDMAEVDORevB,
+                                   CTRadioAccessTechnologyeHRPD];
+        
+        NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
+        
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+            CTTelephonyNetworkInfo *teleInfo= [[CTTelephonyNetworkInfo alloc] init];
+            NSString *accessString = teleInfo.currentRadioAccessTechnology;
+            if ([typeStrings4G containsObject:accessString]) {
+                return UCNetworkStatus_WWAN4G;
+            } else if ([typeStrings3G containsObject:accessString]) {
+                return UCNetworkStatus_WWAN3G;
+            } else if ([typeStrings2G containsObject:accessString]) {
+                return UCNetworkStatus_WWAN2G;
+            } else {
+                return UCNetworkStatus_Unknown;
+            }
+        } else {
+            return UCNetworkStatus_Unknown;
+        }
 	}
     
 	return returnValue;
@@ -227,7 +259,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 - (UCNetworkStatus)currentReachabilityStatus
 {
 	NSAssert(_ucReachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
-	UCNetworkStatus returnValue = Reachable_None;
+	UCNetworkStatus returnValue = UCNetworkStatus_None;
 	SCNetworkReachabilityFlags flags;
     
 	if (SCNetworkReachabilityGetFlags(_ucReachabilityRef, &flags))

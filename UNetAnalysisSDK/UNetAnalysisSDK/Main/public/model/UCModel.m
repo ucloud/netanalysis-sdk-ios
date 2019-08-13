@@ -11,43 +11,6 @@
 #import "UNetTools.h"
 #import <objc/runtime.h>
 
-@implementation UCIpPingResult
-
-- (instancetype)initUIpPingResultWithIp:(NSString *)ip loss:(int)loss delay:(float)delay
-{
-    if (self = [super init]) {
-        _ip = ip;
-        _loss = loss;
-        _delay = delay;
-    }
-    return self;
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"ip:%@, loss:%d, delay:%d",_ip,_loss,_delay];
-}
-@end
-
-@implementation UCManualNetDiagResult
-
-- (instancetype)initWithPingRes:(NSMutableArray *)pingRes
-{
-    if (self = [super init]) {
-        _networkType = [UNetAppInfo uGetNetworkType];
-        _pingInfo = pingRes;
-    }
-    return self;
-}
-
-+ (instancetype)instanceWithPingRes:(NSMutableArray *)pingRes
-{
-    return [[self alloc] initWithPingRes:pingRes];
-}
-
-@end
-
-
 @implementation UCServerError
 
 - (instancetype)initWithCode:(NSInteger)code

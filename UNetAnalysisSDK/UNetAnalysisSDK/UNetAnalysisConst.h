@@ -29,6 +29,15 @@
 /***********      Ping model       ***********/
 #define   KPingIcmpIdBeginNum     8000
 
+typedef NS_ENUM(NSUInteger,UCNetworkStatus)
+{
+    UCNetworkStatus_None,
+    UCNetworkStatus_Unknown,
+    UCNetworkStatus_WiFi,
+    UCNetworkStatus_WWAN2G,
+    UCNetworkStatus_WWAN3G,
+    UCNetworkStatus_WWAN4G
+};
 
 typedef enum UCCDNPingStatus
 {

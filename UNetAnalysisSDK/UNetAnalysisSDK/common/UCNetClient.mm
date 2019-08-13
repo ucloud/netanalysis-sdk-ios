@@ -47,8 +47,6 @@
 @property (nonatomic,assign) UCDataType sourceDataType;  // 表示数据源属于哪一种诊断触发的
 @property (nonatomic,assign) UNetSDKSwitch sdkSwitch;
 
-@property (nonatomic,assign) BOOL isResignActive;
-
 @end
 
 
@@ -159,7 +157,7 @@ static UCNetClient *ucloudNetClient_instance = nil;
         warnInfo = @"customer ip list is nil";
         res = NO;
     }
-    else if(self.netStatus == Reachable_None){
+    else if(self.netStatus == UCNetworkStatus_None || self.netStatus == UCNetworkStatus_Unknown){
         warnInfo = @"none network";
         res = NO;
     }
@@ -171,8 +169,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)startDetect
 {
-    self.isResignActive = NO;
-    
     if (self.sdkSwitch != UNetSDKSwitch_ON) {
         log4cplus_debug("UNetSDK", "SDK does not open...\n");
         return;
@@ -272,27 +268,30 @@ static UCNetClient *ucloudNetClient_instance = nil;
 
 - (void)checkNetworkStatusWithReachability:(UCReachability *)reachability
 {
-    self.isResignActive = NO;
     self.devicePubIpInfo = nil;
     self.uIpListBean = nil;
     self.hostList = nil;
     self.netStatus = [reachability currentReachabilityStatus];
+    [UCNetInfoReporter shareInstance].uNetType = self.netStatus;
     self.ping_status = CDNPingStatus_ICMP_None;
     self.cdnDomain = nil;
     self.isDoneCDNPing = NO;
     switch (self.netStatus) {
-        case Reachable_None:
+        case UCNetworkStatus_None:
+        case UCNetworkStatus_Unknown:
         {
             log4cplus_info("UNetSDK", "none network...\n");
         }
             break;
-        case Reachable_WiFi:
+        case UCNetworkStatus_WiFi:
         {
             log4cplus_info("UNetSDK", "network type is WIFI...\n");
             [self updateEnvironments];
         }
             break;
-        case Reachable_WWAN:
+        case UCNetworkStatus_WWAN2G:
+        case UCNetworkStatus_WWAN3G:
+        case UCNetworkStatus_WWAN4G:
         {
             log4cplus_info("UNetSDK", "network type is WWAN...\n");
             [self updateEnvironments];
@@ -378,7 +377,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCPingService shareInstance] uStopPing];
     }
     self.isManualNetDiag = NO;
-    self.isResignActive = YES;
     
     log4cplus_warn("UNetSDK", "App resign activity , stop collection network data...\n");
 }
@@ -413,11 +411,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCNetInfoReporter shareInstance] setPingStatus:self.ping_status];
         return;
     }
-    
-    if (self.isResignActive) {
-        return;
-    }
-    
     [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel
                                                                   destIpType:(int)self.pingIpType
                                                               dataSourceType:(int)self.sourceDataType];
@@ -447,10 +440,6 @@ static UCNetClient *ucloudNetClient_instance = nil;
 {
 //    log4cplus_info("UNetTracert", "%s",[uReportTracertModel.description UTF8String]);
     if (uReportTracertModel.routeReplyArray.count == 1) {   // 防止icmp发送时间很久之后的响应,eg: 63.245.208.212
-        return;
-    }
-    
-    if (self.isResignActive) {
         return;
     }
     [[UCNetInfoReporter shareInstance] uReportTracertResultWithUReportTracertModel:uReportTracertModel

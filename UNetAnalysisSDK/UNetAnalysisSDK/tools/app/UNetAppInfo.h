@@ -9,11 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface UNetAppInfo : NSObject
-+ (NSString *)uGetAppName;
 + (NSString *)uGetAppBundleId;
-+ (NSString *)uGetAppVersion;
 + (NSString *)uIosVersion;
-+ (NSString *)uScreenResolution;
-+ (NSString*)uDeviceModelName;
-+ (NSString*)uGetNetworkType;
 @end
