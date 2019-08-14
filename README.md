@@ -226,7 +226,7 @@ Stop network data collection when the application is about to move from active t
 
 ### Adapt iOS12(Not Required)
 
-In ios12 (there is no problem found in the version below ios12), if you press the lock screen button and then enter the app again during the process of performing the diagnosis, the app will take up too much cpu momentarily. The cause of the problem is `NSURLSession` in ios12. For more information, see [AFNetWorking---NSPOSIXErrorDomain Code=53: Software caused connection abort] (https://github.com/AFNetworking/AFNetworking/issues/4279) and [Firebase Dynamic Links sometimes got error NSPOSIXErrorDomain Code= 53 "Software caused connection abort" (https://github.com/firebase/firebase-ios-sdk/issues/2303) is a similar problem.
+In ios12 (there is no problem found in the version below ios12), if you press the lock screen button and then enter the app again during the process of performing the diagnosis, the app will take up too much cpu momentarily. The cause of the problem is `NSURLSession` in ios12. For more information, see [AFNetWorking---NSPOSIXErrorDomain Code=53: Software caused connection abort] (https://github.com/AFNetworking/AFNetworking/issues/4279) and [Firebase Dynamic Links sometimes got error NSPOSIXErrorDomain Code= 53 "Software caused connection abort"] (https://github.com/firebase/firebase-ios-sdk/issues/2303) is a similar problem.
 
 Since we also use `NSURLSession` inside the SDK, we added the method `uNetAppDidEnterBackground` to handle this problem. The internal implementation logic of this method is delayed into the suspended state. If your app has background mode or delay pending logic, you can ignore this method.
 
