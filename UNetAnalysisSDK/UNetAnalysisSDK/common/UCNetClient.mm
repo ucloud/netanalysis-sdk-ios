@@ -411,6 +411,9 @@ static UCNetClient *ucloudNetClient_instance = nil;
         [[UCNetInfoReporter shareInstance] setPingStatus:self.ping_status];
         return;
     }
+    if (uReportPingModel.delay < 0) {   // 过滤掉非法数据：1亿条数据里面大概有300多条delay<0的数据
+        return;
+    }
     [[UCNetInfoReporter shareInstance] uReportPingResultWithUReportPingModel:uReportPingModel
                                                                   destIpType:(int)self.pingIpType
                                                               dataSourceType:(int)self.sourceDataType];
