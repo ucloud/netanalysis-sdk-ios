@@ -104,9 +104,12 @@ static UMQAClient *sdkManager_instance = nil;
             handler([UCError sysErrorWithInvalidArgument:errorInfo]);
             return;
         }
-        
+        log4cplus_debug("UNetSDK", "setting user defined field success...\n");
+        handler(nil);
         jsonFields = [UNetTools userDefinedFieldsConvertDictToJson:fields];
         [[UCNetClient shareInstance] settingUserDefineJsonFields:jsonFields];
+    }else{
+        log4cplus_debug("UNetSDK", "does not setting user defined fields...\n");
     }
 }
 
