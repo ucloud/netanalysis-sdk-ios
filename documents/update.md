@@ -55,3 +55,8 @@
 	* 在ios12上`URLSession data request is cancelled as soon as app is not in foreground with error code 53`导致cpu占用过高
 	* 修复了部分内存泄漏问题
 	* 修复了其它一些bug
+
+### v2.0.2(2019.09.23)
+
+* bug修复 
+* 适配ios13 

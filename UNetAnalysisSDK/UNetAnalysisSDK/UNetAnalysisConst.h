@@ -72,6 +72,6 @@ typedef NS_ENUM(NSUInteger,UCDataType)
     UCDataType_Manual
 };
 
-#define KSDKVERSION   @"2.0.1"
+#define KSDKVERSION   @"2.0.2"
 
 #endif /* UNetAnalysisConst_h */
