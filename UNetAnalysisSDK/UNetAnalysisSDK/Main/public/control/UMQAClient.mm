@@ -135,7 +135,7 @@ static UMQAClient *sdkManager_instance = nil;
 
 - (void)uNetAppDidEnterBackground
 {
-    if ([UNetAppInfo uIosVersion].intValue == 12) {
+    if ([UNetAppInfo uIosVersion].intValue >= 12) {
         __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithName:@"UNetSDK_BK_Task" expirationHandler:^{
             [[UIApplication sharedApplication] endBackgroundTask:bgTask];
             bgTask = UIBackgroundTaskInvalid;
